@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko" class="theme-light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>학생 상세 — 수코치</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    html.theme-dark { --bg:#0A0A0A; --surface:#141414; --surface-hover:#1C1C1C; --border:rgba(255,255,255,0.07); --text:#EDEDED; --text-secondary:#888; --text-muted:#555; --accent:#6366F1; --accent-hover:#818CF8; --positive:#10b981; --negative:#f43f5e; --warning:#f59e0b; --overlay:rgba(0,0,0,0.7); }
+    html.theme-light { --bg:#F1F5F9; --surface:#FFFFFF; --surface-hover:#F8FAFC; --border:rgba(0,0,0,0.07); --text:#0F172A; --text-secondary:#64748B; --text-muted:#94A3B8; --accent:#4F46E5; --accent-hover:#4338CA; --positive:#059669; --negative:#DC2626; --warning:#D97706; --overlay:rgba(0,0,0,0.4); }
+    body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; -webkit-font-smoothing:antialiased; }
+
+    .navbar { position:sticky; top:0; z-index:100; height:56px; display:flex; align-items:center; padding:0 20px; gap:10px; background:var(--surface); border-bottom:1px solid var(--border); }
+    .nav-logo { font-size:17px; font-weight:900; color:var(--accent); letter-spacing:-0.06em; text-decoration:none; }
+    .nav-div { width:1px; height:18px; background:var(--border); }
+    .nav-back { font-size:13px; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; gap:5px; font-weight:600; }
+    .nav-back:hover { color:var(--text); }
+    .nav-sp { flex:1; }
+    .nav-btn { height:30px; padding:0 12px; border-radius:7px; border:1px solid var(--border); background:transparent; color:var(--text-secondary); font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; }
+    .nav-btn:hover { background:var(--surface-hover); color:var(--text); }
+
+    .main { max-width:1000px; margin:0 auto; padding:24px 20px; }
+
+    /* 학생 헤더 */
+    .student-header { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:24px; margin-bottom:24px; display:flex; align-items:flex-start; gap:20px; flex-wrap:wrap; }
+    .student-avatar { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,var(--accent),#818CF8); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900; color:white; flex-shrink:0; }
+    .student-info { flex:1; min-width:0; }
+    .student-name { font-size:1.4rem; font-weight:900; letter-spacing:-0.03em; margin-bottom:6px; }
+    .student-meta { display:flex; gap:12px; flex-wrap:wrap; }
+    .meta-item { font-size:13px; color:var(--text-secondary); display:flex; align-items:center; gap:4px; }
+    .student-badges { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .badge { display:inline-flex; align-items:center; padding:3px 10px; border-radius:100px; font-size:12px; font-weight:700; }
+    .badge-blue { background:rgba(79,70,229,0.1); color:var(--accent); }
+    .badge-purple { background:rgba(139,92,246,0.1); color:#8B5CF6; }
+    .badge-green { background:rgba(5,150,105,0.1); color:var(--positive); }
+    .badge-orange { background:rgba(245,158,11,0.1); color:#F59E0B; }
+    .badge-gray { background:rgba(100,116,139,0.1); color:#64748B; }
+    .student-actions { display:flex; gap:8px; align-self:flex-start; flex-wrap:wrap; }
+
+    /* 탭 */
+    .tabs { display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:20px; }
+    .tab { padding:9px 16px; font-size:13px; font-weight:600; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:all 0.15s; background:transparent; border-top:none; border-left:none; border-right:none; font-family:inherit; }
+    .tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+
+    /* 정보 그리드 */
+    .info-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; margin-bottom:20px; }
+    .info-item { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+    .info-label { font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px; }
+    .info-value { font-size:14px; font-weight:600; color:var(--text); }
+
+    /* 수행평가 목록 */
+    .assignment-list { display:flex; flex-direction:column; gap:10px; }
+    .a-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; gap:14px; }
+    .a-card:hover { border-color:var(--accent); box-shadow:0 2px 12px rgba(79,70,229,0.08); }
+    .a-stage-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+    .a-info { flex:1; min-width:0; }
+    .a-title { font-size:14px; font-weight:700; margin-bottom:3px; }
+    .a-meta { font-size:12px; color:var(--text-secondary); display:flex; gap:10px; flex-wrap:wrap; }
+    .a-right { text-align:right; flex-shrink:0; }
+    .dday-safe { color:var(--positive); font-size:12px; font-weight:700; }
+    .dday-warning { color:var(--warning); font-size:12px; font-weight:700; }
+    .dday-urgent { color:var(--negative); font-size:12px; font-weight:700; }
+    .dday-overdue { color:var(--negative); font-size:12px; font-weight:700; }
+    .dday-none { color:var(--text-muted); font-size:12px; }
+
+    /* 파일 목록 */
+    .file-list { display:flex; flex-direction:column; gap:8px; }
+    .file-item { background:var(--surface); border:1px solid var(--border); border-radius:9px; padding:12px 14px; display:flex; align-items:center; gap:12px; }
+    .file-icon { font-size:20px; flex-shrink:0; }
+    .file-info { flex:1; min-width:0; }
+    .file-name { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .file-meta { font-size:11px; color:var(--text-muted); margin-top:2px; }
+    .file-actions { display:flex; gap:6px; }
+    .btn-sm { padding:5px 10px; border-radius:7px; border:1px solid var(--border); background:transparent; color:var(--text-secondary); font-size:11px; font-weight:600; cursor:pointer; font-family:inherit; }
+    .btn-sm:hover { background:var(--surface-hover); }
+
+    /* 버튼 */
+    .btn { padding:8px 16px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text-secondary); font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:6px; transition:all 0.15s; }
+    .btn:hover { background:var(--surface-hover); color:var(--text); }
+    .btn.primary { background:var(--accent); color:white; border-color:var(--accent); }
+    .btn.primary:hover { background:var(--accent-hover); }
+    .btn.danger { color:var(--negative); border-color:rgba(220,38,38,0.2); }
+
+    /* 모달 */
+    .modal-overlay { display:none; position:fixed; inset:0; background:var(--overlay); z-index:200; align-items:center; justify-content:center; padding:20px; }
+    .modal-overlay.open { display:flex; }
+    .modal { background:var(--surface); border-radius:16px; padding:26px; width:100%; max-width:500px; max-height:90vh; overflow-y:auto; }
+    .modal-title { font-size:1.05rem; font-weight:800; margin-bottom:18px; }
+    .form-group { margin-bottom:14px; }
+    .form-label { display:block; font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:6px; }
+    input[type="text"], input[type="date"], input[type="number"], select, textarea {
+      width:100%; padding:10px 12px; border-radius:9px; border:1.5px solid var(--border);
+      background:var(--bg); color:var(--text); font-size:14px; font-family:inherit; outline:none;
+    }
+    input:focus, select:focus, textarea:focus { border-color:var(--accent); }
+    .input-row { display:flex; gap:10px; }
+    .input-row > * { flex:1; }
+    .modal-footer { display:flex; gap:10px; justify-content:flex-end; margin-top:18px; }
+    .btn-cancel { padding:9px 18px; border-radius:9px; border:1.5px solid var(--border); background:transparent; color:var(--text-secondary); font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; }
+    .btn-submit { padding:9px 22px; border-radius:9px; background:var(--accent); color:white; font-size:14px; font-weight:700; border:none; cursor:pointer; font-family:inherit; }
+    .btn-submit:disabled { opacity:0.5; cursor:not-allowed; }
+
+    .modal-alert { padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:12px; }
+    .modal-alert.error { background:rgba(220,38,38,0.08); color:var(--negative); border:1px solid rgba(220,38,38,0.2); }
+
+    .empty { text-align:center; padding:32px; color:var(--text-muted); font-size:14px; }
+    .spinner { display:inline-block; width:14px; height:14px; border:2px solid rgba(255,255,255,0.4); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-right:5px; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="admin-dashboard.html" class="nav-logo">수코치</a>
+    <div class="nav-div"></div>
+    <div class="nav-back" onclick="goBack()">← 뒤로</div>
+    <div class="nav-sp"></div>
+    <button class="nav-btn" onclick="DB.logout()">로그아웃</button>
+  </nav>
+
+  <div class="main">
+    <!-- 학생 헤더 -->
+    <div class="student-header" id="studentHeader">
+      <div style="text-align:center;padding:20px;width:100%;color:var(--text-muted);">로딩 중...</div>
+    </div>
+
+    <!-- 탭 -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('info', this)">📋 기본 정보</button>
+      <button class="tab" onclick="switchTab('assignments', this)">📝 수행평가</button>
+      <button class="tab" onclick="switchTab('files', this)">📁 자료 보관함</button>
+    </div>
+
+    <!-- 기본 정보 탭 -->
+    <div id="tab-info" class="tab-content active">
+      <div class="info-grid" id="infoGrid"></div>
+    </div>
+
+    <!-- 수행평가 탭 -->
+    <div id="tab-assignments" class="tab-content">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+        <button class="btn primary" id="btnAddAssign" onclick="openAddAssign()">+ 수행평가 추가</button>
+      </div>
+      <div class="assignment-list" id="assignmentList"></div>
+    </div>
+
+    <!-- 자료 보관함 탭 -->
+    <div id="tab-files" class="tab-content">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+        <button class="btn primary" onclick="openFileUpload()">+ 파일 업로드</button>
+      </div>
+      <div class="file-list" id="fileList"></div>
+    </div>
+  </div>
+
+  <!-- 수행평가 추가 모달 -->
+  <div class="modal-overlay" id="addAssignModal">
+    <div class="modal">
+      <div class="modal-title">+ 수행평가 추가</div>
+      <div class="modal-alert error" id="addAssignErr" style="display:none;"></div>
+      <div class="form-group">
+        <label class="form-label">과목 *</label>
+        <select id="a_subject">
+          <option value="">과목 선택</option>
+          <option>국어</option><option>영어</option><option>수학</option>
+          <option>사회</option><option>과학</option><option>역사</option><option>기타</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">수행평가 제목 *</label>
+        <input type="text" id="a_title" placeholder="예: 1학기 1회 논술형 수행평가">
+      </div>
+      <div class="form-group">
+        <label class="form-label">유형</label>
+        <select id="a_type">
+          <option value="">유형 선택</option>
+          <option>서술형</option><option>발표형</option><option>보고서형</option>
+          <option>탐구형</option><option>실험형</option><option>프로젝트형</option><option>기타</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">만점</label>
+        <input type="number" id="a_maxscore" placeholder="예: 100">
+      </div>
+      <div class="form-group">
+        <label class="form-label">학교 마감일</label>
+        <input type="date" id="a_deadline">
+      </div>
+      <div class="form-group">
+        <label class="form-label">내부 마감일 <span style="color:var(--text-muted);font-weight:400;">(비워두면 학교마감 -5일 자동)</span></label>
+        <input type="date" id="a_internal_deadline">
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeAddAssign()">취소</button>
+        <button class="btn-submit" id="btnAddAssignSubmit" onclick="submitAddAssign()">추가</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 파일 업로드 모달 -->
+  <div class="modal-overlay" id="fileUploadModal">
+    <div class="modal">
+      <div class="modal-title">📁 파일 업로드 (자료 보관함)</div>
+      <div class="modal-alert error" id="fileUpErr" style="display:none;"></div>
+      <div class="form-group">
+        <label class="form-label">파일 유형</label>
+        <select id="fu_type">
+          <option>연간계획서</option><option>루브릭</option><option>기타</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">파일 선택 *</label>
+        <input type="file" id="fu_file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xls,.xlsx,.hwp">
+      </div>
+      <div class="form-group">
+        <label class="form-label">메모</label>
+        <input type="text" id="fu_note" placeholder="(선택)">
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeFileUpload()">취소</button>
+        <button class="btn-submit" id="btnFileUp" onclick="submitFileUpload()">업로드</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="db.js"></script>
+  <script>
+    var me = null;
+    var student = null;
+    var studentId = null;
+    var assignments = [];
+    var studentFiles = [];
+
+    async function init() {
+      me = DB.requireAuth(['admin', 'tutor']);
+      if (!me) return;
+      var params = new URLSearchParams(window.location.search);
+      studentId = params.get('id');
+      if (!studentId) { goBack(); return; }
+
+      // 강사면 수행평가 추가 버튼 숨기기
+      if (me.role === 'tutor') {
+        var btn = document.getElementById('btnAddAssign');
+        if (btn) btn.style.display = 'none';
+      }
+
+      await loadStudent();
+      await loadAssignments();
+      await loadFiles();
+    }
+
+    async function loadStudent() {
+      student = await DB.getStudent(studentId);
+      if (!student) { alert('학생을 찾을 수 없습니다.'); goBack(); return; }
+
+      var header = document.getElementById('studentHeader');
+      var initial = student.name.charAt(0);
+      var inProgress = assignments.filter(function(a){ return a.stage !== '완료'; }).length;
+
+      header.innerHTML = '<div class="student-avatar">' + initial + '</div>' +
+        '<div class="student-info">' +
+          '<div class="student-name">' + student.name + '</div>' +
+          '<div class="student-meta">' +
+            '<span class="meta-item">🏫 ' + student.school + '</span>' +
+            '<span class="meta-item">📚 ' + student.grade + '학년 ' + (student.class_num||'-') + '반 ' + (student.student_num||'-') + '번</span>' +
+            (student.student_user ? '<span class="meta-item">📧 ' + student.student_user.email + '</span>' : '') +
+          '</div>' +
+          '<div class="student-badges">' +
+            (student.target_grade ? '<span class="badge badge-blue">목표 ' + student.target_grade + '</span>' : '') +
+            (student.student_type ? '<span class="badge badge-purple">' + student.student_type + '</span>' : '') +
+            (student.tutor ? '<span class="badge badge-green">👨‍🏫 ' + student.tutor.display_name + '</span>' : '<span class="badge badge-gray">강사 미배정</span>') +
+          '</div>' +
+        '</div>';
+
+      // 기본 정보 그리드
+      var grid = document.getElementById('infoGrid');
+      var fields = [
+        ['이름', student.name],
+        ['학교', student.school],
+        ['학년', student.grade + '학년'],
+        ['반/번호', (student.class_num||'-') + '반 ' + (student.student_num||'-') + '번'],
+        ['목표등급', student.target_grade || '-'],
+        ['학생유형', student.student_type || '-'],
+        ['담당강사', student.tutor ? student.tutor.display_name : '-'],
+        ['월비용', student.monthly_fee ? student.monthly_fee.toLocaleString() + '원' : '-'],
+        ['학생이메일', student.student_user ? student.student_user.email : '-'],
+        ['학부모이메일', student.parent_user ? student.parent_user.email : '-'],
+        ['등록일', DB.formatDate(student.enrolled_at)],
+        ['메모', student.notes || '-'],
+      ];
+      grid.innerHTML = fields.map(function(f) {
+        return '<div class="info-item"><div class="info-label">' + f[0] + '</div><div class="info-value">' + f[1] + '</div></div>';
+      }).join('');
+    }
+
+    async function loadAssignments() {
+      assignments = await DB.getStudentAssignments(studentId);
+      var list = document.getElementById('assignmentList');
+      if (!assignments.length) {
+        list.innerHTML = '<div class="empty">등록된 수행평가가 없습니다.</div>';
+        return;
+      }
+      var colors = { '접수':'#64748B','분석완료':'#3B82F6','면담완료':'#8B5CF6','초안대기':'#EC4899','피드백완료':'#F59E0B','수정중':'#EF4444','최종확인':'#10B981','완료':'#059669' };
+      list.innerHTML = assignments.map(function(a) {
+        var dl = a.internal_deadline || a.school_deadline;
+        var ddayClass = DB.getDDayClass(dl);
+        var dday = DB.getDDay(dl);
+        var color = colors[a.stage] || '#888';
+        return '<div class="a-card" onclick="goToAssignment(\'' + a.id + '\')">' +
+          '<div class="a-stage-dot" style="background:' + color + '"></div>' +
+          '<div class="a-info">' +
+            '<div class="a-title">[' + a.subject + '] ' + a.title + '</div>' +
+            '<div class="a-meta">' +
+              '<span>' + a.stage + '</span>' +
+              (a.type ? '<span>' + a.type + '</span>' : '') +
+              (a.school_deadline ? '<span>학교마감 ' + DB.formatDate(a.school_deadline) + '</span>' : '') +
+              (a.score ? '<span>' + a.score + '/' + (a.max_score||'?') + '점</span>' : '') +
+            '</div>' +
+          '</div>' +
+          '<div class="a-right"><span class="' + ddayClass + '">' + (dday||'-') + '</span></div>' +
+          '</div>';
+      }).join('');
+    }
+
+    async function loadFiles() {
+      studentFiles = await DB.getStudentFiles(studentId);
+      var list = document.getElementById('fileList');
+      if (!studentFiles.length) {
+        list.innerHTML = '<div class="empty">업로드된 자료가 없습니다.</div>';
+        return;
+      }
+      var icons = { '연간계획서':'📋','루브릭':'📊','코칭가이드':'🗺️','초안':'✏️','피드백':'💬','수정본':'🔄','최종본':'✅','기타':'📎' };
+      list.innerHTML = studentFiles.map(function(f) {
+        return '<div class="file-item">' +
+          '<div class="file-icon">' + (icons[f.file_type]||'📎') + '</div>' +
+          '<div class="file-info">' +
+            '<div class="file-name">' + f.file_name + '</div>' +
+            '<div class="file-meta">' + f.file_type + ' · ' + DB.formatFileSize(f.file_size) + ' · ' + DB.formatDate(f.uploaded_at) + '</div>' +
+          '</div>' +
+          '<div class="file-actions">' +
+            '<a href="' + f.file_url + '" target="_blank"><button class="btn-sm">보기</button></a>' +
+          '</div></div>';
+      }).join('');
+    }
+
+    function switchTab(name, el) {
+      document.querySelectorAll('.tab-content').forEach(function(t){ t.classList.remove('active'); });
+      document.getElementById('tab-' + name).classList.add('active');
+      document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+      el.classList.add('active');
+    }
+
+    function goBack() {
+      var ref = document.referrer;
+      if (ref && ref.includes('tutor-dashboard')) window.location.href = 'tutor-dashboard.html';
+      else window.location.href = 'admin-dashboard.html';
+    }
+    function goToAssignment(id) { window.location.href = 'assignment-detail.html?id=' + id; }
+
+    // 수행평가 추가
+    function _openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow='hidden'; }
+    function _closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow=''; }
+    function openAddAssign() { document.getElementById('addAssignErr').style.display='none'; _openModal('addAssignModal'); }
+    function closeAddAssign() { _closeModal('addAssignModal'); }
+    async function submitAddAssign() {
+      var btn = document.getElementById('btnAddAssignSubmit');
+      var err = document.getElementById('addAssignErr');
+      err.style.display = 'none';
+      var subject = document.getElementById('a_subject').value;
+      var title = document.getElementById('a_title').value.trim();
+      if (!subject || !title) { err.textContent = '과목과 제목은 필수입니다.'; err.style.display='block'; return; }
+      btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>추가 중...';
+      try {
+        await DB.createAssignment({
+          student_id: studentId,
+          subject: subject,
+          title: title,
+          type: document.getElementById('a_type').value || null,
+          max_score: document.getElementById('a_maxscore').value || null,
+          school_deadline: document.getElementById('a_deadline').value || null,
+          internal_deadline: document.getElementById('a_internal_deadline').value || null,
+        });
+        closeAddAssign();
+        await loadAssignments();
+      } catch(e) {
+        err.textContent = e.message; err.style.display='block';
+      } finally {
+        btn.disabled = false; btn.textContent = '추가';
+      }
+    }
+
+    // 파일 업로드
+    function openFileUpload() { document.getElementById('fileUpErr').style.display='none'; _openModal('fileUploadModal'); }
+    function closeFileUpload() { _closeModal('fileUploadModal'); }
+    async function submitFileUpload() {
+      var btn = document.getElementById('btnFileUp');
+      var err = document.getElementById('fileUpErr');
+      err.style.display = 'none';
+      var fileInput = document.getElementById('fu_file');
+      if (!fileInput.files.length) { err.textContent = '파일을 선택해 주세요.'; err.style.display='block'; return; }
+      btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>업로드 중...';
+      try {
+        await DB.uploadFile(
+          fileInput.files[0], studentId, null,
+          document.getElementById('fu_type').value,
+          document.getElementById('fu_note').value
+        );
+        closeFileUpload();
+        await loadFiles();
+      } catch(e) {
+        err.textContent = e.message; err.style.display='block';
+      } finally {
+        btn.disabled = false; btn.textContent = '업로드';
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

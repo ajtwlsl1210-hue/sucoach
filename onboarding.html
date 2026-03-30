@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ko" class="theme-light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>시작하기 — 수코치</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    html.theme-dark {
+      --bg:#0A0A0A; --surface:#141414; --border:rgba(255,255,255,0.08);
+      --text:#EDEDED; --text-secondary:#888; --text-muted:#555;
+      --accent:#6366F1; --accent-hover:#818CF8;
+      --positive:#10b981; --negative:#f43f5e; --input-bg:#1C1C1C; --surface-hover:#1C1C1C;
+    }
+    html.theme-light {
+      --bg:#F8FAFC; --surface:#FFFFFF; --border:rgba(0,0,0,0.08);
+      --text:#0F172A; --text-secondary:#64748B; --text-muted:#94A3B8;
+      --accent:#4F46E5; --accent-hover:#4338CA;
+      --positive:#059669; --negative:#DC2626; --input-bg:#F8FAFC; --surface-hover:#F1F5F9;
+    }
+    body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding:24px 16px; -webkit-font-smoothing:antialiased; }
+    .wrap { max-width:640px; margin:0 auto; }
+
+    .steps { display:flex; align-items:center; margin-bottom:32px; margin-top:16px; }
+    .step { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; }
+    .step-circle { width:36px; height:36px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:var(--text-muted); background:var(--surface); transition:all 0.3s; }
+    .step.active .step-circle { border-color:var(--accent); color:var(--accent); background:rgba(79,70,229,0.08); }
+    .step.done .step-circle { border-color:var(--positive); background:var(--positive); color:white; }
+    .step-label { font-size:12px; color:var(--text-muted); font-weight:600; }
+    .step.active .step-label { color:var(--accent); }
+    .step.done .step-label { color:var(--positive); }
+    .step-line { flex:0 0 48px; height:2px; background:var(--border); margin-top:-30px; }
+    .step-line.done { background:var(--positive); }
+
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px 28px; margin-bottom:20px; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
+    .card-title { font-size:1.2rem; font-weight:800; margin-bottom:8px; letter-spacing:-0.03em; }
+    .card-desc { font-size:14px; color:var(--text-secondary); line-height:1.7; margin-bottom:24px; }
+
+    .consent-box { background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:18px; height:280px; overflow-y:auto; font-size:13px; line-height:1.8; color:var(--text-secondary); margin-bottom:20px; }
+    .consent-box h4 { font-size:14px; font-weight:700; color:var(--text); margin-bottom:12px; }
+    .consent-box h5 { font-size:13px; font-weight:700; color:var(--text); margin-top:16px; margin-bottom:6px; }
+    .consent-box p { margin-bottom:8px; }
+    .consent-box ul { padding-left:16px; margin-bottom:8px; }
+    .consent-box li { margin-bottom:3px; }
+
+    .check-row { display:flex; align-items:flex-start; gap:12px; margin-bottom:12px; }
+    .check-row input[type="checkbox"] { width:18px; height:18px; margin-top:2px; cursor:pointer; accent-color:var(--accent); flex-shrink:0; }
+    .check-row label { font-size:14px; line-height:1.5; cursor:pointer; }
+    .check-row label strong { color:var(--accent); }
+
+    .form-group { margin-bottom:22px; }
+    .form-label { display:block; font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px; }
+    .form-label .req { color:var(--negative); margin-left:3px; }
+
+    .radio-group { display:flex; flex-direction:column; gap:8px; }
+    .radio-item { display:flex; align-items:center; gap:10px; padding:10px 14px; border:1.5px solid var(--border); border-radius:9px; cursor:pointer; transition:all 0.15s; }
+    .radio-item:hover { border-color:var(--accent); background:rgba(79,70,229,0.04); }
+    .radio-item.selected { border-color:var(--accent); background:rgba(79,70,229,0.06); }
+    .radio-item input { accent-color:var(--accent); flex-shrink:0; }
+    .radio-item label { font-size:13px; cursor:pointer; flex:1; }
+
+    .check-options { display:flex; flex-wrap:wrap; gap:8px; }
+    .check-opt { display:flex; align-items:center; gap:7px; padding:8px 14px; border:1.5px solid var(--border); border-radius:100px; cursor:pointer; font-size:13px; transition:all 0.15s; }
+    .check-opt:hover { border-color:var(--accent); }
+    .check-opt.selected { border-color:var(--accent); background:rgba(79,70,229,0.06); color:var(--accent); font-weight:600; }
+    .check-opt input { accent-color:var(--accent); }
+
+    textarea, input[type="text"], select {
+      width:100%; padding:11px 14px; border-radius:10px;
+      border:1.5px solid var(--border); background:var(--input-bg);
+      color:var(--text); font-size:14px; font-family:inherit;
+      outline:none; transition:border-color 0.2s;
+    }
+    textarea { resize:vertical; min-height:72px; }
+    textarea:focus, input[type="text"]:focus, select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(79,70,229,0.08); }
+    .input-row { display:flex; gap:10px; }
+
+    .btn-primary { width:100%; padding:13px; border-radius:10px; background:var(--accent); color:white; font-size:15px; font-weight:700; border:none; cursor:pointer; font-family:inherit; transition:background 0.2s, transform 0.15s; }
+    .btn-primary:hover { background:var(--accent-hover); transform:translateY(-1px); }
+    .btn-primary:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+    .alert { padding:12px 14px; border-radius:9px; font-size:13px; font-weight:500; margin-bottom:16px; }
+    .alert.error { background:rgba(220,38,38,0.08); color:var(--negative); border:1px solid rgba(220,38,38,0.2); }
+    .hidden { display:none; }
+
+    .done-screen { text-align:center; padding:32px 16px; }
+    .done-icon { font-size:60px; margin-bottom:16px; }
+    .done-title { font-size:1.4rem; font-weight:900; margin-bottom:10px; }
+    .done-desc { font-size:14px; color:var(--text-secondary); line-height:1.7; margin-bottom:28px; }
+
+    .spinner { display:inline-block; width:15px; height:15px; border:2px solid rgba(255,255,255,0.4); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-right:6px; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <!-- 진행 단계 -->
+  <div class="steps" id="stepsBar">
+    <div class="step active" id="step1">
+      <div class="step-circle">1</div>
+      <div class="step-label">이용 동의</div>
+    </div>
+    <div class="step-line" id="line1"></div>
+    <div class="step" id="step2">
+      <div class="step-circle">2</div>
+      <div class="step-label">인테이크 설문</div>
+    </div>
+    <div class="step-line" id="line2"></div>
+    <div class="step" id="step3">
+      <div class="step-circle">3</div>
+      <div class="step-label">완료</div>
+    </div>
+  </div>
+
+  <!-- STEP 1: 이용 동의서 -->
+  <div id="secConsent">
+    <div class="card">
+      <div class="card-title">수코치 서비스 이용 동의서</div>
+      <div class="card-desc">아래 내용을 읽고 모두 동의해 주세요.</div>
+      <div class="consent-box">
+        <h4>수코치 수행평가 전략관리 프로그램 이용약관</h4>
+        <h5>제1조 목적</h5>
+        <p>본 약관은 수코치가 제공하는 수행평가 전략관리 서비스의 이용 조건을 규정합니다.</p>
+        <h5>제2조 서비스 내용</h5>
+        <ul>
+          <li>루브릭 분석 및 코칭 가이드 제공</li>
+          <li>초안 피드백 및 수정 방향 제시</li>
+          <li>수행평가 진행 현황 관리 플랫폼 제공</li>
+          <li>담당 강사와의 정기 면담 서비스</li>
+        </ul>
+        <h5>제3조 개인정보 수집 및 이용</h5>
+        <p>서비스 제공을 위해 이름, 학교, 학년, 이메일, 학습 관련 정보를 수집합니다. 수집된 정보는 서비스 목적 외 사용되지 않습니다.</p>
+        <h5>제4조 이용자의 의무</h5>
+        <ul>
+          <li>정확한 정보를 제공해야 합니다.</li>
+          <li>수행평가 자료는 기한 내에 업로드해야 합니다.</li>
+          <li>타인의 계정을 도용하거나 부정한 방법으로 서비스를 이용할 수 없습니다.</li>
+        </ul>
+        <h5>제5조 서비스 이용료</h5>
+        <p>파일럿 프로그램 기준 월 70,000원이며, 변경 시 사전 고지합니다.</p>
+        <h5>제6조 면책</h5>
+        <p>수코치는 학생의 최종 성적을 보장하지 않으며, 코칭 과정에서 최선을 다해 지원합니다.</p>
+      </div>
+      <div class="check-row">
+        <input type="checkbox" id="ck1" onchange="updateConsentBtn()">
+        <label for="ck1">위 이용약관을 <strong>모두 읽었으며 동의</strong>합니다.</label>
+      </div>
+      <div class="check-row">
+        <input type="checkbox" id="ck2" onchange="updateConsentBtn()">
+        <label for="ck2"><strong>개인정보 수집 및 이용</strong>에 동의합니다.</label>
+      </div>
+      <div class="alert error hidden" id="consentErr"></div>
+      <button class="btn-primary" id="btnConsent" onclick="submitConsent()" disabled>동의하고 계속하기</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: 설문지 -->
+  <div id="secSurvey" class="hidden">
+    <div class="card">
+      <div class="card-title" id="surveyTitle">인테이크 설문지</div>
+      <div class="card-desc" id="surveyDesc">서비스 맞춤화를 위한 설문입니다. 솔직하게 답변해 주세요.</div>
+      <div class="alert error hidden" id="surveyErr"></div>
+
+      <!-- 학생 설문 -->
+      <div id="studentQ">
+        <div class="form-group">
+          <label class="form-label">Q1. 학년과 학교 <span class="req">*</span></label>
+          <div class="input-row">
+            <select id="sGrade" style="max-width:130px;">
+              <option value="">학년 선택</option>
+              <option>1학년</option><option>2학년</option><option>3학년</option>
+            </select>
+            <input type="text" id="sSchool" placeholder="학교 이름">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Q2. 수행평가에서 가장 걱정되는 것 (복수 선택) <span class="req">*</span></label>
+          <div class="check-options" id="sWorry">
+            <label class="check-opt"><input type="checkbox" value="시작 못 함"> 시작을 못 하겠어요</label>
+            <label class="check-opt"><input type="checkbox" value="루브릭 이해 어려움"> 루브릭을 모르겠어요</label>
+            <label class="check-opt"><input type="checkbox" value="시간 관리 어려움"> 시간 관리가 안 돼요</label>
+            <label class="check-opt"><input type="checkbox" value="내용 구성 어려움"> 내용 구성이 어려워요</label>
+            <label class="check-opt"><input type="checkbox" value="피드백 반영 어려움"> 피드백 반영이 어려워요</label>
+            <label class="check-opt"><input type="checkbox" value="기타"> 기타</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Q3. 평소 수행평가 준비 방식 <span class="req">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="sHabit" value="마감 직전에 몰아서 함"><label>마감 직전에 몰아서 해요</label></label>
+            <label class="radio-item"><input type="radio" name="sHabit" value="계획 세우나 실행 안 됨"><label>계획은 세우지만 실행이 잘 안 돼요</label></label>
+            <label class="radio-item"><input type="radio" name="sHabit" value="꾸준히 준비함"><label>꾸준히 준비하는 편이에요</label></label>
+            <label class="radio-item"><input type="radio" name="sHabit" value="계획 없음"><label>계획 없이 그때그때 해요</label></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Q4. 목표 등급</label>
+          <select id="sTarget"><option value="">선택 안 함</option><option>1등급</option><option>2등급</option><option>3등급</option><option>4등급 이상</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Q5. 수코치 코칭에서 가장 기대하는 것</label>
+          <textarea id="sExpect" placeholder="자유롭게 적어주세요."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Q6. 기타 전달 사항</label>
+          <textarea id="sEtc" placeholder="(선택 사항)"></textarea>
+        </div>
+      </div>
+
+      <!-- 학부모 설문 -->
+      <div id="parentQ" class="hidden">
+        <div class="form-group">
+          <label class="form-label">Q1. 자녀의 학년과 학교 <span class="req">*</span></label>
+          <div class="input-row">
+            <select id="pGrade" style="max-width:130px;">
+              <option value="">학년 선택</option>
+              <option>1학년</option><option>2학년</option><option>3학년</option>
+            </select>
+            <input type="text" id="pSchool" placeholder="학교 이름">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Q2. 자녀의 수행평가에서 가장 걱정되는 것 (복수 선택) <span class="req">*</span></label>
+          <div class="check-options" id="pWorry">
+            <label class="check-opt"><input type="checkbox" value="시작 못 함"> 시작 자체를 못 해요</label>
+            <label class="check-opt"><input type="checkbox" value="불안해함"> 불안해하고 스트레스를 받아요</label>
+            <label class="check-opt"><input type="checkbox" value="시간 관리 안 됨"> 시간 관리가 안 돼요</label>
+            <label class="check-opt"><input type="checkbox" value="의욕 없음"> 의욕이 없어요</label>
+            <label class="check-opt"><input type="checkbox" value="성적 하락"> 성적이 계속 하락해요</label>
+            <label class="check-opt"><input type="checkbox" value="기타"> 기타</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Q3. 자녀의 공부 유형 <span class="req">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="pType" value="무기력형"><label>무기력형 — 아무것도 시작을 못 해요</label></label>
+            <label class="radio-item"><input type="radio" name="pType" value="과설계형"><label>과설계형 — 계획은 많은데 실행이 없어요</label></label>
+            <label class="radio-item"><input type="radio" name="pType" value="창의형"><label>창의형 — 아이디어는 많은데 정리를 못 해요</label></label>
+            <label class="radio-item"><input type="radio" name="pType" value="수동형"><label>수동형 — 시키는 것만 해요</label></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Q4. 수코치 코칭에서 기대하는 것</label>
+          <textarea id="pExpect" placeholder="자유롭게 적어주세요."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Q5. 기타 전달 사항</label>
+          <textarea id="pEtc" placeholder="(선택 사항)"></textarea>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="btnSurvey" onclick="submitSurvey()">설문 제출하기</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: 완료 -->
+  <div id="secDone" class="hidden">
+    <div class="card">
+      <div class="done-screen">
+        <div class="done-icon">🎉</div>
+        <div class="done-title">준비 완료!</div>
+        <div class="done-desc">동의서와 설문지 작성이 완료되었습니다.<br>이제 수코치 서비스를 시작할 수 있어요.</div>
+        <button class="btn-primary" onclick="goToDash()" style="max-width:260px;margin:0 auto;">대시보드로 이동 →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="db.js"></script>
+<script>
+var me = null;
+
+async function init() {
+  me = DB.getCurrentUser();
+  if (!me) { window.location.href = 'login.html'; return; }
+  if (me.role !== 'student' && me.role !== 'parent') { DB._redirectByRole(me.role); return; }
+
+  var done = await DB.isOnboardingComplete(me.id);
+  if (done) { DB._redirectByRole(me.role); return; }
+
+  // 학부모면 학부모 설문 표시
+  if (me.role === 'parent') {
+    document.getElementById('studentQ').classList.add('hidden');
+    document.getElementById('parentQ').classList.remove('hidden');
+    document.getElementById('surveyTitle').textContent = '학부모 인테이크 설문지';
+  }
+
+  // 체크 옵션 클릭 이벤트
+  document.querySelectorAll('.check-opt').forEach(function(el) {
+    var cb = el.querySelector('input[type="checkbox"]');
+    el.addEventListener('click', function(e) {
+      if (e.target !== cb) cb.checked = !cb.checked;
+      el.classList.toggle('selected', cb.checked);
+    });
+  });
+  document.querySelectorAll('.radio-item').forEach(function(el) {
+    var rb = el.querySelector('input[type="radio"]');
+    el.addEventListener('click', function() {
+      if (rb) {
+        var grp = document.querySelectorAll('input[name="' + rb.name + '"]');
+        grp.forEach(function(r) { r.closest('.radio-item') && r.closest('.radio-item').classList.remove('selected'); });
+        rb.checked = true;
+        el.classList.add('selected');
+      }
+    });
+  });
+}
+
+function updateConsentBtn() {
+  document.getElementById('btnConsent').disabled =
+    !(document.getElementById('ck1').checked && document.getElementById('ck2').checked);
+}
+
+async function submitConsent() {
+  var btn = document.getElementById('btnConsent');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>저장 중...';
+  try {
+    await DB.saveConsent(me.id);
+    show('secSurvey'); hide('secConsent');
+    mark('step1', 'done'); mark('line1', 'done'); mark('step2', 'active');
+    window.scrollTo(0, 0);
+  } catch(e) {
+    showErr('consentErr', e.message);
+    btn.disabled = false; btn.textContent = '동의하고 계속하기';
+  }
+}
+
+async function submitSurvey() {
+  var btn = document.getElementById('btnSurvey');
+  var data = {};
+  if (me.role === 'student') {
+    var g = document.getElementById('sGrade').value;
+    var s = document.getElementById('sSchool').value.trim();
+    if (!g || !s) { showErr('surveyErr', '학년과 학교를 입력해 주세요.'); return; }
+    var worries = Array.from(document.querySelectorAll('#sWorry input:checked')).map(function(i){return i.value;});
+    if (!worries.length) { showErr('surveyErr', 'Q2에서 하나 이상 선택해 주세요.'); return; }
+    var habit = document.querySelector('input[name="sHabit"]:checked');
+    if (!habit) { showErr('surveyErr', 'Q3에서 하나를 선택해 주세요.'); return; }
+    data = { role:'student', grade:g, school:s, worries:worries, habit:habit.value,
+      target_grade: document.getElementById('sTarget').value,
+      expectation: document.getElementById('sExpect').value,
+      etc: document.getElementById('sEtc').value };
+  } else {
+    var pg = document.getElementById('pGrade').value;
+    var ps = document.getElementById('pSchool').value.trim();
+    if (!pg || !ps) { showErr('surveyErr', '학년과 학교를 입력해 주세요.'); return; }
+    var pw = Array.from(document.querySelectorAll('#pWorry input:checked')).map(function(i){return i.value;});
+    if (!pw.length) { showErr('surveyErr', 'Q2에서 하나 이상 선택해 주세요.'); return; }
+    var pt = document.querySelector('input[name="pType"]:checked');
+    if (!pt) { showErr('surveyErr', 'Q3에서 하나를 선택해 주세요.'); return; }
+    data = { role:'parent', grade:pg, school:ps, worries:pw, student_type:pt.value,
+      expectation: document.getElementById('pExpect').value,
+      etc: document.getElementById('pEtc').value };
+  }
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>제출 중...';
+  try {
+    await DB.saveSurvey(me.id, data);
+    show('secDone'); hide('secSurvey');
+    hide('stepsBar');
+    window.scrollTo(0, 0);
+  } catch(e) {
+    showErr('surveyErr', e.message);
+    btn.disabled = false; btn.textContent = '설문 제출하기';
+  }
+}
+
+function goToDash() { DB._redirectByRole(me.role); }
+
+function show(id) { document.getElementById(id).classList.remove('hidden'); }
+function hide(id) { document.getElementById(id).classList.add('hidden'); }
+function mark(id, cls) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('active','done');
+  el.classList.add(cls);
+  if (cls === 'done' && el.querySelector('.step-circle')) {
+    el.querySelector('.step-circle').textContent = '✓';
+  }
+}
+function showErr(id, msg) {
+  var el = document.getElementById(id);
+  el.textContent = msg; el.classList.remove('hidden');
+  el.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko" class="theme-light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로그인 — 수코치</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html.theme-dark {
+      --bg:#0A0A0A; --surface:#141414; --surface-hover:#1C1C1C;
+      --border:rgba(255,255,255,0.08); --text:#EDEDED; --text-secondary:#888; --text-muted:#555;
+      --accent:#6366F1; --accent-hover:#818CF8;
+      --positive:#10b981; --negative:#f43f5e; --warning:#f59e0b;
+      --input-bg:#1C1C1C;
+    }
+    html.theme-light {
+      --bg:#F8FAFC; --surface:#FFFFFF; --surface-hover:#F1F5F9;
+      --border:rgba(0,0,0,0.08); --text:#0F172A; --text-secondary:#64748B; --text-muted:#94A3B8;
+      --accent:#4F46E5; --accent-hover:#4338CA;
+      --positive:#059669; --negative:#DC2626; --warning:#D97706;
+      --input-bg:#F8FAFC;
+    }
+    body {
+      font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--text);
+      min-height:100vh; display:flex; flex-direction:column; align-items:center;
+      justify-content:center; padding:24px; -webkit-font-smoothing:antialiased;
+      transition:background 0.3s,color 0.3s;
+    }
+    .login-wrap { width:100%; max-width:420px; animation:fadeUp 0.5s ease-out both; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+    .login-logo { text-align:center; margin-bottom:36px; }
+    .logo-text { font-size:32px; font-weight:900; color:var(--accent); letter-spacing:-0.06em; }
+    .logo-sub { font-size:13px; color:var(--text-secondary); margin-top:8px; }
+
+    .login-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:20px; padding:36px 32px;
+      box-shadow:0 4px 24px rgba(0,0,0,0.06);
+    }
+    .card-title { font-size:1.35rem; font-weight:800; margin-bottom:6px; letter-spacing:-0.03em; }
+    .card-desc { font-size:13px; color:var(--text-secondary); margin-bottom:28px; }
+
+    .form-group { margin-bottom:18px; }
+    label { display:block; font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:7px; }
+    input {
+      width:100%; padding:12px 14px; border-radius:10px;
+      border:1.5px solid var(--border); background:var(--input-bg);
+      color:var(--text); font-size:14px; font-family:inherit;
+      outline:none; transition:border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(79,70,229,0.12); }
+    input::placeholder { color:var(--text-muted); }
+
+    .btn-login {
+      width:100%; padding:13px; border-radius:10px;
+      background:var(--accent); color:white; font-size:15px; font-weight:700;
+      border:none; cursor:pointer; font-family:inherit;
+      transition:background 0.2s, transform 0.15s; margin-top:6px;
+    }
+    .btn-login:hover { background:var(--accent-hover); transform:translateY(-1px); }
+    .btn-login:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+
+    .alert {
+      padding:11px 14px; border-radius:9px; font-size:13px; font-weight:500;
+      margin-bottom:18px; display:none;
+    }
+    .alert.error { background:rgba(220,38,38,0.08); color:var(--negative); border:1px solid rgba(220,38,38,0.2); }
+    .alert.show { display:block; }
+
+    .login-footer { text-align:center; margin-top:20px; font-size:12px; color:var(--text-muted); }
+
+    .theme-btn {
+      position:fixed; top:20px; right:20px;
+      width:36px; height:36px; border-radius:8px;
+      border:1px solid var(--border); background:var(--surface);
+      color:var(--text-secondary); display:flex; align-items:center;
+      justify-content:center; cursor:pointer; font-size:15px;
+      transition:background 0.2s;
+    }
+    .theme-btn:hover { background:var(--surface-hover); }
+
+    .spinner {
+      display:inline-block; width:16px; height:16px;
+      border:2px solid rgba(255,255,255,0.4); border-top-color:white;
+      border-radius:50%; animation:spin 0.7s linear infinite;
+      vertical-align:middle; margin-right:6px;
+    }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    .helper-text { font-size:12px; color:var(--text-muted); margin-top:16px; text-align:center; }
+  </style>
+</head>
+<body>
+  <button class="theme-btn" id="themeBtn" onclick="cycleTheme()">🌙</button>
+
+  <div class="login-wrap">
+    <div class="login-logo">
+      <div class="logo-text">수코치</div>
+      <div class="logo-sub">수행평가 전략관리 플랫폼</div>
+    </div>
+
+    <div class="login-card">
+      <div class="card-title">로그인</div>
+      <div class="card-desc">이메일과 비밀번호를 입력하세요.</div>
+
+      <div class="alert error" id="alertBox"></div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="emailInput">이메일</label>
+          <input type="email" id="emailInput" placeholder="이메일 주소" autocomplete="email" required>
+        </div>
+        <div class="form-group">
+          <label for="passwordInput">비밀번호</label>
+          <input type="password" id="passwordInput" placeholder="비밀번호" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn-login" id="loginBtn">로그인</button>
+      </form>
+
+      <div class="helper-text">처음 로그인하는 경우 관리자로부터 받은 비밀번호를 입력하세요.</div>
+    </div>
+
+    <div class="login-footer">수코치 수행평가 전략관리 플랫폼</div>
+  </div>
+
+  <script src="db.js"></script>
+  <script>
+    // ── 테마 ─────────────────────────────────────────────────
+    var savedTheme = localStorage.getItem('sc-theme');
+    var currentTheme = savedTheme || (window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+    function applyTheme(t) {
+      document.documentElement.className = 'theme-' + t;
+      var btn = document.getElementById('themeBtn');
+      if (btn) btn.textContent = t === 'dark' ? '☀️' : '🌙';
+      localStorage.setItem('sc-theme', t);
+      currentTheme = t;
+    }
+    function cycleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
+    applyTheme(currentTheme);
+
+    // ── 이미 로그인된 경우 ────────────────────────────────────
+    var existingUser = DB.getCurrentUser();
+    if (existingUser) {
+      DB._redirectByRole(existingUser.role);
+    }
+
+    function showAlert(msg) {
+      var box = document.getElementById('alertBox');
+      box.textContent = msg;
+      box.className = 'alert error show';
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      var btn = document.getElementById('loginBtn');
+      var email = document.getElementById('emailInput').value.trim();
+      var password = document.getElementById('passwordInput').value;
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>로그인 중...';
+
+      try {
+        var user = await DB.login(email, password);
+
+        // 학생/학부모: 온보딩 완료 여부 확인
+        if (user.role === 'student' || user.role === 'parent') {
+          var isComplete = await DB.isOnboardingComplete(user.id);
+          if (!isComplete) {
+            window.location.href = 'onboarding.html';
+            return;
+          }
+        }
+
+        // 역할별 대시보드로 이동
+        DB._redirectByRole(user.role);
+
+      } catch (err) {
+        showAlert(err.message || '로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요.');
+        btn.disabled = false;
+        btn.textContent = '로그인';
+      }
+    }
+  </script>
+</body>
+</html>

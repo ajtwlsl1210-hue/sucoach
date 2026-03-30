@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="ko" class="theme-light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>수행평가 상세 — 수코치</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html.theme-dark {
+      --bg:#0A0A0A; --surface:#141414; --surface-hover:#1C1C1C; --surface-2:#1C1C1C;
+      --border:rgba(255,255,255,0.08); --text:#EDEDED; --text-secondary:#888; --text-muted:#555;
+      --accent:#6366F1; --accent-hover:#818CF8; --accent-light:rgba(99,102,241,0.12);
+      --positive:#10b981; --negative:#f43f5e; --warning:#f59e0b;
+      --input-bg:#1C1C1C;
+    }
+    html.theme-light {
+      --bg:#F8FAFC; --surface:#FFFFFF; --surface-hover:#F1F5F9; --surface-2:#F8FAFC;
+      --border:rgba(0,0,0,0.08); --text:#0F172A; --text-secondary:#64748B; --text-muted:#94A3B8;
+      --accent:#4F46E5; --accent-hover:#4338CA; --accent-light:rgba(79,70,229,0.08);
+      --positive:#059669; --negative:#DC2626; --warning:#D97706;
+      --input-bg:#F8FAFC;
+    }
+    body {
+      font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--text);
+      min-height:100vh; -webkit-font-smoothing:antialiased; transition:background 0.3s,color 0.3s;
+    }
+
+    /* ── 레이아웃 ── */
+    .topbar {
+      position:sticky; top:0; z-index:100;
+      background:var(--surface); border-bottom:1px solid var(--border);
+      padding:0 24px; height:56px; display:flex; align-items:center; gap:12px;
+    }
+    .topbar-back {
+      width:32px; height:32px; border-radius:8px; border:1px solid var(--border);
+      background:none; color:var(--text-secondary); cursor:pointer; display:flex;
+      align-items:center; justify-content:center; font-size:16px; flex-shrink:0;
+      transition:background 0.2s;
+    }
+    .topbar-back:hover { background:var(--surface-hover); }
+    .topbar-breadcrumb { font-size:14px; color:var(--text-secondary); flex:1; }
+    .topbar-breadcrumb strong { color:var(--text); }
+    .topbar-right { display:flex; align-items:center; gap:8px; }
+    .theme-btn {
+      width:32px; height:32px; border-radius:8px; border:1px solid var(--border);
+      background:none; color:var(--text-secondary); cursor:pointer; display:flex;
+      align-items:center; justify-content:center; font-size:14px;
+      transition:background 0.2s;
+    }
+    .theme-btn:hover { background:var(--surface-hover); }
+
+    .main { max-width:900px; margin:0 auto; padding:32px 24px 80px; }
+
+    /* ── 헤더 ── */
+    .asgn-header {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:16px; padding:28px; margin-bottom:24px;
+    }
+    .asgn-title-row { display:flex; align-items:flex-start; gap:16px; margin-bottom:20px; }
+    .asgn-icon { font-size:28px; line-height:1; margin-top:2px; flex-shrink:0; }
+    .asgn-title-group { flex:1; min-width:0; }
+    .asgn-subject-badge {
+      display:inline-block; padding:3px 10px; border-radius:6px; font-size:11px;
+      font-weight:700; background:var(--accent-light); color:var(--accent);
+      margin-bottom:8px; letter-spacing:0.02em;
+    }
+    .asgn-title { font-size:1.5rem; font-weight:800; letter-spacing:-0.04em; line-height:1.3; }
+    .asgn-student-name { font-size:14px; color:var(--text-secondary); margin-top:4px; }
+    .asgn-actions { display:flex; gap:8px; flex-shrink:0; }
+    .btn-sm {
+      padding:8px 14px; border-radius:8px; font-size:13px; font-weight:600;
+      cursor:pointer; font-family:inherit; border:1px solid var(--border);
+      background:var(--surface-hover); color:var(--text); transition:all 0.2s;
+      display:inline-flex; align-items:center; gap:6px;
+    }
+    .btn-sm:hover { background:var(--accent); color:white; border-color:var(--accent); }
+    .btn-sm.primary { background:var(--accent); color:white; border-color:var(--accent); }
+    .btn-sm.primary:hover { background:var(--accent-hover); }
+    .btn-sm.danger { color:var(--negative); border-color:rgba(220,38,38,0.2); }
+    .btn-sm.danger:hover { background:var(--negative); color:white; border-color:var(--negative); }
+
+    .asgn-meta-grid {
+      display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px;
+    }
+    .meta-item { display:flex; flex-direction:column; gap:3px; }
+    .meta-label { font-size:11px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.04em; }
+    .meta-value { font-size:14px; font-weight:600; color:var(--text); }
+    .meta-value.urgent { color:var(--negative); }
+    .meta-value.warn { color:var(--warning); }
+
+    /* ── 8단계 타임라인 ── */
+    .timeline-section {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:16px; padding:24px; margin-bottom:24px;
+    }
+    .section-title {
+      font-size:15px; font-weight:800; letter-spacing:-0.03em; margin-bottom:20px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .section-title span { font-size:16px; }
+
+    .timeline-steps {
+      display:flex; gap:0; position:relative; overflow-x:auto;
+      padding-bottom:4px;
+    }
+    .timeline-steps::before {
+      content:''; position:absolute; top:22px; left:24px; right:24px; height:2px;
+      background:var(--border); z-index:0;
+    }
+    .timeline-step {
+      flex:1; min-width:80px; display:flex; flex-direction:column;
+      align-items:center; position:relative; z-index:1; cursor:default;
+    }
+    .step-circle {
+      width:44px; height:44px; border-radius:50%; display:flex; align-items:center;
+      justify-content:center; font-size:18px; border:3px solid var(--border);
+      background:var(--surface); transition:all 0.3s; position:relative;
+    }
+    .timeline-step.done .step-circle {
+      border-color:var(--positive); background:var(--positive);
+    }
+    .timeline-step.done .step-circle::after {
+      content:'✓'; position:absolute; color:white; font-size:16px; font-weight:800;
+    }
+    .timeline-step.done .step-circle .step-icon { display:none; }
+    .timeline-step.current .step-circle {
+      border-color:var(--accent); background:var(--accent-light);
+      box-shadow:0 0 0 4px rgba(79,70,229,0.15);
+    }
+    .timeline-step.upcoming .step-circle { opacity:0.4; }
+    .step-icon { font-size:18px; line-height:1; }
+    .step-label {
+      font-size:11px; font-weight:600; color:var(--text-secondary);
+      text-align:center; margin-top:8px; line-height:1.3;
+    }
+    .timeline-step.current .step-label { color:var(--accent); font-weight:800; }
+    .timeline-step.done .step-label { color:var(--positive); }
+    .step-num {
+      font-size:10px; color:var(--text-muted); margin-top:2px;
+    }
+    .timeline-step.current .step-num { color:var(--accent); }
+
+    .stage-control {
+      display:flex; align-items:center; gap:12px; margin-top:20px;
+      padding-top:20px; border-top:1px solid var(--border);
+    }
+    .stage-desc { flex:1; font-size:13px; color:var(--text-secondary); }
+    .stage-desc strong { color:var(--text); }
+    .btn-stage {
+      padding:10px 20px; border-radius:10px; font-size:14px; font-weight:700;
+      cursor:pointer; font-family:inherit; border:none; transition:all 0.2s;
+      display:inline-flex; align-items:center; gap:6px;
+    }
+    .btn-stage.advance {
+      background:var(--accent); color:white;
+    }
+    .btn-stage.advance:hover { background:var(--accent-hover); transform:translateY(-1px); }
+    .btn-stage.advance:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+    .btn-stage.back {
+      background:var(--surface-hover); color:var(--text-secondary);
+      border:1px solid var(--border);
+    }
+    .btn-stage.back:hover { background:var(--surface); color:var(--text); }
+
+    /* ── 탭 ── */
+    .tabs {
+      display:flex; gap:4px; border-bottom:1px solid var(--border);
+      margin-bottom:24px; overflow-x:auto;
+    }
+    .tab-btn {
+      padding:10px 18px; border-radius:8px 8px 0 0; font-size:14px; font-weight:600;
+      cursor:pointer; font-family:inherit; border:none; background:none;
+      color:var(--text-secondary); transition:all 0.2s; white-space:nowrap;
+    }
+    .tab-btn.active {
+      color:var(--accent); background:var(--accent-light);
+      border-bottom:2px solid var(--accent);
+    }
+    .tab-btn:hover:not(.active) { color:var(--text); background:var(--surface-hover); }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+
+    /* ── 파일 섹션 ── */
+    .file-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:16px; overflow:hidden; margin-bottom:16px;
+    }
+    .file-card-header {
+      padding:16px 20px; display:flex; align-items:center; gap:10px;
+      border-bottom:1px solid var(--border);
+    }
+    .file-type-badge {
+      padding:3px 10px; border-radius:6px; font-size:11px; font-weight:700;
+      background:var(--accent-light); color:var(--accent);
+    }
+    .file-card-header .card-title { flex:1; font-size:14px; font-weight:700; }
+    .file-empty {
+      padding:24px; text-align:center; color:var(--text-muted); font-size:13px;
+    }
+    .file-list-item {
+      display:flex; align-items:center; padding:14px 20px; gap:12px;
+      border-bottom:1px solid var(--border); transition:background 0.2s;
+    }
+    .file-list-item:last-child { border-bottom:none; }
+    .file-list-item:hover { background:var(--surface-hover); }
+    .file-icon { font-size:20px; flex-shrink:0; }
+    .file-info { flex:1; min-width:0; }
+    .file-name { font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .file-meta { font-size:12px; color:var(--text-muted); margin-top:2px; }
+    .file-actions { display:flex; gap:6px; flex-shrink:0; }
+    .btn-icon {
+      width:30px; height:30px; border-radius:6px; border:1px solid var(--border);
+      background:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
+      font-size:14px; color:var(--text-secondary); transition:all 0.2s;
+    }
+    .btn-icon:hover { background:var(--accent); color:white; border-color:var(--accent); }
+
+    .upload-zone {
+      padding:24px; border:2px dashed var(--border); border-radius:12px;
+      text-align:center; cursor:pointer; transition:all 0.2s; margin:16px 20px;
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color:var(--accent); background:var(--accent-light);
+    }
+    .upload-zone .upload-icon { font-size:24px; margin-bottom:8px; }
+    .upload-zone .upload-text { font-size:14px; color:var(--text-secondary); }
+    .upload-zone .upload-subtext { font-size:12px; color:var(--text-muted); margin-top:4px; }
+    #fileInputHidden { display:none; }
+
+    /* ── 메모 ── */
+    .memo-section {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:16px; overflow:hidden;
+    }
+    .memo-list { padding:4px 0; }
+    .memo-item {
+      padding:16px 20px; border-bottom:1px solid var(--border);
+      display:flex; gap:12px;
+    }
+    .memo-item:last-child { border-bottom:none; }
+    .memo-avatar {
+      width:32px; height:32px; border-radius:50%; background:var(--accent-light);
+      color:var(--accent); display:flex; align-items:center; justify-content:center;
+      font-size:13px; font-weight:700; flex-shrink:0;
+    }
+    .memo-body { flex:1; }
+    .memo-header-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+    .memo-author { font-size:13px; font-weight:700; }
+    .memo-role-badge {
+      padding:2px 7px; border-radius:5px; font-size:10px; font-weight:700;
+      background:var(--surface-2); color:var(--text-muted);
+    }
+    .memo-role-badge.admin { background:rgba(99,102,241,0.1); color:var(--accent); }
+    .memo-role-badge.tutor { background:rgba(16,185,129,0.1); color:var(--positive); }
+    .memo-time { font-size:11px; color:var(--text-muted); margin-left:auto; }
+    .memo-text { font-size:14px; line-height:1.6; color:var(--text); }
+    .memo-compose {
+      padding:16px 20px; border-top:1px solid var(--border);
+    }
+    .memo-input {
+      width:100%; padding:12px 14px; border-radius:10px;
+      border:1.5px solid var(--border); background:var(--input-bg);
+      color:var(--text); font-size:14px; font-family:inherit;
+      resize:vertical; min-height:80px; outline:none;
+      transition:border-color 0.2s;
+    }
+    .memo-input:focus { border-color:var(--accent); }
+    .memo-submit-row { display:flex; justify-content:flex-end; margin-top:8px; }
+
+    /* ── 결과 입력 ── */
+    .result-section {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:16px; padding:24px; margin-bottom:16px;
+    }
+    .result-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px; margin-bottom:20px; }
+    .result-field label {
+      display:block; font-size:12px; font-weight:600; color:var(--text-muted);
+      margin-bottom:6px; text-transform:uppercase; letter-spacing:0.04em;
+    }
+    .result-field input, .result-field select, .result-field textarea {
+      width:100%; padding:10px 12px; border-radius:8px;
+      border:1.5px solid var(--border); background:var(--input-bg);
+      color:var(--text); font-size:14px; font-family:inherit; outline:none;
+      transition:border-color 0.2s;
+    }
+    .result-field input:focus, .result-field select:focus, .result-field textarea:focus {
+      border-color:var(--accent);
+    }
+    .result-field textarea { resize:vertical; min-height:80px; }
+    .result-display {
+      display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;
+    }
+    .result-item { display:flex; flex-direction:column; gap:4px; }
+    .result-label { font-size:11px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.04em; }
+    .result-value { font-size:22px; font-weight:800; color:var(--text); letter-spacing:-0.04em; }
+    .grade-1, .grade-A { color:var(--positive); }
+    .grade-2           { color:#10b981; }
+    .grade-3, .grade-B { color:#3B82F6; }
+    .grade-4, .grade-C { color:var(--warning); }
+    .grade-5, .grade-6, .grade-7, .grade-8, .grade-9, .grade-D, .grade-E { color:var(--negative); }
+    .result-text { font-size:14px; color:var(--text); line-height:1.6; }
+    .result-none { font-size:13px; color:var(--text-muted); }
+
+    /* ── 모달 공통 ── */
+    .modal-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200;
+      display:none; align-items:center; justify-content:center; padding:24px;
+    }
+    .modal-overlay.open { display:flex; }
+    .modal {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:20px; padding:32px; width:100%; max-width:480px;
+      max-height:90vh; overflow-y:auto;
+      animation:fadeUp 0.3s ease-out both;
+    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    .modal-title { font-size:1.2rem; font-weight:800; letter-spacing:-0.03em; margin-bottom:20px; }
+    .form-group { margin-bottom:16px; }
+    .form-group label {
+      display:block; font-size:12px; font-weight:600; color:var(--text-secondary);
+      margin-bottom:6px; text-transform:uppercase; letter-spacing:0.04em;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width:100%; padding:11px 13px; border-radius:9px;
+      border:1.5px solid var(--border); background:var(--input-bg);
+      color:var(--text); font-size:14px; font-family:inherit; outline:none;
+      transition:border-color 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color:var(--accent); box-shadow:0 0 0 3px rgba(79,70,229,0.12);
+    }
+    .form-group textarea { resize:vertical; min-height:80px; }
+    .modal-actions { display:flex; gap:10px; margin-top:24px; }
+    .btn-full {
+      flex:1; padding:12px; border-radius:10px; font-size:14px; font-weight:700;
+      cursor:pointer; font-family:inherit; border:none; transition:all 0.2s;
+    }
+    .btn-full.primary { background:var(--accent); color:white; }
+    .btn-full.primary:hover { background:var(--accent-hover); }
+    .btn-full.cancel {
+      background:var(--surface-hover); color:var(--text);
+      border:1px solid var(--border);
+    }
+    .btn-full.cancel:hover { background:var(--surface); }
+    .alert {
+      padding:11px 14px; border-radius:9px; font-size:13px; font-weight:500;
+      margin-bottom:16px; display:none;
+    }
+    .alert.error { background:rgba(220,38,38,0.08); color:var(--negative); border:1px solid rgba(220,38,38,0.2); }
+    .alert.success { background:rgba(5,150,105,0.08); color:var(--positive); border:1px solid rgba(5,150,105,0.2); }
+    .alert.show { display:block; }
+
+    /* ── 로딩 / 공통 ── */
+    .loading-wrap {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      min-height:60vh; gap:12px; color:var(--text-secondary);
+    }
+    .spinner-lg {
+      width:36px; height:36px; border:3px solid var(--border);
+      border-top-color:var(--accent); border-radius:50%;
+      animation:spin 0.8s linear infinite;
+    }
+    @keyframes spin { to{transform:rotate(360deg)} }
+    .empty-state {
+      text-align:center; padding:48px 24px; color:var(--text-muted);
+    }
+    .empty-state .empty-icon { font-size:40px; margin-bottom:12px; opacity:0.5; }
+    .empty-state .empty-text { font-size:14px; }
+    .badge {
+      display:inline-block; padding:2px 8px; border-radius:5px; font-size:11px; font-weight:700;
+    }
+    .badge-readonly {
+      background:rgba(148,163,184,0.15); color:var(--text-muted);
+      padding:4px 10px; border-radius:6px; font-size:12px; font-weight:600;
+    }
+    .progress-bar-wrap {
+      height:4px; background:var(--border); border-radius:2px; margin-top:16px; overflow:hidden;
+    }
+    .progress-bar { height:100%; background:var(--accent); border-radius:2px; transition:width 0.6s ease; }
+
+    /* ── 파일 업로드 선택 모달 ── */
+    .file-type-grid {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px;
+    }
+    .file-type-option {
+      border:2px solid var(--border); border-radius:10px; padding:12px 8px;
+      text-align:center; cursor:pointer; transition:all 0.2s;
+    }
+    .file-type-option.selected {
+      border-color:var(--accent); background:var(--accent-light);
+    }
+    .file-type-option .ft-icon { font-size:20px; margin-bottom:4px; }
+    .file-type-option .ft-label { font-size:12px; font-weight:600; }
+    .selected-file-name {
+      padding:10px 12px; background:var(--surface-2); border-radius:8px;
+      font-size:13px; color:var(--text-secondary); margin-bottom:8px;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 탑바 -->
+<div class="topbar">
+  <button class="topbar-back" onclick="goBack()">←</button>
+  <div class="topbar-breadcrumb" id="breadcrumb">
+    수코치 / <strong id="breadcrumbName">수행평가 로딩중…</strong>
+  </div>
+  <div class="topbar-right">
+    <button class="theme-btn" id="themeBtn" onclick="cycleTheme()">🌙</button>
+  </div>
+</div>
+
+<!-- 메인 -->
+<div class="main" id="mainContent">
+  <div class="loading-wrap" id="loadingWrap">
+    <div class="spinner-lg"></div>
+    <div>불러오는 중…</div>
+  </div>
+</div>
+
+<!-- ── 파일 업로드 모달 ── -->
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal">
+    <div class="modal-title">📎 파일 업로드</div>
+    <div class="alert error" id="uploadAlert"></div>
+
+    <div class="form-group">
+      <label>파일 유형 선택</label>
+      <div class="file-type-grid" id="fileTypeGrid"></div>
+    </div>
+
+    <div class="form-group">
+      <label>파일 선택</label>
+      <div class="selected-file-name" id="selectedFileName">파일을 선택하세요 (최대 10MB)</div>
+      <button type="button" class="btn-sm" onclick="document.getElementById('fileInputHidden').click()">
+        📂 파일 선택
+      </button>
+      <input type="file" id="fileInputHidden" onchange="onFileSelected(event)">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-full cancel" onclick="closeModal('uploadModal')">취소</button>
+      <button class="btn-full primary" id="uploadSubmitBtn" onclick="submitFileUpload()">업로드</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 결과 입력 모달 ── -->
+<div class="modal-overlay" id="resultModal">
+  <div class="modal" style="max-height:90vh;overflow-y:auto">
+    <div class="modal-title">📊 결과 입력</div>
+    <div class="alert error" id="resultAlert"></div>
+
+    <!-- ① 점수 / 등급 -->
+    <div class="result-grid">
+      <div class="result-field">
+        <label>예상 점수</label>
+        <input type="number" id="inp_expected_score" min="0" max="100" placeholder="예: 88">
+      </div>
+      <div class="result-field">
+        <label>취득 점수</label>
+        <input type="number" id="inp_score" min="0" max="100" placeholder="예: 85">
+      </div>
+      <div class="result-field">
+        <label>취득 등급</label>
+        <select id="inp_grade">
+          <option value="">선택</option>
+          <option value="1등급">1등급</option>
+          <option value="2등급">2등급</option>
+          <option value="3등급">3등급</option>
+          <option value="4등급">4등급</option>
+          <option value="5등급">5등급</option>
+          <option value="6등급">6등급</option>
+          <option value="7등급">7등급</option>
+          <option value="8등급">8등급</option>
+          <option value="9등급">9등급</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+          <option value="E">E</option>
+        </select>
+      </div>
+      <div class="result-field">
+        <label>수정 횟수</label>
+        <input type="number" id="inp_revision_count" min="0" placeholder="예: 2">
+      </div>
+    </div>
+
+    <!-- ② 소요 시간 -->
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin:14px 0 8px">⏱ 소요 시간 (분)</div>
+    <div class="result-grid">
+      <div class="result-field">
+        <label>면담</label>
+        <input type="number" id="inp_interview_minutes" min="0" placeholder="분">
+      </div>
+      <div class="result-field">
+        <label>피드백</label>
+        <input type="number" id="inp_feedback_minutes" min="0" placeholder="분">
+      </div>
+      <div class="result-field">
+        <label>최종 확인</label>
+        <input type="number" id="inp_final_minutes" min="0" placeholder="분">
+      </div>
+    </div>
+
+    <!-- ③ 코칭 체크리스트 -->
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin:14px 0 10px">✅ 코칭 체크리스트</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+      <label style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;cursor:pointer">
+        <input type="checkbox" id="inp_cliche_removed" style="width:16px;height:16px;accent-color:var(--accent)">
+        클리셰 표현 제거 완료
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;cursor:pointer">
+        <input type="checkbox" id="inp_structure_explained" style="width:16px;height:16px;accent-color:var(--accent)">
+        구술 핵심 확인 완료 ("이 글 핵심이 뭐야?" 통과)
+      </label>
+    </div>
+
+    <!-- ④ 서술 필드 -->
+    <div class="form-group">
+      <label>교사 코멘트 (선생님 피드백)</label>
+      <textarea id="inp_teacher_comment" placeholder="선생님으로부터 받은 피드백 내용을 입력하세요"></textarea>
+    </div>
+    <div class="form-group">
+      <label>성장 메모 (내부 기록)</label>
+      <textarea id="inp_growth_note" placeholder="학생의 성장 포인트, 다음 수행평가를 위한 메모"></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-full cancel" onclick="closeModal('resultModal')">취소</button>
+      <button class="btn-full primary" id="resultSubmitBtn" onclick="submitResult()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 수행평가 정보 수정 모달 (관리자 전용) ── -->
+<div class="modal-overlay" id="metaEditModal">
+  <div class="modal">
+    <div class="modal-title">✏️ 수행평가 정보 수정</div>
+    <div class="alert error" id="metaEditAlert"></div>
+    <div class="form-group">
+      <label>수행평가명</label>
+      <input type="text" id="meta_title" placeholder="수행평가 제목">
+    </div>
+    <div class="form-group">
+      <label>과목</label>
+      <select id="meta_subject">
+        <option>국어</option><option>영어</option><option>수학</option>
+        <option>사회</option><option>과학</option><option>역사</option><option>기타</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>유형</label>
+      <select id="meta_type">
+        <option value="">선택 안 함</option>
+        <option>서술형</option><option>발표형</option><option>보고서형</option>
+        <option>탐구형</option><option>실험형</option><option>프로젝트형</option><option>기타</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>학교 마감일</label>
+      <input type="date" id="meta_school_dl">
+    </div>
+    <div class="form-group">
+      <label>내부 마감일 <small style="font-weight:400;text-transform:none;">(비워두면 학교마감 -5일 자동 계산)</small></label>
+      <input type="date" id="meta_internal_dl">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-full cancel" onclick="closeModal('metaEditModal')">취소</button>
+      <button class="btn-full primary" id="metaEditBtn" onclick="submitMetaEdit()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 학생 비밀번호 리셋 모달 (관리자 전용) ── -->
+<div class="modal-overlay" id="pwModal">
+  <div class="modal">
+    <div class="modal-title">🔑 학생 비밀번호 리셋</div>
+    <div class="alert error" id="pwAlert"></div>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;" id="pwTargetDesc">학생의 비밀번호를 새로 설정합니다.</p>
+    <input type="hidden" id="pwTargetUserId">
+    <div class="form-group">
+      <label>새 비밀번호</label>
+      <input type="password" id="inp_pw_new" placeholder="새 비밀번호 (6자 이상)">
+    </div>
+    <div class="form-group">
+      <label>새 비밀번호 확인</label>
+      <input type="password" id="inp_pw_confirm" placeholder="새 비밀번호 재입력">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-full cancel" onclick="closeModal('pwModal')">취소</button>
+      <button class="btn-full primary" onclick="submitPwChange()">변경</button>
+    </div>
+  </div>
+</div>
+
+<script src="db.js"></script>
+<script>
+// ── 테마 ─────────────────────────────────────────────────────────
+var savedTheme = localStorage.getItem('sc-theme');
+var currentTheme = savedTheme || (window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+function applyTheme(t) {
+  document.documentElement.className = 'theme-' + t;
+  var btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = t === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('sc-theme', t);
+  currentTheme = t;
+}
+function cycleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
+applyTheme(currentTheme);
+
+// ── 상태 ─────────────────────────────────────────────────────────
+var currentUser = null;
+var assignmentId = null;
+var assignment = null;
+var student = null;
+var files = [];
+var memos = [];
+var selectedUploadFile = null;
+var selectedFileType = null;
+var activeTab = 'files';
+
+// ── 초기화 ───────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async function() {
+  currentUser = DB.requireAuth(['admin', 'tutor', 'student', 'parent']);
+  if (!currentUser) return;
+
+  var params = new URLSearchParams(window.location.search);
+  assignmentId = params.get('id');
+  if (!assignmentId) { showError('수행평가 ID가 없습니다.'); return; }
+
+  await loadPage();
+});
+
+async function loadPage() {
+  try {
+    // 수행평가 + 학생 정보 동시 로드
+    var rows = await DB._q('assignments', `?id=eq.${assignmentId}`);
+    if (!rows || rows.length === 0) { showError('수행평가를 찾을 수 없습니다.'); return; }
+    assignment = rows[0];
+
+    // 역할 기반 접근 제어
+    if (currentUser.role === 'student') {
+      // currentUser에 student_id 없으므로 DB 조회 필요
+      var myStudentRecord = await DB.getStudentByUserId(currentUser.id);
+      if (!myStudentRecord || myStudentRecord.id !== assignment.student_id) {
+        showError('접근 권한이 없습니다.'); return;
+      }
+    }
+    if (currentUser.role === 'parent') {
+      var myStudent = await DB.getMyChildId(currentUser.id);
+      if (!myStudent || myStudent !== assignment.student_id) {
+        showError('접근 권한이 없습니다.'); return;
+      }
+    }
+    if (currentUser.role === 'tutor') {
+      var tutorStudents = await DB.getTutorStudents(currentUser.id);
+      var ids = tutorStudents.map(function(s) { return s.id; });
+      if (!ids.includes(assignment.student_id)) {
+        showError('담당 학생의 수행평가가 아닙니다.'); return;
+      }
+    }
+
+    // 학생 정보
+    var sRows = await DB._q('students', `?id=eq.${assignment.student_id}`);
+    student = sRows[0];
+
+    // 파일 / 메모 로드
+    var [fileRows, memoRows] = await Promise.all([
+      DB.getFiles(assignmentId),
+      DB.getMemosFull(assignmentId)
+    ]);
+    files = fileRows || [];
+    memos = memoRows || [];
+
+    renderPage();
+    document.getElementById('loadingWrap').style.display = 'none';
+  } catch(e) {
+    showError('데이터 로드 실패: ' + e.message);
+  }
+}
+
+function showError(msg) {
+  document.getElementById('loadingWrap').innerHTML =
+    `<div style="text-align:center;color:var(--negative);font-size:14px;padding:40px">⚠️ ${msg}</div>`;
+}
+
+// ── 렌더링 ───────────────────────────────────────────────────────
+function renderPage() {
+  var stageIdx = DB.STAGES.indexOf(assignment.stage);
+  var deadline = assignment.internal_deadline || assignment.school_deadline;
+  var daysLeft = deadline ? Math.ceil((new Date(deadline) - new Date()) / 86400000) : null;
+  var subjectLabel = DB.STAGE_LABELS[assignment.stage];
+
+  document.getElementById('breadcrumbName').textContent =
+    `${student ? student.name : ''} — ${assignment.subject} ${assignment.title}`;
+
+  var isStaff = DB.isStaff();
+  var isAdmin = DB.isAdmin();
+  var isReadOnly = currentUser.role === 'student' || currentUser.role === 'parent';
+
+  var urgentClass = '';
+  if (daysLeft !== null) {
+    if (daysLeft <= 0) urgentClass = 'urgent';
+    else if (daysLeft <= 5) urgentClass = 'warn';
+  }
+
+  // 진행률
+  var progressPct = Math.round(((stageIdx + 1) / DB.STAGES.length) * 100);
+
+  var html = `
+    <!-- 헤더 -->
+    <div class="asgn-header">
+      <div class="asgn-title-row">
+        <div class="asgn-icon">${subjectLabel ? subjectLabel.icon : '📋'}</div>
+        <div class="asgn-title-group">
+          <div class="asgn-subject-badge">${assignment.subject}</div>
+          <div class="asgn-title">${assignment.title}</div>
+          <div class="asgn-student-name">${student ? student.name + ' (' + (student.school||'') + ' ' + (student.grade||'') + '학년)' : ''}</div>
+        </div>
+        <div class="asgn-actions">
+          ${isReadOnly ? '<span class="badge-readonly">👁 읽기 전용</span>' : ''}
+          ${isStaff ? `<button class="btn-sm" onclick="openModal('uploadModal')">📎 파일 업로드</button>` : ''}
+          ${isStaff ? `<button class="btn-sm primary" onclick="openResultModal()">📊 결과 입력</button>` : ''}
+          ${isAdmin ? `<button class="btn-sm" onclick="openMetaEditModal()">✏️ 정보 수정</button>` : ''}
+          ${isAdmin && student ? `<button class="btn-sm" onclick="openPwResetModal()">🔑 학생 비번 리셋</button>` : ''}
+        </div>
+      </div>
+
+      <div class="asgn-meta-grid">
+        <div class="meta-item">
+          <div class="meta-label">수행평가 유형</div>
+          <div class="meta-value">${assignment.type || '—'}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">학교 마감</div>
+          <div class="meta-value">${formatDate(assignment.school_deadline)}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">내부 마감 (D-5)</div>
+          <div class="meta-value ${urgentClass}">
+            ${formatDate(assignment.internal_deadline)}
+            ${daysLeft !== null ? `<small style="font-size:11px;margin-left:4px;">${daysLeft > 0 ? 'D-'+daysLeft : daysLeft === 0 ? 'D-DAY' : '마감초과'}</small>` : ''}
+          </div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">현재 단계</div>
+          <div class="meta-value" style="color:${subjectLabel ? subjectLabel.color : 'var(--text)'}">
+            ${subjectLabel ? subjectLabel.icon : ''} ${assignment.stage}
+          </div>
+        </div>
+        ${assignment.score != null ? `
+        <div class="meta-item">
+          <div class="meta-label">취득 점수</div>
+          <div class="meta-value">${assignment.score}점</div>
+        </div>` : ''}
+        ${assignment.grade ? `
+        <div class="meta-item">
+          <div class="meta-label">취득 등급</div>
+          <div class="meta-value grade-${(assignment.grade||'').replace('등급','')}">${assignment.grade}</div>
+        </div>` : ''}
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" style="width:${progressPct}%"></div>
+      </div>
+    </div>
+
+    <!-- 타임라인 -->
+    <div class="timeline-section">
+      <div class="section-title"><span>🗺</span> 진행 단계</div>
+      <div class="timeline-steps" id="timelineSteps"></div>
+      ${isStaff ? `
+      <div class="stage-control">
+        <div class="stage-desc">
+          현재: <strong>${assignment.stage}</strong> — ${subjectLabel ? subjectLabel.desc : ''}
+        </div>
+        <button class="btn-stage back" onclick="changeStage(-1)" ${stageIdx === 0 ? 'disabled' : ''}>
+          ← 이전 단계
+        </button>
+        <button class="btn-stage advance" onclick="changeStage(1)" ${stageIdx >= DB.STAGES.length - 1 ? 'disabled' : ''} id="btnAdvance">
+          다음 단계 →
+        </button>
+      </div>` : ''}
+    </div>
+
+    <!-- 탭 -->
+    <div class="tabs">
+      <button class="tab-btn ${activeTab==='files'?'active':''}" onclick="switchTab('files')">📎 파일 (${files.length})</button>
+      <button class="tab-btn ${activeTab==='memos'?'active':''}" onclick="switchTab('memos')">💬 메모 (${memos.length})</button>
+      ${assignment.stage === '완료' || assignment.score != null || assignment.expected_score != null || assignment.grade ? `<button class="tab-btn ${activeTab==='result'?'active':''}" onclick="switchTab('result')">📊 결과</button>` : ''}
+    </div>
+
+    <!-- 파일 탭 -->
+    <div class="tab-content ${activeTab==='files'?'active':''}" id="tab-files">
+      ${renderFilesTab(isStaff)}
+    </div>
+
+    <!-- 메모 탭 -->
+    <div class="tab-content ${activeTab==='memos'?'active':''}" id="tab-memos">
+      ${renderMemosTab(isStaff)}
+    </div>
+
+    <!-- 결과 탭 -->
+    <div class="tab-content ${activeTab==='result'?'active':''}" id="tab-result">
+      ${renderResultTab(isStaff, isAdmin)}
+    </div>
+  `;
+
+  document.getElementById('mainContent').innerHTML = html;
+
+  // 타임라인 렌더링
+  renderTimeline(stageIdx);
+
+  // 파일 업로드 모달 파일유형 그리드 초기화
+  renderFileTypeGrid();
+
+  // 드래그앤드롭
+  setupDragDrop();
+}
+
+function renderTimeline(currentIdx) {
+  var container = document.getElementById('timelineSteps');
+  if (!container) return;
+  var html = '';
+  DB.STAGES.forEach(function(stage, i) {
+    var lbl = DB.STAGE_LABELS[stage];
+    var cls = i < currentIdx ? 'done' : i === currentIdx ? 'current' : 'upcoming';
+    html += `
+      <div class="timeline-step ${cls}" title="${lbl ? lbl.desc : stage}">
+        <div class="step-circle">
+          <span class="step-icon">${lbl ? lbl.icon : '•'}</span>
+        </div>
+        <div class="step-label">${stage}</div>
+        <div class="step-num">STEP ${i+1}</div>
+      </div>
+    `;
+  });
+  container.innerHTML = html;
+}
+
+function renderFilesTab(isStaff) {
+  // 파일유형별 그룹핑
+  var groups = {};
+  DB.FILE_TYPES.forEach(function(t) { groups[t] = []; });
+  files.forEach(function(f) {
+    if (!groups[f.file_type]) groups[f.file_type] = [];
+    groups[f.file_type].push(f);
+  });
+
+  var html = '';
+  DB.FILE_TYPES.forEach(function(type) {
+    var list = groups[type];
+    if (list.length === 0 && !isStaff) return; // 빈 카드 강사/관리자만 보임
+    html += `
+      <div class="file-card">
+        <div class="file-card-header">
+          <span class="file-type-badge">${type}</span>
+          <span class="card-title">${getFileTypeDesc(type)}</span>
+          <span style="font-size:12px;color:var(--text-muted)">${list.length}개</span>
+        </div>
+        ${list.length === 0
+          ? `<div class="file-empty">파일 없음</div>`
+          : list.map(function(f) { return renderFileItem(f, isStaff); }).join('')
+        }
+      </div>
+    `;
+  });
+
+  if (!html) {
+    return `<div class="empty-state">
+      <div class="empty-icon">📂</div>
+      <div class="empty-text">아직 업로드된 파일이 없습니다.</div>
+    </div>`;
+  }
+  return html;
+}
+
+function renderFileItem(f, isStaff) {
+  var sizeStr = f.file_size ? formatFileSize(f.file_size) : '';
+  var ext = (f.file_name || '').split('.').pop().toLowerCase();
+  var icon = getFileIcon(ext);
+  return `
+    <div class="file-list-item">
+      <span class="file-icon">${icon}</span>
+      <div class="file-info">
+        <div class="file-name">${f.file_name || '파일'}</div>
+        <div class="file-meta">${sizeStr} · ${formatDateTime(f.created_at)}</div>
+      </div>
+      <div class="file-actions">
+        <button class="btn-icon" title="다운로드" onclick="downloadFile('${f.file_url}','${(f.file_name||'file').replace(/'/g,'')}')" >⬇</button>
+        ${isStaff ? `<button class="btn-icon" title="삭제" style="color:var(--negative)" onclick="deleteFile('${f.id}')">🗑</button>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function renderMemosTab(isStaff) {
+  var html = '<div class="memo-section">';
+  html += '<div class="memo-list">';
+
+  if (memos.length === 0) {
+    html += '<div class="empty-state" style="padding:32px"><div class="empty-icon">💬</div><div class="empty-text">등록된 메모가 없습니다.</div></div>';
+  } else {
+    memos.forEach(function(m) {
+      // getMemosFull 반환: m.author = { display_name, role } (join)
+      var authorName = (m.author && m.author.display_name) ? m.author.display_name : '알 수 없음';
+      var authorRole = (m.author && m.author.role) ? m.author.role : '';
+      var initials = authorName.charAt(0);
+      var roleBadge = '';
+      if (authorRole === 'admin') roleBadge = '<span class="memo-role-badge admin">관리자</span>';
+      else if (authorRole === 'tutor') roleBadge = '<span class="memo-role-badge tutor">강사</span>';
+      // 메모 유형 배지
+      var typeColors = { '면담': '#8B5CF6', '피드백': '#3B82F6', '특이사항': '#F59E0B', '성장': '#10B981' };
+      var memoTypeLabel = m.memo_type || '면담';
+      var memoTypeBadge = `<span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;background:${typeColors[memoTypeLabel] || '#64748B'}22;color:${typeColors[memoTypeLabel] || '#64748B'};border:1px solid ${typeColors[memoTypeLabel] || '#64748B'}44">${memoTypeLabel}</span>`;
+      html += `
+        <div class="memo-item">
+          <div class="memo-avatar">${initials}</div>
+          <div class="memo-body">
+            <div class="memo-header-row">
+              <span class="memo-author">${authorName}</span>
+              ${roleBadge}
+              ${memoTypeBadge}
+              <span class="memo-time">${formatDateTime(m.created_at)}</span>
+            </div>
+            <div class="memo-text">${escapeHtml(m.content)}</div>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  html += '</div>';
+
+  if (isStaff) {
+    html += `
+      <div class="memo-compose">
+        <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
+          <label style="font-size:12px;font-weight:600;color:var(--text-secondary);white-space:nowrap">유형</label>
+          <select id="memoTypeSelect" style="font-size:13px;padding:5px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--input-bg);color:var(--text);font-family:inherit;cursor:pointer">
+            <option value="면담">💬 면담</option>
+            <option value="피드백">✍️ 피드백</option>
+            <option value="특이사항">⚠️ 특이사항</option>
+            <option value="성장">🌱 성장</option>
+          </select>
+        </div>
+        <textarea class="memo-input" id="memoTextarea" placeholder="메모 내용을 입력하세요…" rows="3"></textarea>
+        <div class="memo-submit-row">
+          <button class="btn-sm primary" onclick="submitMemo()">메모 저장</button>
+        </div>
+      </div>
+    `;
+  }
+
+  html += '</div>';
+  return html;
+}
+
+function renderResultTab(isStaff, isAdmin) {
+  var hasAnyData = assignment.score != null || assignment.grade ||
+    assignment.teacher_comment || assignment.growth_note ||
+    assignment.expected_score != null || assignment.revision_count != null;
+
+  if (!hasAnyData) {
+    return `<div class="result-section">
+      <div class="empty-state" style="padding:16px 0">
+        <div class="empty-icon">📊</div>
+        <div class="empty-text">아직 결과가 입력되지 않았습니다.</div>
+        ${isStaff ? `<div style="margin-top:12px"><button class="btn-sm primary" onclick="openResultModal()">결과 입력하기</button></div>` : ''}
+      </div>
+    </div>`;
+  }
+
+  // 예상 vs 실제 차이
+  var scoreDiff = '';
+  if (assignment.expected_score != null && assignment.score != null) {
+    var diff = assignment.score - assignment.expected_score;
+    var diffColor = diff >= 0 ? 'var(--positive)' : 'var(--negative)';
+    var diffSign  = diff >= 0 ? '+' : '';
+    scoreDiff = `<span style="font-size:12px;color:${diffColor};font-weight:700;margin-left:8px">(예상대비 ${diffSign}${diff}점)</span>`;
+  }
+
+  // 총 소요 시간
+  var totalMin = (assignment.interview_minutes || 0) + (assignment.feedback_minutes || 0) + (assignment.final_minutes || 0);
+
+  return `
+    <div class="result-section">
+      <div class="section-title"><span>📊</span> 결과 요약</div>
+
+      <!-- 점수 / 등급 -->
+      <div class="result-display">
+        ${assignment.expected_score != null ? `
+        <div class="result-item">
+          <div class="result-label">예상 점수</div>
+          <div class="result-value" style="font-size:20px;color:var(--text-secondary)">${assignment.expected_score}<small style="font-size:12px;font-weight:400">점</small></div>
+        </div>` : ''}
+        ${assignment.score != null ? `
+        <div class="result-item">
+          <div class="result-label">취득 점수</div>
+          <div class="result-value">${assignment.score}<small style="font-size:14px;font-weight:400">점</small>${scoreDiff}</div>
+        </div>` : ''}
+        ${assignment.grade ? `
+        <div class="result-item">
+          <div class="result-label">취득 등급</div>
+          <div class="result-value grade-${(assignment.grade||'').replace('등급','')}">${assignment.grade}</div>
+        </div>` : ''}
+        ${assignment.revision_count != null ? `
+        <div class="result-item">
+          <div class="result-label">수정 횟수</div>
+          <div class="result-value" style="font-size:20px">${assignment.revision_count}<small style="font-size:12px;font-weight:400">회</small></div>
+        </div>` : ''}
+      </div>
+
+      <!-- 소요 시간 (내부용) -->
+      ${isStaff && (assignment.interview_minutes || assignment.feedback_minutes || assignment.final_minutes) ? `
+      <div style="margin-top:18px">
+        <div style="font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px">⏱ 소요 시간 (내부)</div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap">
+          ${assignment.interview_minutes ? `<span style="font-size:13px;padding:4px 10px;background:var(--surface-hover);border-radius:6px;font-weight:500">면담 ${assignment.interview_minutes}분</span>` : ''}
+          ${assignment.feedback_minutes  ? `<span style="font-size:13px;padding:4px 10px;background:var(--surface-hover);border-radius:6px;font-weight:500">피드백 ${assignment.feedback_minutes}분</span>` : ''}
+          ${assignment.final_minutes     ? `<span style="font-size:13px;padding:4px 10px;background:var(--surface-hover);border-radius:6px;font-weight:500">최종확인 ${assignment.final_minutes}분</span>` : ''}
+          ${totalMin > 0 ? `<span style="font-size:13px;padding:4px 10px;background:var(--accent-light);border-radius:6px;font-weight:700;color:var(--accent)">총 ${totalMin}분</span>` : ''}
+        </div>
+      </div>` : ''}
+
+      <!-- 코칭 체크리스트 (내부용) -->
+      ${isStaff && (assignment.cliche_removed != null || assignment.structure_explained != null) ? `
+      <div style="margin-top:18px">
+        <div style="font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px">✅ 코칭 체크리스트 (내부)</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500">
+            <span style="font-size:16px">${assignment.cliche_removed ? '✅' : '⬜'}</span> 클리셰 표현 제거
+            ${assignment.cliche_removed ? '' : '<span style="font-size:11px;color:var(--negative)">(미완료)</span>'}
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500">
+            <span style="font-size:16px">${assignment.structure_explained ? '✅' : '⬜'}</span> 구술 핵심 확인
+            ${assignment.structure_explained ? '' : '<span style="font-size:11px;color:var(--negative)">(미완료)</span>'}
+          </div>
+        </div>
+      </div>` : ''}
+
+      <!-- 교사 코멘트 -->
+      ${assignment.teacher_comment ? `
+      <div style="margin-top:20px">
+        <div style="font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px">교사 코멘트</div>
+        <div class="result-text">${escapeHtml(assignment.teacher_comment)}</div>
+      </div>` : ''}
+
+      <!-- 성장 메모 (내부) -->
+      ${isStaff && assignment.growth_note ? `
+      <div style="margin-top:16px">
+        <div style="font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px">성장 메모 <span style="font-size:10px;color:var(--text-muted)">(내부)</span></div>
+        <div class="result-text">${escapeHtml(assignment.growth_note)}</div>
+      </div>` : ''}
+
+      ${isStaff ? `<div style="margin-top:20px"><button class="btn-sm" onclick="openResultModal()">✏️ 결과 수정</button></div>` : ''}
+    </div>
+  `;
+}
+
+// ── 탭 전환 ─────────────────────────────────────────────────────
+function switchTab(tabName) {
+  activeTab = tabName;
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+  var btn = document.querySelector(`.tab-btn[onclick="switchTab('${tabName}')"]`);
+  var content = document.getElementById('tab-' + tabName);
+  if (btn) btn.classList.add('active');
+  if (content) content.classList.add('active');
+}
+
+// ── 단계 변경 ────────────────────────────────────────────────────
+async function changeStage(delta) {
+  var idx = DB.STAGES.indexOf(assignment.stage);
+  var newIdx = idx + delta;
+  if (newIdx < 0 || newIdx >= DB.STAGES.length) return;
+  var newStage = DB.STAGES[newIdx];
+  var confirmed = confirm(`단계를 "${assignment.stage}" → "${newStage}"로 변경할까요?`);
+  if (!confirmed) return;
+  try {
+    var btn = document.getElementById('btnAdvance');
+    if (btn) { btn.disabled = true; btn.textContent = '변경 중…'; }
+    assignment = await DB.updateStage(assignmentId, newStage);
+    await loadPage();
+  } catch(e) {
+    alert('단계 변경 실패: ' + e.message);
+    if (btn) { btn.disabled = false; btn.textContent = '다음 단계 →'; }
+  }
+}
+
+// ── 메모 저장 ────────────────────────────────────────────────────
+async function submitMemo() {
+  var ta = document.getElementById('memoTextarea');
+  var sel = document.getElementById('memoTypeSelect');
+  var content = ta ? ta.value.trim() : '';
+  var memoType = sel ? sel.value : '면담';
+  if (!content) { alert('메모 내용을 입력하세요.'); return; }
+  try {
+    await DB.addMemo(assignmentId, content, assignment.student_id, memoType);
+    // 재조회로 author join 포함한 최신 메모 로드
+    memos = await DB.getMemosFull(assignmentId);
+    ta.value = '';
+    var isStaff = DB.isStaff();
+    document.getElementById('tab-memos').innerHTML = renderMemosTab(isStaff);
+    // 탭 카운트 업데이트
+    var tabBtn = document.querySelector('.tab-btn[onclick="switchTab(\'memos\')"]');
+    if (tabBtn) tabBtn.textContent = `💬 메모 (${memos.length})`;
+    switchTab('memos');
+  } catch(e) {
+    alert('메모 저장 실패: ' + e.message);
+  }
+}
+
+// ── 파일 업로드 ──────────────────────────────────────────────────
+function renderFileTypeGrid() {
+  var grid = document.getElementById('fileTypeGrid');
+  if (!grid) return;
+  var icons = { '연간계획서':'📅','루브릭':'📋','코칭가이드':'📌','초안':'✏️','피드백':'📝','수정본':'🔄','최종본':'✅','기타':'📎' };
+  grid.innerHTML = DB.FILE_TYPES.map(function(t) {
+    return `<div class="file-type-option ${selectedFileType===t?'selected':''}" onclick="selectFileType('${t}')">
+      <div class="ft-icon">${icons[t]||'📎'}</div>
+      <div class="ft-label">${t}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectFileType(t) {
+  selectedFileType = t;
+  renderFileTypeGrid();
+}
+
+function onFileSelected(e) {
+  var f = e.target.files[0];
+  if (!f) return;
+  if (f.size > 10 * 1024 * 1024) {
+    alert('파일 크기는 10MB 이하여야 합니다.');
+    e.target.value = '';
+    return;
+  }
+  selectedUploadFile = f;
+  document.getElementById('selectedFileName').textContent = f.name + ' (' + formatFileSize(f.size) + ')';
+}
+
+function setupDragDrop() {
+  var zones = document.querySelectorAll('.upload-zone');
+  zones.forEach(function(zone) {
+    zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', function() { zone.classList.remove('drag-over'); });
+    zone.addEventListener('drop', function(e) {
+      e.preventDefault(); zone.classList.remove('drag-over');
+      var f = e.dataTransfer.files[0];
+      if (f) { selectedUploadFile = f; document.getElementById('selectedFileName').textContent = f.name; openModal('uploadModal'); }
+    });
+  });
+}
+
+async function submitFileUpload() {
+  var alertEl = document.getElementById('uploadAlert');
+  alertEl.className = 'alert'; alertEl.style.display = 'none';
+
+  if (!selectedFileType) { showModalAlert('uploadAlert', '파일 유형을 선택하세요.'); return; }
+  if (!selectedUploadFile) { showModalAlert('uploadAlert', '파일을 선택하세요.'); return; }
+
+  var btn = document.getElementById('uploadSubmitBtn');
+  btn.disabled = true; btn.textContent = '업로드 중…';
+
+  try {
+    // DB.uploadFile(file, studentId, assignmentId, fileType, note)
+    var newFile = await DB.uploadFile(
+      selectedUploadFile, assignment.student_id,
+      assignmentId, selectedFileType, ''
+    );
+    files.push(newFile);
+    selectedUploadFile = null;
+    selectedFileType = null;
+    document.getElementById('selectedFileName').textContent = '파일을 선택하세요 (최대 10MB)';
+    document.getElementById('fileInputHidden').value = '';
+    closeModal('uploadModal');
+    // 파일 탭 리렌더
+    var isStaff = DB.isStaff();
+    document.getElementById('tab-files').innerHTML = renderFilesTab(isStaff);
+    // 탭 카운트 업데이트
+    var tabBtn = document.querySelector('.tab-btn[onclick="switchTab(\'files\')"]');
+    if (tabBtn) tabBtn.textContent = `📎 파일 (${files.length})`;
+    DB.toast('파일이 업로드되었습니다.');
+  } catch(e) {
+    showModalAlert('uploadAlert', '업로드 실패: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = '업로드';
+  }
+}
+
+async function deleteFile(fileId) {
+  if (!confirm('파일을 삭제할까요?')) return;
+  try {
+    await DB.deleteFile(fileId);
+    files = files.filter(function(f) { return f.id !== fileId; });
+    var isStaff = DB.isStaff();
+    document.getElementById('tab-files').innerHTML = renderFilesTab(isStaff);
+    var tabBtn = document.querySelector('.tab-btn[onclick="switchTab(\'files\')"]');
+    if (tabBtn) tabBtn.textContent = `📎 파일 (${files.length})`;
+  } catch(e) {
+    alert('삭제 실패: ' + e.message);
+  }
+}
+
+function downloadFile(url, name) {
+  var a = document.createElement('a');
+  a.href = url; a.download = name; a.target = '_blank';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+// ── 결과 입력 ────────────────────────────────────────────────────
+function openResultModal() {
+  // 기존 필드
+  document.getElementById('inp_score').value = assignment.score != null ? assignment.score : '';
+  document.getElementById('inp_grade').value = assignment.grade || '';
+  document.getElementById('inp_teacher_comment').value = assignment.teacher_comment || '';
+  document.getElementById('inp_growth_note').value = assignment.growth_note || '';
+  // T2 필드
+  document.getElementById('inp_expected_score').value     = assignment.expected_score  != null ? assignment.expected_score  : '';
+  document.getElementById('inp_revision_count').value     = assignment.revision_count  != null ? assignment.revision_count  : '';
+  document.getElementById('inp_interview_minutes').value  = assignment.interview_minutes  != null ? assignment.interview_minutes  : '';
+  document.getElementById('inp_feedback_minutes').value   = assignment.feedback_minutes   != null ? assignment.feedback_minutes   : '';
+  document.getElementById('inp_final_minutes').value      = assignment.final_minutes      != null ? assignment.final_minutes      : '';
+  document.getElementById('inp_cliche_removed').checked       = !!assignment.cliche_removed;
+  document.getElementById('inp_structure_explained').checked  = !!assignment.structure_explained;
+  openModal('resultModal');
+}
+
+async function submitResult() {
+  var score          = document.getElementById('inp_score').value;
+  var expectedScore  = document.getElementById('inp_expected_score').value;
+  var grade          = document.getElementById('inp_grade').value;
+  var teacherComment = document.getElementById('inp_teacher_comment').value.trim();
+  var growthNote     = document.getElementById('inp_growth_note').value.trim();
+  var revisionCount  = document.getElementById('inp_revision_count').value;
+  var interviewMin   = document.getElementById('inp_interview_minutes').value;
+  var feedbackMin    = document.getElementById('inp_feedback_minutes').value;
+  var finalMin       = document.getElementById('inp_final_minutes').value;
+  var clicheRemoved  = document.getElementById('inp_cliche_removed').checked;
+  var structureExpl  = document.getElementById('inp_structure_explained').checked;
+
+  var btn = document.getElementById('resultSubmitBtn');
+  btn.disabled = true; btn.textContent = '저장 중…';
+
+  try {
+    assignment = await DB.recordResult(assignmentId, {
+      score:               score         ? parseInt(score)         : null,
+      expected_score:      expectedScore ? parseFloat(expectedScore) : null,
+      grade:               grade         || null,
+      teacher_comment:     teacherComment || null,
+      growth_note:         growthNote    || null,
+      revision_count:      revisionCount !== '' ? parseInt(revisionCount) : null,
+      interview_minutes:   interviewMin  !== '' ? parseInt(interviewMin)  : null,
+      feedback_minutes:    feedbackMin   !== '' ? parseInt(feedbackMin)   : null,
+      final_minutes:       finalMin      !== '' ? parseInt(finalMin)      : null,
+      cliche_removed:      clicheRemoved ? true : null,
+      structure_explained: structureExpl  ? true : null,
+    });
+    closeModal('resultModal');
+    renderPage();
+    setTimeout(function() { switchTab('result'); }, 100);
+  } catch(e) {
+    showModalAlert('resultAlert', '저장 실패: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = '저장';
+  }
+}
+
+// ── 수행평가 메타 수정 (관리자 전용) ─────────────────────────────
+function openMetaEditModal() {
+  document.getElementById('meta_title').value       = assignment.title || '';
+  document.getElementById('meta_subject').value     = assignment.subject || '국어';
+  document.getElementById('meta_type').value        = assignment.type || '';
+  document.getElementById('meta_school_dl').value   = assignment.school_deadline ? assignment.school_deadline.substring(0,10) : '';
+  document.getElementById('meta_internal_dl').value = assignment.internal_deadline ? assignment.internal_deadline.substring(0,10) : '';
+  var alertEl = document.getElementById('metaEditAlert');
+  alertEl.textContent = ''; alertEl.className = 'alert error';
+  document.getElementById('metaEditBtn').disabled = false;
+  document.getElementById('metaEditBtn').textContent = '저장';
+  openModal('metaEditModal');
+}
+
+async function submitMetaEdit() {
+  var title   = document.getElementById('meta_title').value.trim();
+  var subject = document.getElementById('meta_subject').value;
+  var type    = document.getElementById('meta_type').value || null;
+  var schoolDl   = document.getElementById('meta_school_dl').value   || null;
+  var internalDl = document.getElementById('meta_internal_dl').value || null;
+
+  if (!title || !subject) { showModalAlert('metaEditAlert', '수행평가명과 과목은 필수입니다.'); return; }
+
+  var btn = document.getElementById('metaEditBtn');
+  btn.disabled = true; btn.textContent = '저장 중…';
+  try {
+    assignment = await DB.updateAssignment(assignmentId, {
+      title:             title,
+      subject:           subject,
+      type:              type,
+      school_deadline:   schoolDl,
+      internal_deadline: internalDl || (schoolDl ? DB._addDays(schoolDl, -5) : null)
+    });
+    closeModal('metaEditModal');
+    renderPage();
+  } catch(e) {
+    showModalAlert('metaEditAlert', '저장 실패: ' + e.message);
+    btn.disabled = false; btn.textContent = '저장';
+  }
+}
+
+// ── 학생 비밀번호 리셋 (관리자 전용) ─────────────────────────────
+function openPwResetModal() {
+  if (!student) return;
+  var targetUserId = student.user_id;
+  document.getElementById('pwTargetUserId').value = targetUserId || '';
+  document.getElementById('pwTargetDesc').textContent =
+    student.name + ' 학생의 비밀번호를 새로 설정합니다.';
+  document.getElementById('inp_pw_new').value = '';
+  document.getElementById('inp_pw_confirm').value = '';
+  var alertEl = document.getElementById('pwAlert');
+  alertEl.textContent = ''; alertEl.className = 'alert error';
+  openModal('pwModal');
+}
+
+async function submitPwChange() {
+  var targetUserId = document.getElementById('pwTargetUserId').value;
+  var nw = document.getElementById('inp_pw_new').value;
+  var cf = document.getElementById('inp_pw_confirm').value;
+  if (!nw || !cf) { showModalAlert('pwAlert', '새 비밀번호를 입력하세요.'); return; }
+  if (nw.length < 6) { showModalAlert('pwAlert', '새 비밀번호는 6자 이상이어야 합니다.'); return; }
+  if (nw !== cf) { showModalAlert('pwAlert', '새 비밀번호가 일치하지 않습니다.'); return; }
+  if (!targetUserId) { showModalAlert('pwAlert', '대상 학생 정보가 없습니다.'); return; }
+  try {
+    await DB.changePassword(nw, null, targetUserId);
+    closeModal('pwModal');
+    DB.toast(student.name + ' 학생의 비밀번호가 변경되었습니다.');
+  } catch(e) {
+    showModalAlert('pwAlert', e.message);
+  }
+}
+
+// ── 모달 유틸 ─────────────────────────────────────────────────────
+var _modalOpenCount = 0;
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  _modalOpenCount++;
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  _modalOpenCount = Math.max(0, _modalOpenCount - 1);
+  if (_modalOpenCount === 0) document.body.style.overflow = '';
+}
+function showModalAlert(id, msg) {
+  var el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'alert error show';
+}
+document.querySelectorAll('.modal-overlay').forEach(function(ov) {
+  ov.addEventListener('click', function(e) {
+    if (e.target === ov) ov.classList.remove('open');
+  });
+});
+
+// ── 네비게이션 ────────────────────────────────────────────────────
+function goBack() {
+  if (document.referrer && document.referrer.includes(window.location.hostname)) {
+    window.history.back();
+  } else if (currentUser && currentUser.role) {
+    DB._redirectByRole(currentUser.role);
+  } else {
+    window.location.href = 'admin-dashboard.html';
+  }
+}
+
+// ── 유틸 ─────────────────────────────────────────────────────────
+function formatDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('ko-KR', { year:'numeric', month:'2-digit', day:'2-digit' });
+}
+function formatDateTime(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleString('ko-KR', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+}
+function formatFileSize(bytes) {
+  if (!bytes) return '';
+  if (bytes < 1024) return bytes + 'B';
+  if (bytes < 1048576) return (bytes/1024).toFixed(1) + 'KB';
+  return (bytes/1048576).toFixed(1) + 'MB';
+}
+function getFileIcon(ext) {
+  var icons = { pdf:'📄', doc:'📝', docx:'📝', xls:'📊', xlsx:'📊', ppt:'📊', pptx:'📊',
+    jpg:'🖼', jpeg:'🖼', png:'🖼', gif:'🖼', mp4:'🎬', mov:'🎬', zip:'🗜', hwp:'📝', txt:'📄' };
+  return icons[ext] || '📎';
+}
+function getFileTypeDesc(type) {
+  var descs = {
+    '연간계획서':'학교 연간 수행평가 계획서', '루브릭':'채점 기준표',
+    '코칭가이드':'작성 코칭 가이드', '초안':'학생 초안',
+    '피드백':'강사 피드백 파일', '수정본':'학생 수정본',
+    '최종본':'최종 제출본', '기타':'기타 자료'
+  };
+  return descs[type] || type;
+}
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;').replace(/\n/g,'<br>');
+}
+</script>
+</body>
+</html>

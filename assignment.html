@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ko" class="theme-light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>수행평가 상세 — 수코치</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html.theme-dark { --bg:#0A0A0A; --surface:#141414; --surface-hover:#1C1C1C; --border:rgba(255,255,255,0.08); --text:#EDEDED; --text-secondary:#888; --text-muted:#555; --accent:#6366F1; --accent-hover:#818CF8; --positive:#10b981; --negative:#f43f5e; --warning:#f59e0b; }
+    html.theme-light { --bg:#F1F5F9; --surface:#FFFFFF; --surface-hover:#F8FAFC; --border:rgba(0,0,0,0.07); --text:#0F172A; --text-secondary:#64748B; --text-muted:#94A3B8; --accent:#4F46E5; --accent-hover:#4338CA; --positive:#059669; --negative:#DC2626; --warning:#D97706; }
+    body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; -webkit-font-smoothing:antialiased; transition:background 0.3s,color 0.3s; }
+    @media (prefers-reduced-motion:reduce) { * { transition:none !important; animation:none !important; } }
+
+    /* NAVBAR */
+    .navbar { height:60px; display:flex; align-items:center; padding:0 24px; gap:12px; background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; }
+    .nav-back { display:flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:var(--text-secondary); cursor:pointer; padding:6px 10px; border-radius:7px; transition:background 0.15s; border:none; background:transparent; font-family:inherit; }
+    .nav-back:hover { background:var(--surface-hover); color:var(--text); }
+    .nav-logo { font-size:18px; font-weight:900; color:var(--accent); letter-spacing:-0.06em; }
+    .nav-divider { width:1px; height:18px; background:var(--border); }
+    .nav-spacer { flex:1; }
+    .nav-icon-btn { width:34px; height:34px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--text-secondary); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; transition:background 0.2s; }
+    .nav-icon-btn:hover { background:var(--surface-hover); }
+
+    /* LAYOUT */
+    .page { max-width:860px; margin:0 auto; padding:28px 24px 60px; }
+
+    /* LOADING */
+    .loading-overlay { position:fixed; inset:0; background:var(--bg); z-index:999; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px; }
+    .spinner-lg { width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    /* HEADER CARD */
+    .assignment-header { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px; margin-bottom:20px; }
+    .ah-top { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+    .ah-subject { display:inline-block; padding:4px 12px; border-radius:100px; font-size:12px; font-weight:700; margin-bottom:10px; }
+    .ah-title { font-size:1.4rem; font-weight:900; letter-spacing:-0.03em; margin-bottom:8px; }
+    .ah-meta { display:flex; gap:20px; flex-wrap:wrap; font-size:13px; color:var(--text-secondary); }
+    .ah-meta span { display:flex; align-items:center; gap:5px; }
+    .ah-actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .btn-sm { padding:8px 14px; border-radius:8px; font-size:12px; font-weight:700; border:1px solid var(--border); background:transparent; color:var(--text-secondary); cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:6px; transition:all 0.15s; white-space:nowrap; }
+    .btn-sm:hover { background:var(--surface-hover); color:var(--text); }
+    .btn-sm.primary { background:var(--accent); color:white; border-color:var(--accent); }
+    .btn-sm.primary:hover { background:var(--accent-hover); }
+    .btn-sm.success { background:var(--positive); color:white; border-color:var(--positive); }
+
+    /* STAGE PROGRESS */
+    .stage-progress-bar { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:20px 24px; margin-bottom:20px; }
+    .stage-track { display:flex; align-items:center; position:relative; }
+    .stage-item { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; z-index:1; }
+    .stage-dot { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; border:2px solid var(--border); background:var(--surface); color:var(--text-muted); transition:all 0.3s; }
+    .stage-dot.active { background:var(--accent); color:white; border-color:var(--accent); box-shadow:0 0 0 4px rgba(79,70,229,0.2); }
+    .stage-dot.done { background:var(--positive); color:white; border-color:var(--positive); }
+    .stage-label { font-size:11px; font-weight:600; color:var(--text-muted); margin-top:7px; white-space:nowrap; }
+    .stage-label.active { color:var(--accent); font-weight:700; }
+    .stage-label.done { color:var(--positive); }
+    .stage-connector { flex:1; height:2px; background:var(--border); margin:0 -2px; margin-bottom:22px; transition:background 0.3s; position:relative; z-index:0; }
+    .stage-connector.done { background:var(--positive); }
+
+    /* TWO-COLUMN LAYOUT */
+    .two-col { display:grid; grid-template-columns:1fr 320px; gap:20px; }
+    @media (max-width:720px) { .two-col { grid-template-columns:1fr; } }
+
+    /* TIMELINE */
+    .section-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+    .section-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .section-title { font-size:14px; font-weight:800; display:flex; align-items:center; gap:8px; }
+    .timeline { padding:16px 20px; display:flex; flex-direction:column; gap:0; }
+    .tl-item { display:flex; gap:14px; padding-bottom:20px; position:relative; }
+    .tl-item:last-child { padding-bottom:0; }
+    .tl-item:not(:last-child)::after { content:''; position:absolute; left:15px; top:32px; bottom:0; width:2px; background:var(--border); }
+    .tl-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; z-index:1; }
+    .tl-content { flex:1; min-width:0; padding-top:4px; }
+    .tl-actor { font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:3px; }
+    .tl-text { font-size:13px; font-weight:500; margin-bottom:4px; }
+    .tl-file-link { display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--accent); padding:4px 10px; background:rgba(79,70,229,0.08); border-radius:6px; text-decoration:none; transition:background 0.15s; }
+    .tl-file-link:hover { background:rgba(79,70,229,0.15); }
+    .tl-time { font-size:11px; color:var(--text-muted); }
+    .tl-note { font-size:12px; color:var(--text-secondary); margin-top:4px; padding:8px 12px; background:var(--surface-hover); border-radius:7px; border-left:2px solid var(--border); }
+
+    /* FILES PANEL */
+    .files-list { padding:12px 16px; display:flex; flex-direction:column; gap:8px; }
+    .file-item { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--surface-hover); border-radius:9px; border:1px solid var(--border); transition:background 0.15s; }
+    .file-icon { font-size:18px; flex-shrink:0; }
+    .file-info { flex:1; min-width:0; }
+    .file-name { font-size:12px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .file-meta { font-size:11px; color:var(--text-muted); margin-top:2px; }
+    .file-dl { font-size:16px; color:var(--accent); cursor:pointer; flex-shrink:0; text-decoration:none; }
+    .file-type-badge { font-size:10px; font-weight:700; padding:2px 7px; border-radius:100px; }
+
+    /* UPLOAD AREA */
+    .upload-section { padding:16px; }
+    .upload-area { border:2px dashed var(--border); border-radius:10px; padding:24px 16px; text-align:center; cursor:pointer; transition:all 0.2s; }
+    .upload-area:hover { border-color:var(--accent); background:rgba(79,70,229,0.04); }
+    .upload-area p { font-size:13px; color:var(--text-secondary); }
+    .upload-area strong { color:var(--accent); }
+
+    /* SCORE SECTION */
+    .score-section { padding:16px 20px; }
+    .score-display { display:flex; align-items:baseline; gap:6px; margin-bottom:8px; }
+    .score-num { font-size:2rem; font-weight:900; color:var(--accent); }
+    .score-max { font-size:1rem; color:var(--text-muted); }
+    .score-pct { font-size:1rem; font-weight:700; color:var(--positive); }
+    .score-bar { height:8px; background:var(--border); border-radius:100px; overflow:hidden; }
+    .score-fill { height:100%; background:var(--positive); border-radius:100px; transition:width 0.8s ease; }
+
+    /* NOTIFICATION */
+    .notif-area { padding:12px 16px; border-top:1px solid var(--border); }
+    .notif-row { display:flex; gap:8px; }
+    .notif-check { display:flex; align-items:center; gap:6px; font-size:12px; cursor:pointer; }
+    .notif-check input { cursor:pointer; }
+
+    /* STAGE CHANGE */
+    .stage-change { padding:16px 20px; border-top:1px solid var(--border); }
+
+    /* MODAL */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:500; display:none; align-items:center; justify-content:center; padding:24px; }
+    .modal-overlay.open { display:flex; }
+    .modal { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px; max-width:460px; width:100%; box-shadow:0 20px 60px rgba(0,0,0,0.2); animation:modalIn 0.25s ease-out; }
+    @keyframes modalIn { from{opacity:0;transform:scale(0.96)} to{opacity:1;transform:scale(1)} }
+    .modal h3 { font-size:1.05rem; font-weight:800; margin-bottom:6px; }
+    .modal p { font-size:13px; color:var(--text-secondary); margin-bottom:18px; }
+    .modal-label { display:block; font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.04em; margin-top:12px; }
+    .modal-input, .modal-select { width:100%; padding:10px 13px; border-radius:8px; border:1.5px solid var(--border); background:var(--bg); color:var(--text); font-size:13px; font-family:inherit; outline:none; transition:border-color 0.2s; }
+    .modal-input:focus, .modal-select:focus { border-color:var(--accent); }
+    .modal-btns { display:flex; gap:10px; justify-content:flex-end; margin-top:18px; }
+    .btn-cancel { padding:9px 18px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--text-secondary); font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; }
+    .btn-confirm { padding:9px 18px; border-radius:8px; border:none; background:var(--accent); color:white; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; transition:background 0.2s; }
+    .btn-confirm:hover { background:var(--accent-hover); }
+    .btn-confirm:disabled { opacity:0.6; cursor:not-allowed; }
+
+    /* TOAST */
+    .toast { position:fixed; bottom:24px; right:24px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px 18px; font-size:13px; font-weight:600; box-shadow:0 8px 24px rgba(0,0,0,0.12); z-index:9999; transform:translateY(80px); opacity:0; transition:all 0.3s; }
+    .toast.show { transform:translateY(0); opacity:1; }
+    .toast.success { border-left:3px solid var(--positive); }
+    .toast.error { border-left:3px solid var(--negative); }
+
+    /* EMPTY */
+    .empty-tl { text-align:center; padding:28px 16px; color:var(--text-muted); font-size:13px; }
+  </style>
+</head>
+<body>
+
+  <!-- LOADING -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner-lg"></div>
+    <div style="font-size:14px;color:var(--text-secondary)">불러오는 중...</div>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <button class="nav-back" onclick="history.back()">← 뒤로</button>
+    <div class="nav-divider"></div>
+    <div class="nav-logo">수코치</div>
+    <div class="nav-spacer"></div>
+    <button class="nav-icon-btn" onclick="cycleTheme()" id="themeBtn">🌙</button>
+    <button class="nav-icon-btn" onclick="DB.logout()" title="로그아웃">⏻</button>
+  </nav>
+
+  <!-- PAGE -->
+  <div class="page" id="page" style="display:none">
+
+    <!-- HEADER -->
+    <div class="assignment-header">
+      <div class="ah-top">
+        <div style="flex:1;min-width:0">
+          <div><span class="ah-subject" id="ahSubject"></span></div>
+          <div class="ah-title" id="ahTitle"></div>
+          <div class="ah-meta" id="ahMeta"></div>
+        </div>
+        <div class="ah-actions" id="ahActions"></div>
+      </div>
+    </div>
+
+    <!-- STAGE PROGRESS BAR -->
+    <div class="stage-progress-bar">
+      <div class="stage-track" id="stageTrack"></div>
+    </div>
+
+    <!-- TWO COLUMN -->
+    <div class="two-col">
+
+      <!-- LEFT: Timeline -->
+      <div>
+        <div class="section-card">
+          <div class="section-header">
+            <div class="section-title">🕐 활동 타임라인</div>
+          </div>
+          <div class="timeline" id="timeline">
+            <div class="empty-tl">아직 활동 내역이 없습니다</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Files + Upload + Score + Stage -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <!-- Files -->
+        <div class="section-card">
+          <div class="section-header">
+            <div class="section-title">📎 파일 목록</div>
+            <span id="filesCount" style="font-size:12px;color:var(--text-muted)"></span>
+          </div>
+          <div class="files-list" id="filesList">
+            <div style="padding:12px;font-size:13px;color:var(--text-muted);text-align:center">파일 없음</div>
+          </div>
+
+          <!-- Upload (학생/관리자) -->
+          <div class="upload-section" id="uploadSection" style="display:none">
+            <div class="upload-area" onclick="document.getElementById('filePickInput').click()" id="uploadArea">
+              <div style="font-size:1.8rem;margin-bottom:8px">📎</div>
+              <p><strong>클릭하여 파일 업로드</strong></p>
+              <p style="margin-top:4px;font-size:12px">PDF, Word, 이미지, Excel · 최대 10MB</p>
+            </div>
+            <input type="file" id="filePickInput" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.xls,.xlsx" style="display:none" onchange="handleFileSelect(this)">
+          </div>
+        </div>
+
+        <!-- Score (admin/tutor only) -->
+        <div class="section-card" id="scoreCard" style="display:none">
+          <div class="section-header">
+            <div class="section-title">🎯 취득 점수</div>
+            <button class="btn-sm" onclick="openScoreModal()" id="scoreEditBtn">점수 입력</button>
+          </div>
+          <div class="score-section" id="scoreDisplay">
+            <div style="font-size:13px;color:var(--text-muted);text-align:center;padding:8px 0">아직 점수가 입력되지 않았습니다</div>
+          </div>
+        </div>
+
+        <!-- Notification (admin/tutor only) -->
+        <div class="section-card" id="notifCard" style="display:none">
+          <div class="section-header">
+            <div class="section-title">📬 알림 보내기</div>
+          </div>
+          <div class="notif-area">
+            <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px">업데이트 사항을 이메일로 알립니다.</div>
+            <label class="notif-check"><input type="checkbox" id="notifStudent" checked> 학생</label>
+            <label class="notif-check" style="margin-top:6px"><input type="checkbox" id="notifParent" checked> 학부모</label>
+            <br><br>
+            <button class="btn-sm primary" style="width:100%;justify-content:center" onclick="sendNotification()">이메일 초안 열기</button>
+          </div>
+        </div>
+
+        <!-- Stage Change (admin/tutor only) -->
+        <div class="section-card" id="stageCard" style="display:none">
+          <div class="section-header">
+            <div class="section-title">🔄 단계 변경</div>
+          </div>
+          <div class="stage-change">
+            <select class="modal-select" id="stageSelect" style="margin-bottom:10px"></select>
+            <button class="btn-sm primary" style="width:100%;justify-content:center" onclick="changeStage()">단계 업데이트</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- MODAL: File Upload Confirm -->
+  <div class="modal-overlay" id="uploadModal">
+    <div class="modal">
+      <h3>📎 파일 업로드</h3>
+      <p id="uploadFileName" style="font-weight:600;color:var(--text)"></p>
+      <label class="modal-label">파일 종류</label>
+      <select class="modal-select" id="uploadFileType"></select>
+      <label class="modal-label">메모 (선택)</label>
+      <input class="modal-input" id="uploadNote" placeholder="파일에 대한 설명">
+      <div class="modal-btns">
+        <button class="btn-cancel" onclick="closeModal('uploadModal')">취소</button>
+        <button class="btn-confirm" id="uploadConfirmBtn" onclick="confirmUpload()">업로드</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Score Input -->
+  <div class="modal-overlay" id="scoreModal">
+    <div class="modal">
+      <h3>🎯 점수 입력</h3>
+      <p>이 수행평가의 취득 점수를 입력하세요.</p>
+      <label class="modal-label">취득 점수</label>
+      <input class="modal-input" id="scoreInput" type="number" min="0" placeholder="예: 45">
+      <label class="modal-label">만점</label>
+      <input class="modal-input" id="maxScoreInput" type="number" min="1" placeholder="예: 50">
+      <div class="modal-btns">
+        <button class="btn-cancel" onclick="closeModal('scoreModal')">취소</button>
+        <button class="btn-confirm" onclick="saveScore()">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="db.js"></script>
+  <script>
+    // ── Theme ────────────────────────────────────────────
+    var savedTheme = localStorage.getItem('sc-theme');
+    var currentTheme = savedTheme || (window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+    function applyTheme(t) {
+      document.documentElement.className = 'theme-' + t;
+      var btn = document.getElementById('themeBtn');
+      if (btn) btn.textContent = t === 'dark' ? '☀️' : '🌙';
+      localStorage.setItem('sc-theme', t); currentTheme = t;
+    }
+    function cycleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
+    applyTheme(currentTheme);
+
+    // ── State ────────────────────────────────────────────
+    var user = null;
+    var isAdmin = false;
+    var assignment = null;
+    var student = null;
+    var files = [];
+    var pendingFile = null;
+    var assignmentId = new URLSearchParams(window.location.search).get('id');
+
+    var STAGE_COLORS = {
+      '접수': { bg:'rgba(100,116,139,0.12)', color:'#64748B', dot:'#94A3B8' },
+      '루브릭분석': { bg:'rgba(59,130,246,0.12)', color:'#3B82F6', dot:'#3B82F6' },
+      '초안작성': { bg:'rgba(139,92,246,0.12)', color:'#8B5CF6', dot:'#8B5CF6' },
+      '피드백': { bg:'rgba(245,158,11,0.12)', color:'#F59E0B', dot:'#F59E0B' },
+      '완료': { bg:'rgba(16,185,129,0.12)', color:'#10B981', dot:'#10B981' }
+    };
+    var SUBJECT_COLORS = {
+      '국어': {bg:'rgba(79,70,229,0.1)',color:'#4F46E5'}, '영어': {bg:'rgba(5,150,105,0.1)',color:'#059669'},
+      '사회': {bg:'rgba(217,119,6,0.1)',color:'#D97706'}, '과학': {bg:'rgba(124,58,237,0.1)',color:'#7C3AED'},
+      '수학': {bg:'rgba(220,38,38,0.1)',color:'#DC2626'}, '기타': {bg:'rgba(100,116,139,0.1)',color:'#64748B'}
+    };
+
+    // ── Init ─────────────────────────────────────────────
+    async function init() {
+      user = DB.requireAuth();
+      if (!user) return;
+      isAdmin = DB.isAdmin();
+      if (!assignmentId) { alert('수행평가 ID가 없습니다.'); history.back(); return; }
+      try {
+        assignment = await DB.getAssignment(assignmentId);
+        if (!assignment) { alert('수행평가를 찾을 수 없습니다.'); history.back(); return; }
+        student = await DB.getStudent(assignment.student_id);
+        files = await DB.getFiles(assignmentId);
+        render();
+        document.getElementById('page').style.display = 'block';
+      } catch (err) {
+        showToast('데이터 로드 실패: ' + err.message, 'error');
+      }
+      document.getElementById('loadingOverlay').style.display = 'none';
+    }
+
+    // ── Render ───────────────────────────────────────────
+    function render() {
+      renderHeader();
+      renderStageBar();
+      renderTimeline();
+      renderFiles();
+      renderActions();
+      if (isAdmin) {
+        document.getElementById('scoreCard').style.display = 'block';
+        document.getElementById('notifCard').style.display = 'block';
+        document.getElementById('stageCard').style.display = 'block';
+        renderScore();
+        renderStageSelect();
+      }
+      // 학생이나 관리자는 업로드 가능
+      if (user.role === 'student' || isAdmin) {
+        document.getElementById('uploadSection').style.display = 'block';
+      }
+    }
+
+    function renderHeader() {
+      var sc = STAGE_COLORS[assignment.stage] || STAGE_COLORS['접수'];
+      var subColor = SUBJECT_COLORS[assignment.subject] || SUBJECT_COLORS['기타'];
+      var dday = DB.getDDay(assignment.deadline);
+      var ddayClass = DB.getDDayClass(assignment.deadline);
+      document.getElementById('ahSubject').textContent = assignment.subject;
+      document.getElementById('ahSubject').style.background = subColor.bg;
+      document.getElementById('ahSubject').style.color = subColor.color;
+      document.getElementById('ahTitle').textContent = assignment.title;
+      document.getElementById('ahMeta').innerHTML =
+        '<span>👤 ' + (student ? student.name : '알 수 없음') + '</span>' +
+        (student ? '<span>🏫 ' + student.school + ' ' + student.grade + '학년</span>' : '') +
+        '<span>📅 마감: ' + DB.formatDate(assignment.deadline) + '</span>' +
+        (dday ? '<span class="kc-dday ' + ddayClass + '" style="padding:3px 10px;border-radius:100px;font-size:12px;font-weight:700;background:rgba(var(--accent-rgb,79,70,229),0.1)">' + dday + '</span>' : '') +
+        '<span>단계: <strong style="color:' + sc.color + '">' + assignment.stage + '</strong></span>';
+    }
+
+    function renderStageBar() {
+      var stageIdx = DB.STAGES.indexOf(assignment.stage);
+      var track = document.getElementById('stageTrack');
+      var html = '';
+      DB.STAGES.forEach(function(stage, i) {
+        var isDone = i < stageIdx;
+        var isActive = i === stageIdx;
+        var dotClass = isDone ? 'done' : isActive ? 'active' : '';
+        html += '<div class="stage-item">' +
+          '<div class="stage-dot ' + dotClass + '">' + (isDone ? '✓' : (i + 1)) + '</div>' +
+          '<div class="stage-label ' + dotClass + '">' + stage + '</div>' +
+          '</div>';
+        if (i < DB.STAGES.length - 1) {
+          html += '<div class="stage-connector' + (isDone ? ' done' : '') + '"></div>';
+        }
+      });
+      track.innerHTML = html;
+    }
+
+    function renderTimeline() {
+      var tl = document.getElementById('timeline');
+      if (!files.length) {
+        tl.innerHTML = '<div class="empty-tl">아직 활동 내역이 없습니다.<br>파일을 업로드하면 여기에 표시됩니다.</div>';
+        return;
+      }
+      var sorted = files.slice().sort(function(a, b) { return new Date(b.uploaded_at) - new Date(a.uploaded_at); });
+      var tlHtml = sorted.map(function(f) {
+        var icon = DB.FILE_ICONS[f.file_type] || '📎';
+        var roleLabel = f.uploader_role === 'admin' ? '관리자' : f.uploader_role === 'tutor' ? '강사' : '학생';
+        var roleColor = (f.uploader_role === 'admin' || f.uploader_role === 'tutor') ?
+          'rgba(79,70,229,0.15)' : 'rgba(5,150,105,0.15)';
+        return '<div class="tl-item">' +
+          '<div class="tl-icon" style="background:' + roleColor + '">' + icon + '</div>' +
+          '<div class="tl-content">' +
+          '<div class="tl-actor">' + roleLabel + ' · ' + f.file_type + '</div>' +
+          '<div class="tl-text"><a class="tl-file-link" href="' + f.file_url + '" target="_blank">📎 ' + escHtml(f.file_name) + '</a></div>' +
+          (f.note ? '<div class="tl-note">' + escHtml(f.note) + '</div>' : '') +
+          '<div class="tl-time">' + formatRelTime(f.uploaded_at) + ' · ' + DB.formatFileSize(f.file_size) + '</div>' +
+          '</div></div>';
+      }).join('');
+      tl.innerHTML = tlHtml;
+    }
+
+    function renderFiles() {
+      var list = document.getElementById('filesList');
+      document.getElementById('filesCount').textContent = files.length + '개';
+      if (!files.length) {
+        list.innerHTML = '<div style="padding:12px;font-size:13px;color:var(--text-muted);text-align:center">파일 없음</div>';
+        return;
+      }
+      list.innerHTML = files.map(function(f) {
+        var icon = DB.FILE_ICONS[f.file_type] || '📎';
+        var sc = STAGE_COLORS['접수'];
+        return '<div class="file-item">' +
+          '<div class="file-icon">' + icon + '</div>' +
+          '<div class="file-info">' +
+          '<div class="file-name">' + escHtml(f.file_name) + '</div>' +
+          '<div class="file-meta">' + f.file_type + ' · ' + DB.formatFileSize(f.file_size) + ' · ' + DB.formatDate(f.uploaded_at) + '</div>' +
+          '</div>' +
+          '<a class="file-dl" href="' + f.file_url + '" target="_blank" title="다운로드">↓</a>' +
+          '</div>';
+      }).join('');
+    }
+
+    function renderActions() {
+      // Admin actions in header
+      if (isAdmin) {
+        document.getElementById('ahActions').innerHTML =
+          '<button class="btn-sm" onclick="location.href=\'dashboard.html\'">← 대시보드</button>';
+      }
+    }
+
+    function renderScore() {
+      if (assignment.score != null && assignment.max_score != null) {
+        var pct = Math.round(assignment.score / assignment.max_score * 100);
+        document.getElementById('scoreDisplay').innerHTML =
+          '<div class="score-display">' +
+          '<div class="score-num">' + assignment.score + '</div>' +
+          '<div class="score-max">/ ' + assignment.max_score + '</div>' +
+          '<div class="score-pct">(' + pct + '%)</div>' +
+          '</div>' +
+          '<div class="score-bar"><div class="score-fill" style="width:' + pct + '%"></div></div>';
+        document.getElementById('scoreEditBtn').textContent = '수정';
+      }
+    }
+
+    function renderStageSelect() {
+      var sel = document.getElementById('stageSelect');
+      sel.innerHTML = DB.STAGES.map(function(s) {
+        return '<option value="' + s + '"' + (s === assignment.stage ? ' selected' : '') + '>' + s + '</option>';
+      }).join('');
+    }
+
+    // ── File Upload ───────────────────────────────────────
+    function handleFileSelect(input) {
+      if (!input.files.length) return;
+      pendingFile = input.files[0];
+      document.getElementById('uploadFileName').textContent = pendingFile.name + ' (' + DB.formatFileSize(pendingFile.size) + ')';
+      // Set allowed types based on role
+      var types = isAdmin ? DB.FILE_TYPES : ['계획서', '루브릭', '초안', '기타'];
+      document.getElementById('uploadFileType').innerHTML = types.map(function(t) {
+        return '<option value="' + t + '">' + DB.FILE_ICONS[t] + ' ' + t + '</option>';
+      }).join('');
+      // Pre-select based on role
+      if (!isAdmin && user.role === 'student') {
+        document.getElementById('uploadFileType').value = '초안';
+      } else if (isAdmin) {
+        document.getElementById('uploadFileType').value = '피드백';
+      }
+      document.getElementById('uploadNote').value = '';
+      document.getElementById('uploadModal').classList.add('open');
+    }
+
+    async function confirmUpload() {
+      if (!pendingFile) return;
+      var btn = document.getElementById('uploadConfirmBtn');
+      btn.disabled = true; btn.textContent = '업로드 중...';
+      try {
+        var fileType = document.getElementById('uploadFileType').value;
+        var note = document.getElementById('uploadNote').value.trim();
+        await DB.uploadFile(pendingFile, student.id, assignmentId, fileType, note);
+        files = await DB.getFiles(assignmentId);
+        renderTimeline();
+        renderFiles();
+        closeModal('uploadModal');
+        document.getElementById('filePickInput').value = '';
+        pendingFile = null;
+        showToast('파일이 업로드되었습니다.', 'success');
+      } catch (e) {
+        showToast(e.message, 'error');
+      }
+      btn.disabled = false; btn.textContent = '업로드';
+    }
+
+    // ── Stage Change ──────────────────────────────────────
+    async function changeStage() {
+      var newStage = document.getElementById('stageSelect').value;
+      if (newStage === assignment.stage) { showToast('이미 해당 단계입니다.', 'error'); return; }
+      try {
+        await DB.updateStage(assignmentId, newStage);
+        assignment.stage = newStage;
+        renderHeader();
+        renderStageBar();
+        showToast('단계가 "' + newStage + '"으로 변경되었습니다.', 'success');
+      } catch (e) { showToast(e.message, 'error'); }
+    }
+
+    // ── Score ─────────────────────────────────────────────
+    function openScoreModal() {
+      document.getElementById('scoreInput').value = assignment.score || '';
+      document.getElementById('maxScoreInput').value = assignment.max_score || '';
+      document.getElementById('scoreModal').classList.add('open');
+    }
+    async function saveScore() {
+      var score = parseFloat(document.getElementById('scoreInput').value);
+      var maxScore = parseFloat(document.getElementById('maxScoreInput').value);
+      if (isNaN(score) || isNaN(maxScore) || maxScore <= 0) {
+        showToast('유효한 점수를 입력하세요.', 'error'); return;
+      }
+      try {
+        await DB.recordScore(assignmentId, score, maxScore);
+        assignment.score = score; assignment.max_score = maxScore; assignment.stage = '완료';
+        renderHeader(); renderStageBar(); renderScore();
+        document.getElementById('stageSelect').value = '완료';
+        closeModal('scoreModal');
+        showToast('점수가 저장되었습니다.', 'success');
+      } catch (e) { showToast(e.message, 'error'); }
+    }
+
+    // ── Notification ──────────────────────────────────────
+    async function sendNotification() {
+      if (!student) return;
+      var toEmails = [];
+      var studentUser = null, parentUser = null;
+      try {
+        if (student.user_id) studentUser = await DB.getUserById(student.user_id);
+        if (student.parent_user_id) parentUser = await DB.getUserById(student.parent_user_id);
+      } catch (e) {}
+      if (document.getElementById('notifStudent').checked && studentUser) toEmails.push(studentUser.email);
+      if (document.getElementById('notifParent').checked && parentUser) toEmails.push(parentUser.email);
+      if (!toEmails.length) { showToast('수신자를 선택하거나 이메일 정보를 확인하세요.', 'error'); return; }
+      var notif = DB.makeFeedbackNotification(student.name, assignment.title, assignment.stage);
+      DB.openNotificationEmail(toEmails, notif.subject, notif.body);
+      showToast('이메일 초안이 열렸습니다.', 'success');
+    }
+
+    // ── Helpers ───────────────────────────────────────────
+    function formatRelTime(dateStr) {
+      if (!dateStr) return '-';
+      var d = new Date(dateStr);
+      var diff = Math.floor((new Date() - d) / 60000);
+      if (diff < 1) return '방금 전';
+      if (diff < 60) return diff + '분 전';
+      if (diff < 1440) return Math.floor(diff/60) + '시간 전';
+      return DB.formatDate(dateStr);
+    }
+    function escHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+    document.querySelectorAll('.modal-overlay').forEach(function(el) {
+      el.addEventListener('click', function(e) { if (e.target === el) el.classList.remove('open'); });
+    });
+    var toastTimer;
+    function showToast(msg, type) {
+      var t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast show ' + (type || '');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function() { t.className = 'toast'; }, 3200);
+    }
+
+    init();
+  </script>
+</body>
+</html>

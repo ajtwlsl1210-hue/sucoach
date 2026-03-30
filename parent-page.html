@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ko" class="theme-light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>자녀 현황 — 수코치</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html.theme-dark {
+      --bg:#0A0A0A; --surface:#141414; --surface-hover:#1C1C1C; --surface-2:#1C1C1C;
+      --border:rgba(255,255,255,0.08); --text:#EDEDED; --text-secondary:#888; --text-muted:#555;
+      --accent:#6366F1; --accent-hover:#818CF8; --accent-light:rgba(99,102,241,0.12);
+      --positive:#10b981; --negative:#f43f5e; --warning:#f59e0b; --input-bg:#1C1C1C;
+    }
+    html.theme-light {
+      --bg:#F8FAFC; --surface:#FFFFFF; --surface-hover:#F1F5F9; --surface-2:#F8FAFC;
+      --border:rgba(0,0,0,0.08); --text:#0F172A; --text-secondary:#64748B; --text-muted:#94A3B8;
+      --accent:#4F46E5; --accent-hover:#4338CA; --accent-light:rgba(79,70,229,0.08);
+      --positive:#059669; --negative:#DC2626; --warning:#D97706; --input-bg:#F8FAFC;
+    }
+    body {
+      font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--text);
+      min-height:100vh; -webkit-font-smoothing:antialiased; transition:background 0.3s,color 0.3s;
+    }
+
+    /* ── 탑바 ── */
+    .topbar {
+      position:sticky; top:0; z-index:100; background:var(--surface);
+      border-bottom:1px solid var(--border); padding:0 20px; height:56px;
+      display:flex; align-items:center; gap:12px;
+    }
+    .topbar-logo { font-size:20px; font-weight:900; color:var(--accent); letter-spacing:-0.06em; }
+    .topbar-divider { width:1px; height:20px; background:var(--border); }
+    .topbar-title { font-size:14px; font-weight:700; color:var(--text-secondary); flex:1; }
+    .topbar-actions { display:flex; gap:8px; align-items:center; }
+    .btn-sm {
+      padding:7px 12px; border-radius:8px; font-size:12px; font-weight:600;
+      cursor:pointer; font-family:inherit; border:1px solid var(--border);
+      background:var(--surface-hover); color:var(--text); transition:all 0.2s;
+    }
+    .btn-sm:hover { background:var(--accent); color:white; border-color:var(--accent); }
+    .theme-btn {
+      width:32px; height:32px; border-radius:8px; border:1px solid var(--border);
+      background:none; color:var(--text-secondary); cursor:pointer; display:flex;
+      align-items:center; justify-content:center; font-size:14px; transition:background 0.2s;
+    }
+    .theme-btn:hover { background:var(--surface-hover); }
+
+    /* ── 메인 ── */
+    .main { max-width:860px; margin:0 auto; padding:28px 20px 80px; }
+
+    /* ── 자녀 프로필 카드 ── */
+    .child-card {
+      background:var(--surface); border:1px solid var(--border); border-radius:20px;
+      padding:24px; margin-bottom:24px; display:flex; gap:20px; align-items:center;
+    }
+    .child-avatar {
+      width:60px; height:60px; border-radius:50%; background:var(--accent-light);
+      color:var(--accent); display:flex; align-items:center; justify-content:center;
+      font-size:22px; font-weight:900; flex-shrink:0;
+    }
+    .child-info { flex:1; }
+    .child-name { font-size:1.4rem; font-weight:900; letter-spacing:-0.04em; }
+    .child-school { font-size:13px; color:var(--text-secondary); margin-top:3px; }
+    .child-badges { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+    .child-badge {
+      padding:3px 10px; border-radius:6px; font-size:11px; font-weight:700;
+      background:var(--surface-2); color:var(--text-muted);
+    }
+    .child-badge.primary { background:var(--accent-light); color:var(--accent); }
+    .child-stats { display:flex; gap:16px; flex-shrink:0; }
+    .child-stat { display:flex; flex-direction:column; align-items:center; gap:3px; }
+    .child-stat-val { font-size:20px; font-weight:900; color:var(--text); }
+    .child-stat-lbl { font-size:11px; color:var(--text-muted); font-weight:600; }
+    .child-stat-val.warn { color:var(--warning); }
+
+    /* ── 읽기전용 배너 ── */
+    .readonly-banner {
+      background:rgba(148,163,184,0.08); border:1px solid var(--border);
+      border-radius:12px; padding:12px 16px; margin-bottom:20px;
+      display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text-muted);
+    }
+
+    /* ── 섹션 ── */
+    .section { margin-bottom:24px; }
+    .section-header {
+      display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;
+    }
+    .section-title {
+      font-size:15px; font-weight:800; letter-spacing:-0.03em;
+      display:flex; align-items:center; gap:7px;
+    }
+    .section-count {
+      background:var(--accent-light); color:var(--accent); border-radius:6px;
+      padding:2px 8px; font-size:11px; font-weight:700;
+    }
+
+    /* ── 수행평가 카드 (읽기 전용) ── */
+    .asgn-card {
+      background:var(--surface); border:1px solid var(--border); border-radius:14px;
+      padding:18px 20px; margin-bottom:12px; cursor:pointer; transition:all 0.2s;
+    }
+    .asgn-card:hover { border-color:var(--accent); box-shadow:0 2px 12px rgba(0,0,0,0.06); }
+    .asgn-top { display:flex; align-items:flex-start; gap:12px; margin-bottom:12px; }
+    .asgn-icon { font-size:24px; flex-shrink:0; }
+    .asgn-info { flex:1; }
+    .asgn-subject-badge {
+      display:inline-block; padding:2px 8px; border-radius:5px; font-size:11px; font-weight:700;
+      background:var(--accent-light); color:var(--accent); margin-bottom:5px;
+    }
+    .asgn-title { font-size:14px; font-weight:800; letter-spacing:-0.03em; }
+    .asgn-meta { font-size:12px; color:var(--text-muted); margin-top:3px; }
+    .asgn-right { display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0; }
+    .asgn-stage {
+      padding:4px 10px; border-radius:7px; font-size:12px; font-weight:700;
+      border:1.5px solid currentColor;
+    }
+    .dday-badge {
+      padding:3px 8px; border-radius:6px; font-size:11px; font-weight:700;
+    }
+    .dday-urgent { background:rgba(220,38,38,0.1); color:var(--negative); }
+    .dday-warning { background:rgba(217,119,6,0.1); color:var(--warning); }
+    .dday-safe { background:rgba(5,150,105,0.1); color:var(--positive); }
+    .dday-overdue { background:rgba(220,38,38,0.15); color:var(--negative); }
+    .dday-none { background:var(--surface-2); color:var(--text-muted); }
+    .progress-bar-wrap { height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
+    .progress-bar { height:100%; background:var(--accent); border-radius:3px; }
+
+    /* ── 결과 카드 ── */
+    .result-cards { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:12px; }
+    .result-card {
+      background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px;
+    }
+    .result-card-subject { font-size:11px; color:var(--text-muted); font-weight:700; margin-bottom:4px; }
+    .result-card-title { font-size:13px; font-weight:700; margin-bottom:12px; }
+    .result-score { font-size:28px; font-weight:900; color:var(--accent); letter-spacing:-0.05em; }
+    .result-grade { font-size:24px; font-weight:900; }
+    /* 알파벳 등급 */
+    .grade-A { color:var(--positive); }
+    .grade-B { color:#3B82F6; }
+    .grade-C { color:var(--warning); }
+    .grade-D, .grade-E { color:var(--negative); }
+    /* 한국 숫자 등급 (1~9등급) */
+    .grade-1 { color:var(--positive); }
+    .grade-2 { color:#10b981; }
+    .grade-3 { color:#3B82F6; }
+    .grade-4 { color:#6366F1; }
+    .grade-5 { color:var(--warning); }
+    .grade-6 { color:#f97316; }
+    .grade-7, .grade-8, .grade-9 { color:var(--negative); }
+    .result-unit { font-size:13px; font-weight:400; color:var(--text-muted); }
+
+    /* ── 빈 상태 ── */
+    .empty-state { text-align:center; padding:40px; color:var(--text-muted); }
+    .empty-icon { font-size:36px; margin-bottom:10px; opacity:0.5; }
+    .empty-text { font-size:13px; }
+
+    /* ── 모달 ── */
+    .modal-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200;
+      display:none; align-items:center; justify-content:center; padding:24px;
+    }
+    .modal-overlay.open { display:flex; }
+    .modal {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:20px; padding:28px; width:100%; max-width:400px;
+      animation:fadeUp 0.3s ease-out both;
+    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    .modal-title { font-size:1.1rem; font-weight:800; margin-bottom:16px; }
+    .form-group { margin-bottom:14px; }
+    .form-group label { display:block; font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:5px; }
+    .form-group input {
+      width:100%; padding:10px 12px; border-radius:8px; border:1.5px solid var(--border);
+      background:var(--input-bg); color:var(--text); font-size:13px; font-family:inherit; outline:none;
+      transition:border-color 0.2s;
+    }
+    .form-group input:focus { border-color:var(--accent); }
+    .modal-actions { display:flex; gap:10px; margin-top:18px; }
+    .btn-full { flex:1; padding:10px; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; border:none; }
+    .btn-full.primary { background:var(--accent); color:white; }
+    .btn-full.cancel { background:var(--surface-hover); color:var(--text); border:1px solid var(--border); }
+    .alert { padding:10px 12px; border-radius:8px; font-size:13px; margin-bottom:12px; display:none; }
+    .alert.error { background:rgba(220,38,38,0.08); color:var(--negative); border:1px solid rgba(220,38,38,0.2); }
+    .alert.show { display:block; }
+
+    /* ── 로딩 ── */
+    .loading-wrap { display:flex; align-items:center; justify-content:center; min-height:300px; flex-direction:column; gap:12px; color:var(--text-secondary); }
+    .spinner-lg { width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    /* ── 파일 업로드 ── */
+    .form-group select {
+      width:100%; padding:10px 12px; border-radius:8px; border:1.5px solid var(--border);
+      background:var(--input-bg); color:var(--text); font-size:13px; font-family:inherit; outline:none;
+      transition:border-color 0.2s; appearance:none;
+    }
+    .form-group select:focus { border-color:var(--accent); }
+    .file-pick-btn {
+      padding:12px; background:var(--surface-2); border-radius:8px; font-size:13px;
+      color:var(--text-muted); cursor:pointer; width:100%; border:1.5px dashed var(--border);
+      text-align:left; transition:border-color 0.2s;
+    }
+    .file-pick-btn:hover { border-color:var(--accent); }
+
+    /* ── 타임라인 미니 ── */
+    .stage-steps {
+      display:flex; gap:4px; overflow-x:auto; padding:4px 0;
+    }
+    .stage-dot {
+      width:28px; height:28px; border-radius:50%; display:flex; align-items:center;
+      justify-content:center; font-size:12px; border:2px solid var(--border);
+      background:var(--surface-2); flex-shrink:0; transition:all 0.2s;
+    }
+    .stage-dot.done { background:var(--positive); border-color:var(--positive); color:white; font-size:10px; font-weight:800; }
+    .stage-dot.current { background:var(--accent-light); border-color:var(--accent); font-size:14px; }
+    .stage-dot.upcoming { opacity:0.3; }
+    .stage-connector { height:2px; background:var(--border); flex:1; align-self:center; min-width:8px; }
+    .stage-connector.done { background:var(--positive); }
+  </style>
+</head>
+<body>
+
+<!-- 탑바 -->
+<div class="topbar">
+  <div class="topbar-logo">수코치</div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-title" id="topbarTitle">자녀 현황</div>
+  <div class="topbar-actions">
+    <button class="btn-sm" onclick="openUploadModal()">📎 자료 업로드</button>
+    <button class="btn-sm" onclick="openModal('pwModal')">🔑 비번변경</button>
+    <button class="btn-sm" onclick="DB.logout()">로그아웃</button>
+    <button class="theme-btn" id="themeBtn" onclick="cycleTheme()">🌙</button>
+  </div>
+</div>
+
+<!-- 메인 -->
+<div class="main">
+  <div class="loading-wrap" id="loadingWrap">
+    <div class="spinner-lg"></div>
+    <div>불러오는 중…</div>
+  </div>
+  <div id="pageContent" style="display:none"></div>
+</div>
+
+<!-- 파일 업로드 모달 -->
+<div class="modal-overlay" id="uploadFileModal">
+  <div class="modal">
+    <div class="modal-title">📎 자료 업로드</div>
+    <div class="alert error" id="uploadAlert"></div>
+    <div class="form-group">
+      <label>관련 수행평가 (선택)</label>
+      <select id="upload_assignment_id">
+        <option value="">일반 자료 (특정 수행평가 없음)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>파일</label>
+      <div class="file-pick-btn" onclick="document.getElementById('parentFileInput').click()">
+        <span id="uploadFileName">파일을 선택하세요 (최대 10MB)</span>
+      </div>
+      <input type="file" id="parentFileInput" style="display:none" onchange="onParentFileSelected(event)">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-full cancel" onclick="closeModal('uploadFileModal')">취소</button>
+      <button class="btn-full primary" id="parentUploadBtn" onclick="submitParentUpload()">업로드</button>
+    </div>
+  </div>
+</div>
+
+<!-- 비밀번호 변경 모달 -->
+<div class="modal-overlay" id="pwModal">
+  <div class="modal">
+    <div class="modal-title">🔑 비밀번호 변경</div>
+    <div class="alert error" id="pwAlert"></div>
+    <div class="form-group">
+      <label>현재 비밀번호</label>
+      <input type="password" id="inp_pw_current" placeholder="현재 비밀번호">
+    </div>
+    <div class="form-group">
+      <label>새 비밀번호</label>
+      <input type="password" id="inp_pw_new" placeholder="새 비밀번호 (6자 이상)">
+    </div>
+    <div class="form-group">
+      <label>새 비밀번호 확인</label>
+      <input type="password" id="inp_pw_confirm" placeholder="재입력">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-full cancel" onclick="closeModal('pwModal')">취소</button>
+      <button class="btn-full primary" onclick="submitPwChange()">변경</button>
+    </div>
+  </div>
+</div>
+
+<script src="db.js"></script>
+<script>
+// ── 테마 ─────────────────────────────────────────────────────────
+var savedTheme = localStorage.getItem('sc-theme');
+var currentTheme = savedTheme || (window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+function applyTheme(t) {
+  document.documentElement.className = 'theme-' + t;
+  var btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = t === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('sc-theme', t);
+  currentTheme = t;
+}
+function cycleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
+applyTheme(currentTheme);
+
+// ── 상태 ─────────────────────────────────────────────────────────
+var currentUser = null;
+var myChild = null;
+var assignments = [];
+var selectedUploadFile = null;
+
+document.addEventListener('DOMContentLoaded', async function() {
+  currentUser = DB.requireAuth(['parent']);
+  if (!currentUser) return;
+
+  try {
+    myChild = await DB.getStudentByParentId(currentUser.id);
+    if (!myChild) {
+      showError('자녀 정보를 찾을 수 없습니다. 관리자에게 문의하세요.');
+      return;
+    }
+
+    document.getElementById('topbarTitle').textContent = myChild.name + ' 학생 현황';
+
+    assignments = await DB.getStudentAssignments(myChild.id) || [];
+    renderPage();
+  } catch(e) {
+    showError('데이터 로드 실패: ' + e.message);
+  }
+});
+
+function renderPage() {
+  var today = new Date(); today.setHours(0,0,0,0);
+  var active = assignments.filter(function(a) { return a.stage !== '완료'; });
+  var completed = assignments.filter(function(a) { return a.stage === '완료'; });
+  var urgent = active.filter(function(a) {
+    var dl = a.internal_deadline || a.school_deadline;
+    if (!dl) return false;
+    return Math.ceil((new Date(dl) - today) / 86400000) <= 5;
+  });
+
+  var html = '';
+
+  // 자녀 프로필 카드
+  html += `
+    <div class="child-card">
+      <div class="child-avatar">${(myChild.name||'?').charAt(0)}</div>
+      <div class="child-info">
+        <div class="child-name">${myChild.name}</div>
+        <div class="child-school">${myChild.school||''} ${myChild.grade ? myChild.grade + '학년' : ''} ${myChild.class_num ? myChild.class_num + '반' : ''}</div>
+        <div class="child-badges">
+          ${myChild.target_grade ? `<span class="child-badge primary">목표 ${myChild.target_grade}등급</span>` : ''}
+          ${myChild.student_type ? `<span class="child-badge">${myChild.student_type}</span>` : ''}
+        </div>
+      </div>
+      <div class="child-stats">
+        <div class="child-stat">
+          <div class="child-stat-val">${active.length}</div>
+          <div class="child-stat-lbl">진행중</div>
+        </div>
+        <div class="child-stat">
+          <div class="child-stat-val ${urgent.length > 0 ? 'warn' : ''}">${urgent.length}</div>
+          <div class="child-stat-lbl">D-5긴급</div>
+        </div>
+        <div class="child-stat">
+          <div class="child-stat-val">${completed.length}</div>
+          <div class="child-stat-lbl">완료</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="readonly-banner">
+      <span>👁</span>
+      <span>자녀의 수행평가 진행 현황을 확인하고, 관련 자료를 직접 업로드하실 수 있습니다.</span>
+    </div>
+  `;
+
+  // 진행 중 수행평가
+  html += `
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title"><span>📋</span> 진행 중 <span class="section-count">${active.length}</span></div>
+      </div>
+  `;
+
+  if (active.length === 0) {
+    html += `<div class="empty-state"><div class="empty-icon">✨</div><div class="empty-text">현재 진행 중인 수행평가가 없습니다.</div></div>`;
+  } else {
+    active.sort(function(a,b) {
+      var da = new Date(a.internal_deadline || a.school_deadline || '2099-12-31');
+      var db2 = new Date(b.internal_deadline || b.school_deadline || '2099-12-31');
+      return da - db2;
+    }).forEach(function(a) {
+      html += renderAssignmentCard(a, today);
+    });
+  }
+  html += `</div>`;
+
+  // 완료된 수행평가 + 결과
+  if (completed.length > 0) {
+    var withResults = completed.filter(function(a) { return a.score != null || a.grade; });
+    if (withResults.length > 0) {
+      html += `
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title"><span>🏆</span> 완료된 수행평가 결과</div>
+          </div>
+          <div class="result-cards">
+            ${withResults.map(function(a) {
+              return `
+                <div class="result-card" style="cursor:pointer" onclick="goAssignment('${a.id}')">
+                  <div class="result-card-subject">${a.subject}</div>
+                  <div class="result-card-title">${a.title}</div>
+                  <div style="display:flex;align-items:baseline;gap:10px">
+                    ${a.score != null ? `<div class="result-score">${a.score}<span class="result-unit">점</span></div>` : ''}
+                    ${a.grade ? `<div class="result-grade grade-${(a.grade||'').replace('등급','')}">${a.grade}</div>` : ''}
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    html += `
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title"><span>🎉</span> 완료 <span class="section-count">${completed.length}</span></div>
+        </div>
+    `;
+    completed.forEach(function(a) {
+      html += renderAssignmentCard(a, today);
+    });
+    html += `</div>`;
+  }
+
+  document.getElementById('pageContent').innerHTML = html;
+  document.getElementById('loadingWrap').style.display = 'none';
+  document.getElementById('pageContent').style.display = 'block';
+}
+
+function renderAssignmentCard(a, today) {
+  var dl = a.internal_deadline || a.school_deadline;
+  var dday = DB.getDDay(dl);
+  var ddayClass = DB.getDDayClass(dl);
+  var stage = DB.STAGE_LABELS[a.stage] || {};
+  var stageIdx = DB.STAGES.indexOf(a.stage);
+  var progressPct = Math.round(((stageIdx + 1) / DB.STAGES.length) * 100);
+  var isCompleted = a.stage === '완료';
+
+  // 미니 단계 표시
+  var stepsHtml = '<div class="stage-steps">';
+  DB.STAGES.forEach(function(s, i) {
+    var lbl = DB.STAGE_LABELS[s] || {};
+    var cls = i < stageIdx ? 'done' : i === stageIdx ? 'current' : 'upcoming';
+    if (i > 0) stepsHtml += `<div class="stage-connector ${i <= stageIdx ? 'done' : ''}"></div>`;
+    stepsHtml += `<div class="stage-dot ${cls}" title="${s}">${cls === 'done' ? '✓' : (lbl.icon || '•')}</div>`;
+  });
+  stepsHtml += '</div>';
+
+  return `
+    <div class="asgn-card" onclick="goAssignment('${a.id}')">
+      <div class="asgn-top">
+        <div class="asgn-icon">${stage.icon || '📋'}</div>
+        <div class="asgn-info">
+          <div class="asgn-subject-badge">${a.subject}</div>
+          <div class="asgn-title">${a.title}</div>
+          <div class="asgn-meta">
+            ${a.type || ''} ${a.school_deadline ? '· 학교마감 ' + DB.formatDate(a.school_deadline) : ''}
+          </div>
+        </div>
+        <div class="asgn-right">
+          <span class="asgn-stage" style="color:${stage.color||'var(--text)'};border-color:${stage.color||'var(--border)'}">${stage.icon||''} ${a.stage}</span>
+          ${dl && !isCompleted ? `<span class="dday-badge ${ddayClass}">${dday}</span>` : ''}
+          ${isCompleted && a.grade ? `<span class="result-grade grade-${(a.grade||'').replace('등급','')}" style="font-size:14px">${a.grade}${a.score != null ? ' / ' + a.score + '점' : ''}</span>` : ''}
+        </div>
+      </div>
+      ${stepsHtml}
+    </div>
+  `;
+}
+
+function goAssignment(id) {
+  window.location.href = 'assignment-detail.html?id=' + id;
+}
+
+// ── 파일 업로드 ──────────────────────────────────────────────────
+function openUploadModal() {
+  // 수행평가 목록 채우기
+  var sel = document.getElementById('upload_assignment_id');
+  sel.innerHTML = '<option value="">일반 자료 (특정 수행평가 없음)</option>';
+  assignments.forEach(function(a) {
+    var opt = document.createElement('option');
+    opt.value = a.id;
+    opt.textContent = '[' + a.subject + '] ' + a.title;
+    sel.appendChild(opt);
+  });
+  selectedUploadFile = null;
+  document.getElementById('uploadFileName').textContent = '파일을 선택하세요 (최대 10MB)';
+  document.getElementById('parentFileInput').value = '';
+  openModal('uploadFileModal');
+}
+
+function onParentFileSelected(e) {
+  var f = e.target.files[0];
+  if (!f) return;
+  if (f.size > 10 * 1024 * 1024) { alert('파일 크기는 10MB 이하여야 합니다.'); e.target.value = ''; return; }
+  selectedUploadFile = f;
+  var kb = f.size < 1024 * 1024
+    ? Math.round(f.size / 1024) + 'KB'
+    : (f.size / 1024 / 1024).toFixed(1) + 'MB';
+  document.getElementById('uploadFileName').textContent = f.name + ' (' + kb + ')';
+}
+
+async function submitParentUpload() {
+  if (!selectedUploadFile) { showAlert('uploadAlert', '파일을 선택하세요.'); return; }
+  var assignmentId = document.getElementById('upload_assignment_id').value || null;
+  var btn = document.getElementById('parentUploadBtn');
+  btn.disabled = true; btn.textContent = '업로드 중…';
+  try {
+    await DB.uploadFile(selectedUploadFile, myChild.id, assignmentId, '기타', '');
+    selectedUploadFile = null;
+    document.getElementById('uploadFileName').textContent = '파일을 선택하세요 (최대 10MB)';
+    document.getElementById('parentFileInput').value = '';
+    closeModal('uploadFileModal');
+    // 업로드 후 수행평가 목록 재로드 → UI 최신 상태 반영
+    assignments = await DB.getStudentAssignments(myChild.id) || [];
+    renderPage();
+    DB.toast('파일이 업로드되었습니다.');
+  } catch(e) {
+    showAlert('uploadAlert', '업로드 실패: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = '업로드';
+  }
+}
+
+// ── 비밀번호 변경 ────────────────────────────────────────────────
+async function submitPwChange() {
+  var cur = document.getElementById('inp_pw_current').value;
+  var nw = document.getElementById('inp_pw_new').value;
+  var cf = document.getElementById('inp_pw_confirm').value;
+  if (!cur || !nw || !cf) { showAlert('pwAlert', '모든 항목을 입력하세요.'); return; }
+  if (nw.length < 6) { showAlert('pwAlert', '새 비밀번호는 6자 이상이어야 합니다.'); return; }
+  if (nw !== cf) { showAlert('pwAlert', '새 비밀번호가 일치하지 않습니다.'); return; }
+  try {
+    await DB.changePassword(nw, cur);
+    closeModal('pwModal');
+    DB.toast('비밀번호가 변경되었습니다.');
+  } catch(e) { showAlert('pwAlert', e.message); }
+}
+
+// ── 유틸 ─────────────────────────────────────────────────────────
+function showError(msg) {
+  document.getElementById('loadingWrap').innerHTML =
+    `<div style="text-align:center;color:var(--negative);font-size:14px;padding:40px">⚠️ ${msg}</div>`;
+}
+var _modalCount = 0;
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  _modalCount++;
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  _modalCount = Math.max(0, _modalCount - 1);
+  if (_modalCount === 0) document.body.style.overflow = '';
+}
+function showAlert(id, msg) {
+  var el = document.getElementById(id);
+  el.textContent = msg; el.className = 'alert error show';
+}
+document.querySelectorAll('.modal-overlay').forEach(function(ov) {
+  ov.addEventListener('click', function(e) { if (e.target === ov) ov.classList.remove('open'); });
+});
+</script>
+</body>
+</html>
