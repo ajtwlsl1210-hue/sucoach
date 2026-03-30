@@ -35,6 +35,14 @@
     .topbar-divider { width:1px; height:20px; background:var(--border); }
     .topbar-title { font-size:14px; font-weight:700; color:var(--text-secondary); flex:1; }
     .topbar-actions { display:flex; gap:8px; align-items:center; }
+    @media (max-width:520px) {
+      .topbar { padding:0 12px; gap:8px; }
+      .topbar-logo { font-size:16px; }
+      .topbar-divider { display:none; }
+      .topbar-title { font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px; }
+      .topbar-actions { gap:4px; }
+      .btn-sm { padding:6px 10px; font-size:12px; }
+    }
     .btn-sm {
       padding:7px 12px; border-radius:8px; font-size:12px; font-weight:600;
       cursor:pointer; font-family:inherit; border:1px solid var(--border);
