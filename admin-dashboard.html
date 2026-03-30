@@ -459,6 +459,10 @@
         <select id="edit_tutor"><option value="">미배정</option></select>
       </div>
       <div class="form-group">
+        <label class="form-label">학부모 계정 연결 <small style="font-weight:400;color:var(--text-muted);">(학부모 페이지 접속 권한)</small></label>
+        <select id="edit_parent"><option value="">연결 안 함</option></select>
+      </div>
+      <div class="form-group">
         <label class="form-label">메모</label>
         <textarea id="edit_notes" rows="2" placeholder="특이사항"></textarea>
       </div>
@@ -640,6 +644,16 @@
           sel.innerHTML += '<option value="' + t.id + '">' + t.display_name + '</option>';
         });
       });
+      // 학부모 드롭다운 채우기
+      var allUsers = await DB.getAllUsers();
+      var parents = allUsers.filter(function(u){ return u.role === 'parent'; });
+      var pSel = document.getElementById('edit_parent');
+      if (pSel) {
+        pSel.innerHTML = '<option value="">연결 안 함</option>';
+        parents.forEach(function(p) {
+          pSel.innerHTML += '<option value="' + p.id + '">' + p.display_name + ' (' + p.email + ')</option>';
+        });
+      }
     }
 
     // ── 온보딩 현황 ──────────────────────────────────────────────────
@@ -777,7 +791,7 @@
     function renderKanban() {
       var board = document.getElementById('kanbanBoard');
       var colors = {
-        '접수':'#64748B','분석완료':'#3B82F6','면담완료':'#8B5CF6','초안대기':'#EC4899',
+        '접수':'#64748B','분석완료':'#3B82F6','면담완료':'#8C5CF6','초안대기':'#EC4899',
         '피드백완료':'#F59E0B','수정중':'#EF4444','최종확인':'#10B981','완료':'#059669'
       };
       board.innerHTML = '';
@@ -842,6 +856,7 @@
       document.getElementById('edit_target').value    = s.target_grade  || '';
       document.getElementById('edit_type').value      = s.student_type  || '';
       document.getElementById('edit_tutor').value     = s.tutor_id || '';
+      document.getElementById('edit_parent').value    = s.parent_user_id || '';
       document.getElementById('edit_notes').value     = s.notes || '';
       document.getElementById('editStudentErr').style.display = 'none';
       document.getElementById('btnEditStudent').disabled = false;
@@ -875,8 +890,9 @@
           student_num:  document.getElementById('edit_num').value    || null,
           target_grade: document.getElementById('edit_target').value || null,
           student_type: document.getElementById('edit_type').value   || null,
-          tutor_id:     document.getElementById('edit_tutor').value  || null,
-          notes:        document.getElementById('edit_notes').value.trim() || null
+          tutor_id:        document.getElementById('edit_tutor').value  || null,
+          parent_user_id:  document.getElementById('edit_parent').value || null,
+          notes:           document.getElementById('edit_notes').value.trim() || null
         });
         closeEditStudent();
         await loadData();
