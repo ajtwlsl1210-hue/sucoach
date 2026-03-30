@@ -20,7 +20,7 @@
       --accent:#4F46E5; --accent-hover:#4338CA;
       --positive:#059669; --negative:#DC2626; --input-bg:#F8FAFC; --surface-hover:#F1F5F9;
     }
-    body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding:24px 16px; -webkit-font-smoothing:antialiased; }
+    body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding:24px 16px; -webkit-font-smoothing:antialiased; word-break:keep-all; }
     .wrap { max-width:640px; margin:0 auto; }
 
     .steps { display:flex; align-items:center; margin-bottom:32px; margin-top:16px; }
@@ -165,6 +165,14 @@
 
       <!-- 학생 설문 -->
       <div id="studentQ">
+        <div style="background:linear-gradient(135deg,rgba(79,70,229,0.08),rgba(124,58,237,0.06)); border:1px solid rgba(79,70,229,0.2); border-radius:12px; padding:16px 18px; margin-bottom:24px; display:flex; align-items:flex-start; gap:12px;">
+          <span style="font-size:22px; flex-shrink:0; line-height:1.4;">💡</span>
+          <div>
+            <div style="font-size:14px; font-weight:800; color:var(--accent); margin-bottom:4px;">자세히 입력할수록 나에게 딱 맞는 코칭이 나옵니다</div>
+            <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">대충 입력하면 일반적인 가이드밖에 드릴 수 없어요. 학교·선생님·내 습관까지 최대한 자세히 써줄수록, 수코치가 나만을 위한 전략을 설계해요.</div>
+          </div>
+        </div>
+
         <div class="form-group">
           <label class="form-label">Q1. 학년과 학교 <span class="req">*</span></label>
           <div class="input-row">
@@ -172,45 +180,131 @@
               <option value="">학년 선택</option>
               <option>1학년</option><option>2학년</option><option>3학년</option>
             </select>
-            <input type="text" id="sSchool" placeholder="학교 이름">
+            <input type="text" id="sSchool" placeholder="학교 이름 (예: OO고등학교)">
           </div>
         </div>
+
         <div class="form-group">
-          <label class="form-label">Q2. 수행평가에서 가장 걱정되는 것 (복수 선택) <span class="req">*</span></label>
+          <label class="form-label">Q2. 수행평가에서 가장 걱정되는 것 (복수 선택 가능) <span class="req">*</span></label>
           <div class="check-options" id="sWorry">
             <label class="check-opt"><input type="checkbox" value="시작 못 함"> 시작을 못 하겠어요</label>
             <label class="check-opt"><input type="checkbox" value="루브릭 이해 어려움"> 루브릭을 모르겠어요</label>
             <label class="check-opt"><input type="checkbox" value="시간 관리 어려움"> 시간 관리가 안 돼요</label>
             <label class="check-opt"><input type="checkbox" value="내용 구성 어려움"> 내용 구성이 어려워요</label>
             <label class="check-opt"><input type="checkbox" value="피드백 반영 어려움"> 피드백 반영이 어려워요</label>
+            <label class="check-opt"><input type="checkbox" value="완성도 부족"> 완성도를 높이기 어려워요</label>
             <label class="check-opt"><input type="checkbox" value="기타"> 기타</label>
           </div>
         </div>
+
         <div class="form-group">
-          <label class="form-label">Q3. 평소 수행평가 준비 방식 <span class="req">*</span></label>
+          <label class="form-label">Q3. 마감일 앞에서 나의 행동 패턴 <span class="req">*</span></label>
           <div class="radio-group">
-            <label class="radio-item"><input type="radio" name="sHabit" value="마감 직전에 몰아서 함"><label>마감 직전에 몰아서 해요</label></label>
-            <label class="radio-item"><input type="radio" name="sHabit" value="계획 세우나 실행 안 됨"><label>계획은 세우지만 실행이 잘 안 돼요</label></label>
-            <label class="radio-item"><input type="radio" name="sHabit" value="꾸준히 준비함"><label>꾸준히 준비하는 편이에요</label></label>
-            <label class="radio-item"><input type="radio" name="sHabit" value="계획 없음"><label>계획 없이 그때그때 해요</label></label>
+            <label class="radio-item"><input type="radio" name="sHabit" value="마감 직전에 몰아서 함"><label>마감 하루이틀 전에 몰아서 해요</label></label>
+            <label class="radio-item"><input type="radio" name="sHabit" value="계획 세우나 실행 안 됨"><label>계획은 세우는데 막상 실행이 잘 안 돼요</label></label>
+            <label class="radio-item"><input type="radio" name="sHabit" value="꾸준히 준비함"><label>꾸준히 조금씩 준비하는 편이에요</label></label>
+            <label class="radio-item"><input type="radio" name="sHabit" value="아예 안 하다가 포기"><label>아예 손을 못 대다가 포기하는 경우도 있어요</label></label>
           </div>
         </div>
+
         <div class="form-group">
-          <label class="form-label">Q4. 목표 등급</label>
-          <select id="sTarget"><option value="">선택 안 함</option><option>1등급</option><option>2등급</option><option>3등급</option><option>4등급 이상</option></select>
+          <label class="form-label">Q4. 글쓰기·제출물을 만들 때 나의 방식 <span class="req">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="sWriteStyle" value="생각나는대로 쓰고 나중에 정리"><label>일단 생각나는 대로 쓰고 나중에 정리해요</label></label>
+            <label class="radio-item"><input type="radio" name="sWriteStyle" value="개요 먼저 짜고 채움"><label>먼저 개요(목차)를 짜고 채워나가요</label></label>
+            <label class="radio-item"><input type="radio" name="sWriteStyle" value="인터넷 참고자료 먼저 수집"><label>인터넷 자료를 먼저 찾고 거기서 아이디어를 얻어요</label></label>
+            <label class="radio-item"><input type="radio" name="sWriteStyle" value="어떻게 써야 할지 모름"><label>어떻게 시작해야 할지 잘 모르겠어요</label></label>
+          </div>
         </div>
+
         <div class="form-group">
-          <label class="form-label">Q5. 수코치 코칭에서 가장 기대하는 것</label>
-          <textarea id="sExpect" placeholder="자유롭게 적어주세요."></textarea>
+          <label class="form-label">Q5. 피드백을 받았을 때 나의 반응 <span class="req">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="sFeedback" value="바로 수정하는 편"><label>바로 고치는 편이에요</label></label>
+            <label class="radio-item"><input type="radio" name="sFeedback" value="이해는 하지만 반영이 어려움"><label>이해는 하는데 막상 반영하기가 어려워요</label></label>
+            <label class="radio-item"><input type="radio" name="sFeedback" value="피드백 내용이 어렵게 느껴짐"><label>피드백 자체가 어렵게 느껴져서 뭘 어떻게 해야 할지 몰라요</label></label>
+            <label class="radio-item"><input type="radio" name="sFeedback" value="반영이 잘 안 됨"><label>솔직히 피드백을 받아도 잘 반영이 안 돼요</label></label>
+          </div>
         </div>
+
         <div class="form-group">
-          <label class="form-label">Q6. 기타 전달 사항</label>
-          <textarea id="sEtc" placeholder="(선택 사항)"></textarea>
+          <label class="form-label">Q6. 과목별 담당 선생님 이름 <span class="req">*</span>
+            <span style="font-size:12px; font-weight:400; color:var(--text-secondary); display:block; margin-top:3px;">수행평가가 있는 과목만 입력해주세요. 선생님마다 채점 스타일이 다르기 때문에 중요합니다.</span>
+          </label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div>
+              <div style="font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:5px;">국어</div>
+              <input type="text" id="sTeacherKo" placeholder="예: 김OO 선생님">
+            </div>
+            <div>
+              <div style="font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:5px;">영어</div>
+              <input type="text" id="sTeacherEn" placeholder="예: 박OO 선생님">
+            </div>
+            <div>
+              <div style="font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:5px;">수학</div>
+              <input type="text" id="sTeacherMath" placeholder="예: 이OO 선생님">
+            </div>
+            <div>
+              <div style="font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:5px;">사회/역사/윤리</div>
+              <input type="text" id="sTeacherSoc" placeholder="예: 최OO 선생님">
+            </div>
+            <div>
+              <div style="font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:5px;">과학</div>
+              <input type="text" id="sTeacherSci" placeholder="예: 정OO 선생님">
+            </div>
+            <div>
+              <div style="font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:5px;">기타 (직접 입력)</div>
+              <input type="text" id="sTeacherEtc" placeholder="과목명: 선생님 이름">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Q7. 지금까지 수행평가 중 가장 잘됐던 경험
+            <span style="font-size:12px; font-weight:400; color:var(--text-secondary); display:block; margin-top:3px;">어떤 과목이었고, 왜 잘됐다고 생각하나요? (없으면 '없음' 입력)</span>
+          </label>
+          <textarea id="sBestExp" placeholder="예: 국어 독서 감상문 — 미리 책을 읽어 놨고, 선생님이 원하는 형식을 미리 물어봤어요."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Q8. 반대로 가장 아쉬웠던 수행평가 경험
+            <span style="font-size:12px; font-weight:400; color:var(--text-secondary); display:block; margin-top:3px;">무엇이 문제였나요?</span>
+          </label>
+          <textarea id="sWorstExp" placeholder="예: 사회 논술 — 루브릭을 제대로 안 읽고 내용만 썼다가 낮은 점수를 받았어요."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Q9. 목표 등급</label>
+          <select id="sTarget">
+            <option value="">선택 안 함</option>
+            <option>1등급 (최상위)</option>
+            <option>2등급</option>
+            <option>3등급</option>
+            <option>4등급 이상</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Q10. 수코치 코칭에서 가장 기대하는 것</label>
+          <textarea id="sExpect" placeholder="예: 루브릭 분석을 도와줬으면 해요 / 초안 피드백을 상세하게 받고 싶어요"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Q11. 기타 전달 사항</label>
+          <textarea id="sEtc" placeholder="선생님 성향, 반 분위기, 본인만의 특수한 상황 등 알려주고 싶은 것은 무엇이든 써주세요. (선택 사항)"></textarea>
         </div>
       </div>
 
       <!-- 학부모 설문 -->
       <div id="parentQ" class="hidden">
+        <div style="background:linear-gradient(135deg,rgba(79,70,229,0.08),rgba(124,58,237,0.06)); border:1px solid rgba(79,70,229,0.2); border-radius:12px; padding:16px 18px; margin-bottom:24px; display:flex; align-items:flex-start; gap:12px;">
+          <span style="font-size:22px; flex-shrink:0; line-height:1.4;">💡</span>
+          <div>
+            <div style="font-size:14px; font-weight:800; color:var(--accent); margin-bottom:4px;">자세히 입력할수록 아이에게 맞는 코칭이 나옵니다</div>
+            <div style="font-size:13px; color:var(--text-secondary); line-height:1.6;">대충 입력하면 일반적인 가이드밖에 드릴 수 없어요. 아이의 특성과 학교 상황을 최대한 자세히 알려주실수록, 수코치가 그 학생만을 위한 전략을 설계합니다.</div>
+          </div>
+        </div>
+
         <div class="form-group">
           <label class="form-label">Q1. 자녀의 학년과 학교 <span class="req">*</span></label>
           <div class="input-row">
@@ -218,36 +312,82 @@
               <option value="">학년 선택</option>
               <option>1학년</option><option>2학년</option><option>3학년</option>
             </select>
-            <input type="text" id="pSchool" placeholder="학교 이름">
+            <input type="text" id="pSchool" placeholder="학교 이름 (예: OO고등학교)">
           </div>
         </div>
+
         <div class="form-group">
-          <label class="form-label">Q2. 자녀의 수행평가에서 가장 걱정되는 것 (복수 선택) <span class="req">*</span></label>
+          <label class="form-label">Q2. 자녀의 수행평가에서 가장 걱정되는 것 (복수 선택 가능) <span class="req">*</span></label>
           <div class="check-options" id="pWorry">
             <label class="check-opt"><input type="checkbox" value="시작 못 함"> 시작 자체를 못 해요</label>
             <label class="check-opt"><input type="checkbox" value="불안해함"> 불안해하고 스트레스를 받아요</label>
             <label class="check-opt"><input type="checkbox" value="시간 관리 안 됨"> 시간 관리가 안 돼요</label>
             <label class="check-opt"><input type="checkbox" value="의욕 없음"> 의욕이 없어요</label>
             <label class="check-opt"><input type="checkbox" value="성적 하락"> 성적이 계속 하락해요</label>
+            <label class="check-opt"><input type="checkbox" value="지시 없이 못 함"> 시켜야만 해요</label>
             <label class="check-opt"><input type="checkbox" value="기타"> 기타</label>
           </div>
         </div>
+
         <div class="form-group">
-          <label class="form-label">Q3. 자녀의 공부 유형 <span class="req">*</span></label>
+          <label class="form-label">Q3. 자녀의 학습 유형 <span class="req">*</span>
+            <span style="font-size:12px; font-weight:400; color:var(--text-secondary); display:block; margin-top:3px;">가장 가까운 유형 하나를 선택해주세요.</span>
+          </label>
           <div class="radio-group">
-            <label class="radio-item"><input type="radio" name="pType" value="무기력형"><label>무기력형 — 아무것도 시작을 못 해요</label></label>
-            <label class="radio-item"><input type="radio" name="pType" value="과설계형"><label>과설계형 — 계획은 많은데 실행이 없어요</label></label>
-            <label class="radio-item"><input type="radio" name="pType" value="창의형"><label>창의형 — 아이디어는 많은데 정리를 못 해요</label></label>
-            <label class="radio-item"><input type="radio" name="pType" value="수동형"><label>수동형 — 시키는 것만 해요</label></label>
+            <label class="radio-item"><input type="radio" name="pType" value="무기력형"><label>😔 무기력형 — 무엇을 해야 할지 몰라서 아무것도 못 시작해요</label></label>
+            <label class="radio-item"><input type="radio" name="pType" value="과설계형"><label>📋 과설계형 — 계획은 많은데 실행이 안 따라와요</label></label>
+            <label class="radio-item"><input type="radio" name="pType" value="창의형"><label>💡 창의형 — 아이디어는 많은데 정리·마무리를 못 해요</label></label>
+            <label class="radio-item"><input type="radio" name="pType" value="수동형"><label>🤷 수동형 — 시키는 것만 하고 스스로 생각하지 않아요</label></label>
           </div>
         </div>
+
         <div class="form-group">
-          <label class="form-label">Q4. 수코치 코칭에서 기대하는 것</label>
-          <textarea id="pExpect" placeholder="자유롭게 적어주세요."></textarea>
+          <label class="form-label">Q4. 자녀가 수행평가를 할 때 주로 어떤 환경인가요? <span class="req">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="pEnv" value="혼자 방에서"><label>주로 혼자 방에서 해요</label></label>
+            <label class="radio-item"><input type="radio" name="pEnv" value="보호자 옆에서"><label>부모님/보호자 옆에서 함께 해요</label></label>
+            <label class="radio-item"><input type="radio" name="pEnv" value="학원에서"><label>학원에서 주로 해요</label></label>
+            <label class="radio-item"><input type="radio" name="pEnv" value="거의 안 함"><label>수행평가를 거의 안 하거나 포기하는 경우가 많아요</label></label>
+          </div>
         </div>
+
         <div class="form-group">
-          <label class="form-label">Q5. 기타 전달 사항</label>
-          <textarea id="pEtc" placeholder="(선택 사항)"></textarea>
+          <label class="form-label">Q5. 특히 어려워했던 수행평가 과목이나 유형
+            <span style="font-size:12px; font-weight:400; color:var(--text-secondary); display:block; margin-top:3px;">어떤 과목에서, 어떤 이유로 어려워했나요?</span>
+          </label>
+          <textarea id="pHardSubject" placeholder="예: 국어 논술 — 글쓰기 자체를 너무 힘들어해요. 과학 탐구 보고서 — 어디서 시작해야 할지 몰라해요."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Q6. 학교에서 수행평가 관련 자료를 받으셨나요?
+            <span style="font-size:12px; font-weight:400; color:var(--text-secondary); display:block; margin-top:3px;">연간 수행평가 계획서, 루브릭, 가정통신문 등</span>
+          </label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="pHasDoc" value="있음 - 업로드 예정"><label>있어요 — 나중에 앱에 업로드할게요</label></label>
+            <label class="radio-item"><input type="radio" name="pHasDoc" value="있음 - 어디 있는지 모름"><label>받은 것 같은데 어디 있는지 잘 모르겠어요</label></label>
+            <label class="radio-item"><input type="radio" name="pHasDoc" value="없음 - 안 줬음"><label>학교에서 따로 주지 않았어요</label></label>
+            <label class="radio-item"><input type="radio" name="pHasDoc" value="모름"><label>잘 모르겠어요</label></label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Q7. 수코치 알림을 주로 받으실 채널 <span class="req">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="pNotify" value="카카오톡"><label>카카오톡</label></label>
+            <label class="radio-item"><input type="radio" name="pNotify" value="문자(SMS)"><label>문자(SMS)</label></label>
+            <label class="radio-item"><input type="radio" name="pNotify" value="이메일"><label>이메일</label></label>
+            <label class="radio-item"><input type="radio" name="pNotify" value="앱 내 알림"><label>앱 내 알림만 봐도 괜찮아요</label></label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Q8. 수코치 코칭에서 기대하는 것</label>
+          <textarea id="pExpect" placeholder="예: 루브릭 분석 결과를 공유받고 싶어요 / 아이가 스스로 할 수 있도록 동기부여해주세요"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Q8. 기타 전달 사항</label>
+          <textarea id="pEtc" placeholder="아이에 대해 알려주고 싶은 것, 특별히 주의해야 할 점, 가정환경 등 편하게 써주세요. (선택 사항)"></textarea>
         </div>
       </div>
 
@@ -338,10 +478,27 @@ async function submitSurvey() {
     if (!worries.length) { showErr('surveyErr', 'Q2에서 하나 이상 선택해 주세요.'); return; }
     var habit = document.querySelector('input[name="sHabit"]:checked');
     if (!habit) { showErr('surveyErr', 'Q3에서 하나를 선택해 주세요.'); return; }
-    data = { role:'student', grade:g, school:s, worries:worries, habit:habit.value,
+    var writeStyle = document.querySelector('input[name="sWriteStyle"]:checked');
+    if (!writeStyle) { showErr('surveyErr', 'Q4에서 하나를 선택해 주세요.'); return; }
+    var feedback = document.querySelector('input[name="sFeedback"]:checked');
+    if (!feedback) { showErr('surveyErr', 'Q5에서 하나를 선택해 주세요.'); return; }
+    data = {
+      role:'student', grade:g, school:s, worries:worries, habit:habit.value,
+      write_style: writeStyle.value, feedback_style: feedback.value,
+      teachers: {
+        ko: document.getElementById('sTeacherKo').value.trim(),
+        en: document.getElementById('sTeacherEn').value.trim(),
+        math: document.getElementById('sTeacherMath').value.trim(),
+        social: document.getElementById('sTeacherSoc').value.trim(),
+        science: document.getElementById('sTeacherSci').value.trim(),
+        other: document.getElementById('sTeacherEtc').value.trim()
+      },
+      best_experience: document.getElementById('sBestExp').value.trim(),
+      worst_experience: document.getElementById('sWorstExp').value.trim(),
       target_grade: document.getElementById('sTarget').value,
       expectation: document.getElementById('sExpect').value,
-      etc: document.getElementById('sEtc').value };
+      etc: document.getElementById('sEtc').value
+    };
   } else {
     var pg = document.getElementById('pGrade').value;
     var ps = document.getElementById('pSchool').value.trim();
@@ -350,9 +507,20 @@ async function submitSurvey() {
     if (!pw.length) { showErr('surveyErr', 'Q2에서 하나 이상 선택해 주세요.'); return; }
     var pt = document.querySelector('input[name="pType"]:checked');
     if (!pt) { showErr('surveyErr', 'Q3에서 하나를 선택해 주세요.'); return; }
-    data = { role:'parent', grade:pg, school:ps, worries:pw, student_type:pt.value,
+    var penv = document.querySelector('input[name="pEnv"]:checked');
+    if (!penv) { showErr('surveyErr', 'Q4에서 하나를 선택해 주세요.'); return; }
+    var pnotify = document.querySelector('input[name="pNotify"]:checked');
+    if (!pnotify) { showErr('surveyErr', 'Q7에서 알림 채널을 선택해 주세요.'); return; }
+    var pHasDoc = document.querySelector('input[name="pHasDoc"]:checked');
+    data = {
+      role:'parent', grade:pg, school:ps, worries:pw, student_type:pt.value,
+      study_env: penv.value,
+      hard_subject: document.getElementById('pHardSubject').value.trim(),
+      has_doc: pHasDoc ? pHasDoc.value : '',
+      notify_channel: pnotify.value,
       expectation: document.getElementById('pExpect').value,
-      etc: document.getElementById('pEtc').value };
+      etc: document.getElementById('pEtc').value
+    };
   }
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>제출 중...';
   try {
