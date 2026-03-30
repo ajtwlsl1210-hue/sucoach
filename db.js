@@ -214,7 +214,7 @@ const DB = {
   },
 
   // ── 사용자 관리 (관리자 전용) ─────────────────────────────────
-  asyng createUserAccount(email, displayName, role) {
+  async createUserAccount(email, displayName, role) {
     const hash = await hashPassword('1234');
     return this.insert('users', {
       email: email.trim().toLowerCase(),
