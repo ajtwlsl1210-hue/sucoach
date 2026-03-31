@@ -118,7 +118,7 @@ const DB = {
     const user = this.getCurrentUser();
     if (!user) { window.location.href = 'login.html'; return null; }
     if (allowedRoles.length && !allowedRoles.includes(user.role)) {
-      console.warn('[sucoach] 접근 권한 없음: role=' + user.role + ', required=' + allowedRoles.join('/'));
+      alert('접근 권한이 없습니다.');
       this._redirectByRole(user.role);
       return null;
     }
@@ -431,17 +431,22 @@ const DB = {
     }
     const uploader = this.getCurrentUser();
     const timestamp = Date.now();
-    const safeName = file.name.replace(/[^a-zA-Z0-9가-힣._-]/g, '_');
+    // 파일명에서 경로 구분자·특수문자 제거 (한글·영숫자·점·하이픈은 유지)
+    const safeName = file.name.replace(/[/\\?%*:|"<>]/g, '_');
     const path = `${studentId}/${assignmentId || 'general'}/${timestamp}_${safeName}`;
+    // URL 경로 각 세그먼트를 인코딩 — 한글 파일명이 있어도 Supabase Storage에 안전하게 전달
+    const encodedPath = path.split('/').map(encodeURIComponent).join('/');
+    // HWP 등 브라우저가 MIME 타입을 모르는 경우 octet-stream으로 fallback
+    const contentType = file.type || 'application/octet-stream';
 
     const uploadRes = await fetch(
-      `${SUPABASE_URL}/storage/v1/object/${STORAGE_BUCKET}/${path}`,
+      `${SUPABASE_URL}/storage/v1/object/${STORAGE_BUCKET}/${encodedPath}`,
       {
         method: 'POST',
         headers: {
           'apikey': SUPABASE_KEY,
           'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': file.type || 'application/octet-stream',
+          'Content-Type': contentType,
           'x-upsert': 'false'
         },
         body: file
@@ -452,14 +457,15 @@ const DB = {
       throw new Error('파일 업로드 실패: ' + err);
     }
 
-    const file_url = `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${path}`;
+    // file_url에도 인코딩된 경로 사용 (한글 포함 URL이 깨지지 않도록)
+    const file_url = `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${encodedPath}`;
     return this.insert('files', {
       assignment_id: assignmentId || null,
       student_id: studentId,
       uploader_id: uploader?.id,
       uploader_role: uploader?.role,
       file_type: fileType,
-      file_name: file.name,
+      file_name: file.name,   // 원본 파일명(한글 포함)은 그대로 보관 — 화면 표시용
       file_url,
       file_size: file.size,
       note,
@@ -491,21 +497,6 @@ const DB = {
       memo_type: memoType,
       content,
       created_at: new Date().toISOString()
-    });
-  },
-
-  // 코칭 노트 전용 저장 (student-detail.html 에서 호출)
-  // saveMemo(studentId, assignmentId, content, authorName)
-  async saveMemo(studentId, assignmentId, content, authorName) {
-    const user = this.getCurrentUser();
-    return this.insert('memos', {
-      assignment_id: assignmentId || null,
-      student_id:    studentId   || null,
-      author_id:     user?.id    || null,
-      author_name:   authorName  || user?.display_name || null,
-      memo_type:    '면담',        // CHECK 제약: '면담'|'피드백'|'특이사항'|'성장'
-      content,
-      created_at:   new Date().toISOString()
     });
   },
 
@@ -550,6 +541,36 @@ const DB = {
     return this._q('files',
       '?student_id=is.null&assignment_id=is.null&order=uploaded_at.desc'
     );
+  },
+
+  // 내부자료 파일 직접 업로드 → Supabase Storage → public URL 반환
+  async uploadInternalFile(file) {
+    if (file.size > MAX_FILE_SIZE) {
+      throw new Error(`파일 크기 초과 (최대 10MB, 현재 ${(file.size/1024/1024).toFixed(1)}MB)`);
+    }
+    const timestamp = Date.now();
+    const safeName = file.name.replace(/[/\\?%*:|"<>]/g, '_');
+    const path = `internal/${timestamp}_${safeName}`;
+    const encodedPath = path.split('/').map(encodeURIComponent).join('/');
+    const contentType = file.type || 'application/octet-stream';
+    const uploadRes = await fetch(
+      `${SUPABASE_URL}/storage/v1/object/${STORAGE_BUCKET}/${encodedPath}`,
+      {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': contentType,
+          'x-upsert': 'true'
+        },
+        body: file
+      }
+    );
+    if (!uploadRes.ok) {
+      const err = await uploadRes.text();
+      throw new Error('파일 업로드 실패: ' + err);
+    }
+    return `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${encodedPath}`;
   },
 
   async addInternalDoc(data) {
