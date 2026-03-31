@@ -10,7 +10,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html.theme-dark {
       --bg:#0A0A0A; --surface:#141414; --surface-hover:#1C1C1C; --surface-2:#1C1C1C;
-      --border:rgba(255,255,255,0.08); --text:#EDEDED; --text-secondary:#888; --text-muted:#555;
+      --border:rgba(255,255,255,0.08); --text:#EDEDED; --text-secondary:#888; --text-muted:#555;h
       --accent:#6366F1; --accent-hover:#818CF8; --accent-light:rgba(99,102,241,0.12);
       --positive:#10b981; --negative:#f43f5e; --warning:#f59e0b; --info:#3b82f6;
       --input-bg:#1C1C1C; --sidebar-width:220px;
@@ -702,16 +702,15 @@ function renderChecklist() {
     var ddayClass = DB.getDDayClass(dl);
     var dday = DB.getDDay(dl);
 
-    // 단계별 액션 아이템
-    var actionMap = {
-      '접수': `[${sn}] 루브릭 분석 및 코칭가이드 작성`,
-      '분석완료': `[${sn}] 면담 일정 잡기`,
-      '면담완료': `[${sn}] 초안 업로드 독려`,
-      '초안대기': `[${sn}] 학생 초안 제출 확인`,
-      '피드백완료': `[${sn}] 수정 지도 완료 후 단계 변경`,
-      '수정중': `[${sn}] 수정본 확인 및 피드백`,
-      '최종확인': `[${sn}] 최종 구두 확인 진행`,
-    };
+    // 단계별 액션 아이템 (강사 역할만: 영업·커뮤니케이션 코칭)
+        // '접수', '수정중' 은 관리자 역할이므로 제외
+        var actionMap = {
+                '분석완료': `[${sn}] 면담 일정 잡기`,
+                '면담완료': `[${sn}] 초안 업로드 독려`,
+                '초안대기': `[${sn}] 학생 초안 제출 확인`,
+                '피드백완료': `[${sn}] 피드백 내용 설명 & 학생 상담`,
+                '최종확인': `[${sn}] 최종 구두 확인 및 완료 처리`,
+        };
     var action = actionMap[a.stage];
     if (!action) return;
 
