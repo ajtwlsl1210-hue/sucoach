@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="ko" class="theme-dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sucoach 역할별 워크플로우</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { interpolate-size: allow-keywords; }
+
+    html.theme-dark {
+      --bg: #0A0A0A; --surface: #141414; --surface-hover: #1C1C1C;
+      --border: rgba(255,255,255,0.06);
+      --text: #EDEDED; --text-secondary: #888;
+      --accent: #3b82f6; --accent-secondary: #8b5cf6;
+      --positive: #10b981; --negative: #f43f5e; --warning: #f59e0b;
+      --admin-color: #f59e0b; --tutor-color: #3b82f6;
+      --student-color: #10b981; --parent-color: #8b5cf6;
+      --admin-bg: rgba(245,158,11,0.08); --tutor-bg: rgba(59,130,246,0.08);
+      --student-bg: rgba(16,185,129,0.08); --parent-bg: rgba(139,92,246,0.08);
+    }
+    html.theme-light {
+      --bg: #F5F5F4; --surface: #FFFFFF; --surface-hover: #F0F0EF;
+      --border: rgba(0,0,0,0.07);
+      --text: #0f172a; --text-secondary: #64748b;
+      --accent: #2563eb; --accent-secondary: #7c3aed;
+      --positive: #059669; --negative: #e11d48; --warning: #d97706;
+      --admin-color: #d97706; --tutor-color: #2563eb;
+      --student-color: #059669; --parent-color: #7c3aed;
+      --admin-bg: rgba(217,119,6,0.06); --tutor-bg: rgba(37,99,235,0.06);
+      --student-bg: rgba(5,150,105,0.06); --parent-bg: rgba(124,58,237,0.06);
+    }
+
+    body {
+      font-family: 'Noto Sans KR', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg); color: var(--text);
+      line-height: 1.6; -webkit-font-smoothing: antialiased;
+      transition: background 0.3s, color 0.3s;
+      min-height: 100vh;
+    }
+
+    h1,h2,h3,h4 { color: var(--text); letter-spacing: -0.02em; line-height: 1.2; }
+    h1 { font-weight: 800; font-size: 2.8rem; }
+    h2 { font-weight: 700; font-size: 2rem; }
+    h3 { font-weight: 600; font-size: 1.5rem; }
+    h4 { font-weight: 600; font-size: 1.1rem; }
+    .text-secondary { color: var(--text-secondary); }
+
+    /* Layout */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* Hero */
+    .hero {
+      padding: 80px 0 56px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 100px; padding: 6px 16px; font-size: 13px;
+      color: var(--text-secondary); margin-bottom: 24px;
+    }
+    .hero-badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--positive); animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+    .hero h1 { margin-bottom: 16px; }
+    .hero p { color: var(--text-secondary); font-size: 1.1rem; max-width: 520px; margin: 0 auto; }
+
+    /* Role tabs */
+    .tabs-section { padding: 48px 0 0; }
+    .tabs {
+      display: flex; gap: 8px; margin-bottom: 40px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 6px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      flex: 1; min-width: 140px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 12px 16px; border-radius: 10px; border: none;
+      background: transparent; color: var(--text-secondary);
+      font-family: inherit; font-size: 15px; font-weight: 500;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .tab-btn:hover { background: var(--surface-hover); color: var(--text); }
+    .tab-btn.active { color: var(--text); }
+    .tab-btn.active.admin { background: var(--admin-bg); color: var(--admin-color); }
+    .tab-btn.active.tutor { background: var(--tutor-bg); color: var(--tutor-color); }
+    .tab-btn.active.student { background: var(--student-bg); color: var(--student-color); }
+    .tab-btn.active.parent { background: var(--parent-bg); color: var(--parent-color); }
+    .tab-icon {
+      width: 28px; height: 28px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; font-size: 14px;
+    }
+
+    /* Tab content */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeInUp 0.4s ease-out both; }
+
+    /* Role header */
+    .role-header {
+      display: flex; align-items: flex-start; gap: 24px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px; margin-bottom: 32px;
+    }
+    .role-avatar {
+      width: 64px; height: 64px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; flex-shrink: 0;
+    }
+    .role-avatar.admin { background: var(--admin-bg); }
+    .role-avatar.tutor { background: var(--tutor-bg); }
+    .role-avatar.student { background: var(--student-bg); }
+    .role-avatar.parent { background: var(--parent-bg); }
+    .role-info { flex: 1; }
+    .role-name { font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
+    .role-name.admin { color: var(--admin-color); }
+    .role-name.tutor { color: var(--tutor-color); }
+    .role-name.student { color: var(--student-color); }
+    .role-name.parent { color: var(--parent-color); }
+    .role-desc { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 12px; }
+    .role-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+    .role-meta-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--text-secondary);
+    }
+    .role-meta-item svg { opacity: 0.6; }
+
+    /* Steps */
+    .steps-title {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+    .steps { display: flex; flex-direction: column; gap: 0; }
+    .step {
+      display: flex; gap: 0; position: relative;
+    }
+    .step-left {
+      display: flex; flex-direction: column; align-items: center; width: 52px; flex-shrink: 0;
+    }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; flex-shrink: 0;
+      border: 2px solid var(--border); color: var(--text-secondary);
+      background: var(--surface); z-index: 1;
+      transition: all 0.2s;
+    }
+    .step-num.admin { border-color: var(--admin-color); color: var(--admin-color); background: var(--admin-bg); }
+    .step-num.tutor { border-color: var(--tutor-color); color: var(--tutor-color); background: var(--tutor-bg); }
+    .step-num.student { border-color: var(--student-color); color: var(--student-color); background: var(--student-bg); }
+    .step-num.parent { border-color: var(--parent-color); color: var(--parent-color); background: var(--parent-bg); }
+
+    .step-line {
+      width: 2px; background: var(--border); flex: 1; min-height: 20px; margin: 4px 0;
+    }
+    .step:last-child .step-line { display: none; }
+
+    .step-body {
+      flex: 1; padding-bottom: 28px; padding-left: 16px; padding-top: 6px;
+    }
+    .step-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 18px 20px;
+      transition: all 0.2s; cursor: default;
+    }
+    .step-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border-color: rgba(255,255,255,0.1);
+      transform: translateX(3px);
+    }
+    html.theme-light .step-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border-color: rgba(0,0,0,0.12);
+    }
+    .step-stage {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+      text-transform: uppercase; padding: 3px 9px; border-radius: 100px;
+      margin-bottom: 8px;
+    }
+    .step-stage.admin { background: var(--admin-bg); color: var(--admin-color); }
+    .step-stage.tutor { background: var(--tutor-bg); color: var(--tutor-color); }
+    .step-stage.student { background: var(--student-bg); color: var(--student-color); }
+    .step-stage.parent { background: var(--parent-bg); color: var(--parent-color); }
+    .step-title { font-size: 1rem; font-weight: 600; margin-bottom: 5px; }
+    .step-desc { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55; }
+    .step-actions {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px;
+    }
+    .step-action-tag {
+      font-size: 11.5px; padding: 3px 10px; border-radius: 6px;
+      background: var(--surface-hover); color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    /* Stage flow for tutor (special 8-stage grid) */
+    .stage-flow {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px;
+    }
+    .stage-pill {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 12px; text-align: center;
+      transition: all 0.2s;
+    }
+    .stage-pill:hover { background: var(--tutor-bg); border-color: var(--tutor-color); }
+    .stage-pill-num { font-size: 11px; color: var(--text-secondary); margin-bottom: 2px; }
+    .stage-pill-name { font-size: 13px; font-weight: 600; color: var(--tutor-color); }
+
+    /* Permission matrix */
+    .perm-section { margin-top: 56px; padding-top: 48px; border-top: 1px solid var(--border); margin-bottom: 80px; }
+    .perm-title { margin-bottom: 28px; }
+    .perm-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    }
+    .perm-cell {
+      padding: 13px 16px; border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border); font-size: 14px;
+    }
+    .perm-cell:last-child, .perm-cell:nth-child(5n) { border-right: none; }
+    .perm-cell.header {
+      background: var(--surface); font-weight: 600; font-size: 13px;
+    }
+    .perm-cell.feature { background: var(--surface); color: var(--text-secondary); font-size: 13px; }
+    .perm-cell.center { text-align: center; }
+    .perm-cell.admin-header { color: var(--admin-color); }
+    .perm-cell.tutor-header { color: var(--tutor-color); }
+    .perm-cell.student-header { color: var(--student-color); }
+    .perm-cell.parent-header { color: var(--parent-color); }
+    .check { font-size: 16px; }
+    .check.y { color: var(--positive); }
+    .check.n { color: var(--border); }
+    .check.p { color: var(--warning); }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate { animation: fadeInUp 0.6s ease-out both; }
+    .animate.delay-1 { animation-delay: 0.1s; }
+    .animate.delay-2 { animation-delay: 0.2s; }
+    .animate.delay-3 { animation-delay: 0.3s; }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+
+    /* Responsive */
+    .tabs { flex-direction: row; }
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      .hero { padding: 48px 0 36px; }
+      .tabs { flex-wrap: wrap; gap: 6px; }
+      .tab-btn { min-width: 120px; font-size: 13px; padding: 10px 12px; }
+      .stage-flow { grid-template-columns: repeat(2, 1fr); }
+      .role-header { flex-direction: column; gap: 16px; }
+      .perm-grid { font-size: 12px; }
+      .perm-cell { padding: 10px 10px; font-size: 12px; }
+    }
+    @media (max-width: 375px) {
+      body { overflow-x: hidden; }
+      .container { padding: 0 14px; }
+      .tabs { flex-direction: column; }
+      .tab-btn { min-width: unset; }
+      .stage-flow { grid-template-columns: repeat(2, 1fr); }
+      h1 { font-size: 1.7rem; }
+    }
+
+    @media print {
+      body { background: white !important; color: black !important; }
+      .viz-menu { display: none; }
+      .tab-content { display: block !important; page-break-after: always; }
+      .tabs { display: none; }
+    }
+
+    /* Menu */
+    .viz-menu { position: fixed; top: 16px; right: 16px; z-index: 9999; }
+    .viz-menu-toggle {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      backdrop-filter: blur(12px); transition: all 0.2s;
+    }
+    .viz-menu-toggle:hover { background: var(--surface-hover); }
+    .viz-menu-dropdown {
+      position: absolute; top: 52px; right: 0; min-width: 200px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 8px;
+      opacity: 0; visibility: hidden; transform: translateY(-8px);
+      transition: all 0.2s; backdrop-filter: blur(16px);
+    }
+    .viz-menu-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
+    .viz-menu-dropdown button {
+      width: 100%; padding: 10px 14px; border: none; border-radius: 8px;
+      background: transparent; color: var(--text); font-size: 14px;
+      font-family: inherit; cursor: pointer; text-align: left;
+      display: flex; align-items: center; gap: 10px; transition: background 0.15s;
+    }
+    .viz-menu-dropdown button:hover { background: var(--surface-hover); }
+
+    .skip-to-content {
+      position: absolute; top: -40px; left: 6px; background: var(--accent);
+      color: white; padding: 8px 12px; text-decoration: none;
+      border-radius: 4px; z-index: 10000;
+    }
+    .skip-to-content:focus { top: 6px; }
+
+    footer {
+      text-align: center; padding: 40px 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-secondary); font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-to-content">Skip to content</a>
+
+  <!-- MENU -->
+  <div class="viz-menu">
+    <button class="viz-menu-toggle" onclick="toggleMenu()" aria-label="메뉴">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="5" x2="17" y2="5"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="15" x2="17" y2="15"/>
+      </svg>
+    </button>
+    <div class="viz-menu-dropdown" id="vizMenuDropdown">
+      <button onclick="cycleTheme()"><span id="themeIcon">🌙</span><span id="themeLabel">다크 모드</span></button>
+      <button onclick="downloadImage()"><span>📥</span><span>PNG 다운로드</span></button>
+      <button onclick="window.print()"><span>🖨️</span><span>인쇄 / PDF</span></button>
+    </div>
+  </div>
+
+  <main id="main-content" role="main">
+    <!-- Hero -->
+    <section class="hero animate">
+      <div class="container">
+        <div class="hero-badge">
+          <div class="hero-badge-dot"></div>
+          Sucoach · 수행평가 전략관리 프로그램
+        </div>
+        <h1>역할별 워크플로우</h1>
+        <p>Admin · 강사 · 학생 · 학부모, 각 역할이 수행하는 작업과 권한을 한눈에 확인하세요.</p>
+      </div>
+    </section>
+
+    <!-- Tabs -->
+    <section class="tabs-section">
+      <div class="container">
+        <div class="tabs animate delay-1">
+          <button class="tab-btn active admin" onclick="switchTab('admin')" id="tab-admin">
+            <div class="tab-icon">🛡️</div> Admin (종범)
+          </button>
+          <button class="tab-btn tutor" onclick="switchTab('tutor')" id="tab-tutor">
+            <div class="tab-icon">👨‍🏫</div> 강사 (재우)
+          </button>
+          <button class="tab-btn student" onclick="switchTab('student')" id="tab-student">
+            <div class="tab-icon">🎒</div> 학생
+          </button>
+          <button class="tab-btn parent" onclick="switchTab('parent')" id="tab-parent">
+            <div class="tab-icon">👨‍👩‍👧</div> 학부모
+          </button>
+        </div>
+
+        <!-- ===================== ADMIN ===================== -->
+        <div class="tab-content active" id="content-admin">
+          <div class="role-header">
+            <div class="role-avatar admin">🛡️</div>
+            <div class="role-info">
+              <div class="role-name admin">Admin · 종범</div>
+              <div class="role-desc">프로그램 전체를 관리하는 운영자. 학생 등록부터 수행평가 접수, 강사 배정, 전체 진행 현황 모니터링까지 모든 권한을 보유합니다.</div>
+              <div class="role-meta">
+                <div class="role-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  ajtwlsl1210@gmail.com
+                </div>
+                <div class="role-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg>
+                  admin-page.html
+                </div>
+                <div class="role-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  전체 접근 권한
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="steps-title">업무 프로세스</div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-left">
+                <div class="step-num admin">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="step-body">
+                <div class="step-card">
+                  <div class="step-stage admin">초기 설정</div>
+                  <div class="step-title">학생 계정 등록</div>
+                  <div class="step-desc">신규 학생의 기본 정보(이름, 이메일, 학교, 학년, 유형)를 시스템에 등록하고 계정을 생성합니다. 학부모 계정도 함께 생성합니다.</div>
+                  <div class="step-actions">
+                    <span class="step-action-tag">users 테이블 INSERT</span>
+                    <span class="step-action-tag">학생/학부모 계정 쌍 생성</span>
+                    <span class="step-action-tag">SHA-256 비밀번호 처리</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-left">
+                <div class="step-num admin">2</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="step-body">
+                <div class="step-card">
+                  <div class="step-stage admin">접수</div>
+                  <div class="step-title">수행평가 접수 등록</div>
+                  <div class="step-desc">학생이 요청한 수행평가를 시스템에 등록합니다. 과목, 마감일, 상세 내용, 담당 강사를 지정하고 초기 단계를 '접수'로 설정합니다.</div>
+                  <div class="step-actions">
+                    <span class="step-action-tag">assignments 테이블 INSERT</span>
+                    <span class="step-action-tag">tutor_id 배정</span>
+                    <span class="step-action-tag">status = '접수'</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-left">
+                <div class="step-num admin">3</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="step-body">
+                <div class="step-card">
+                  <div class="step-stage admin">모니터링</div>
+                  <div class="step-title">전체 진행 현황 관리</div>
+                  <div class="step-desc">모든 학생의 수행평가 진행 단계를 대시보드에서 실시간으로 확인합니다. 지연 건을 파악하고, 필요 시 담당 강사를 변경하거나 마감일을 조정합니다.</div>
+                  <div class="step-actions">
+                    <span class="step-action-tag">전체 student 뷰</span>
+                    <span class="step-action-tag">단계별 필터링</span>
+                    <span class="step-action-tag">강사 재배정</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-left">
+                <div class="step-num admin">4</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="step-body">
+                <div class="step-card">
+                  <div class="step-stage admin">파일 관리</div>
+                  <div class="step-title">업로드 파일 전체 열람</div>
+                  <div class="step-desc">각 수행평가에 업로드된 모든 파일(분석 자료, 초안, 피드백, 최종본)을 열람하고 관리합니다. Storage 경로에 직접 접근 가능합니다.</div>
+                  <div class="step-actions">
+                    <span class="step-action-tag">Supabase Storage 접근</span>
+                    <span class="step-action-tag">files 테이블 전체 조회</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-left">
+                <div class="step-num admin">5</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="step-body">
+                <div class="step-card">
+                  <div class="step-stage admin">완료</div>
+                  <div class="step-title">결과 데이터 확인 및 정산</div>
+                  <div class="step-desc">완료 처리된 수행평가의 최종 점수와 등급을 확인합니다. 학생별 성과를 집계하고 프로그램 효과를 분석합니다.</div>
+                  <div class="step-actions">
+                    <span class="step-action-tag">result_score / result_grade</span>
+                    <span class="step-action-tag">학생별 통계</span>
+                    <span class="step-action-tag">기간별 리포트</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== TUTOR ===================== -->
+        <div class="tab-content" id="content-tutor">
+          <div class="role-header">
+            <div class="role-avatar tutor">👨‍🏫</div>
+            <div class="role-info">
+              <div class="role-name tutor">강사 · 재우</div>
+              <div class="role-desc">수행평가 전략 코칭의 핵심 역할. 분석→면담→초안→피드백→수정→최종까지 8단계 워크플로우를 주도합니다.</div>
+              <div class="role-meta">
+                <div class="role-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  teacher@sucoach.kr
+                </div>
+                <div class="role-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg>
+                  tutor-page.html / assignment-detail.html
+                </div>
+                <div class="role-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  배정된 학생 전용 접근
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="steps-title">8단계 코칭 워크플로우</div>
+
+          <div class="stage-flow" data-reveal>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 1</div><div class="stage-pill-name">접수</div></div>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 2</div><div class="stage-pill-name">분석완료</div></div>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 3</div><div class="stage-pill-name">면담완료</div></div>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 4</div><div class="stage-pill-name">초안대기</div></div>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 5</div><div class="stage-pill-name">피드백완료</div></div>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 6</div><div class="stage-pill-name">수정중</div></div>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 7</div><div class="stage-pill-name">최종확인</div></div>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 8</div><div class="stage-pill-name">완료</div></div>
+          </div>
+
+          <div class="steps">
+            <div class="step">
+              <div class="step-left"><div class="step-num tutor">1</div><div class="step-line"></div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage tutor">접수</div>
+                <div class="step-title">배정 수행평가 확인</div>
+                <div class="step-desc">Admin이 배정한 수행평가 내용을 확인합니다. 과목, 마감일, 학생 정보, 수행평가 세부 요건을 파악하고 코칭 계획을 수립합니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">수행평가 목록 조회</span>
+                  <span class="step-action-tag">학생 정보 확인</span>
+                  <span class="step-action-tag">요건 검토</span>
+                </div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="step-left"><div class="step-num tutor">2</div><div class="step-line"></div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage tutor">분석완료</div>
+                <div class="step-title">수행평가 요건 분석 + 방향 설정</div>
+                <div class="step-desc">채점 기준, 루브릭, 출제 의도를 분석합니다. 학생의 현재 수준을 진단하고 최적의 전략 방향을 설정합니다. 분석 자료 파일을 업로드하고 단계를 진행합니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">파일 업로드 (분석자료)</span>
+                  <span class="step-action-tag">status → '분석완료'</span>
+                </div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="step-left"><div class="step-num tutor">3</div><div class="step-line"></div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage tutor">면담완료</div>
+                <div class="step-title">학생 면담 진행</div>
+                <div class="step-desc">학생과 1:1 면담을 통해 학생의 생각, 아이디어, 방향성을 파악합니다. 면담 내용을 바탕으로 초안 구성을 확정하고 단계를 업데이트합니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">면담 노트 업로드</span>
+                  <span class="step-action-tag">status → '면담완료'</span>
+                </div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="step-left"><div class="step-num tutor">4</div><div class="step-line"></div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage tutor">초안대기</div>
+                <div class="step-title">초안 작성 및 업로드</div>
+                <div class="step-desc">면담 내용을 바탕으로 수행평가 초안을 작성합니다. 완성된 초안 파일을 시스템에 업로드하고 학생/학부모가 확인할 수 있도록 공개합니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">파일 업로드 (초안)</span>
+                  <span class="step-action-tag">status → '초안대기'</span>
+                  <span class="step-action-tag">학생 열람 가능</span>
+                </div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="step-left"><div class="step-num tutor">5</div><div class="step-line"></div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage tutor">피드백완료</div>
+                <div class="step-title">피드백 수렴 및 반영 확인</div>
+                <div class="step-desc">학생/학부모로부터 받은 피드백 내용을 검토합니다. 반영 가능한 사항과 방향성을 정리하고 수정 계획을 수립합니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">피드백 내용 확인</span>
+                  <span class="step-action-tag">status → '피드백완료'</span>
+                </div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="step-left"><div class="step-num tutor">6</div><div class="step-line"></div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage tutor">수정중</div>
+                <div class="step-title">초안 수정 작업 진행</div>
+                <div class="step-desc">피드백을 반영하여 수행평가를 수정합니다. 내용의 완성도를 높이고, 채점 기준에 맞게 조정합니다. 수정 과정 파일을 필요 시 업로드합니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">파일 업로드 (수정본)</span>
+                  <span class="step-action-tag">status → '수정중'</span>
+                </div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="step-left"><div class="step-num tutor">7</div><div class="step-line"></div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage tutor">최종확인</div>
+                <div class="step-title">최종본 업로드 및 제출</div>
+                <div class="step-desc">수정이 완료된 최종본을 업로드합니다. 학생/학부모가 최종본을 확인하고 제출 승인을 합니다. 이상이 없으면 완료 단계로 진행합니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">파일 업로드 (최종본)</span>
+                  <span class="step-action-tag">status → '최종확인'</span>
+                  <span class="step-action-tag">학생 최종 검토</span>
+                </div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="step-left"><div class="step-num tutor">8</div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage tutor">완료</div>
+                <div class="step-title">결과 입력 — 점수 / 등급 기록</div>
+                <div class="step-desc">수행평가 제출 후 받은 실제 점수와 등급을 시스템에 입력합니다. 학생과 학부모가 결과를 확인할 수 있으며, 코칭 효과를 분석하는 데 활용됩니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">result_score 입력</span>
+                  <span class="step-action-tag">result_grade 입력</span>
+                  <span class="step-action-tag">status → '완료'</span>
+                </div>
+              </div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== STUDENT ===================== -->
+        <div class="tab-content" id="content-student">
+          <div class="role-header">
+            <div class="role-avatar student">🎒</div>
+            <div class="role-info">
+              <div class="role-name student">학생</div>
+              <div class="role-desc">수행평가 코칭의 주인공. 진행 현황을 확인하고, 파일을 수령하며, 피드백을 제공하고 최종 결과를 확인합니다.</div>
+              <div class="role-meta">
+                <div class="role-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  예) jisu@sucoach.kr
+                </div>
+                <div class="role-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg>
+                  student-page.html
+                </div>
+                <div class="role-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  본인 수행평가만 접근
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="steps-title">이용 흐름</div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-left"><div class="step-num student">1</div><div class="step-line"></div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage student">로그인</div>
+                <div class="step-title">학생 계정으로 접속</div>
+                <div class="step-desc">이메일 + 비밀번호로 로그인합니다. 시스템이 역할을 자동으로 확인하여 학생 전용 페이지로 이동합니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">SHA-256 인증</span>
+                  <span class="step-action-tag">localStorage sc_user 저장</span>
+                  <span class="step-action-tag">student-page.html 이동</span>
+                </div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="step-left"><div class="step-num student">2</div><div class="step-line"></div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage student">현황 확인</div>
+                <div class="step-title">수행평가 진행 단계 확인</div>
+                <div class="step-desc">현재 진행 중인 수행평가 목록과 각 수행평가의 단계(접수/분석완료/면담완료/초안대기…)를 카드 형태로 확인합니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">assignments 목록 조회</span>
+                  <span class="step-action-tag">단계별 배지 표시</span>
+                </div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="step-left"><div class="step-num student">3</div><div class="step-line"></div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage student">파일 수령</div>
+                <div class="step-title">분석자료 / 초안 / 최종본 다운로드</div>
+                <div class="step-desc">강사가 업로드한 파일(분석 자료, 초안, 최종본)을 다운로드합니다. 파일은 Supabase Storage에서 공개 URL로 제공됩니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">파일 목록 조회</span>
+                  <span class="step-action-tag">공개 URL 다운로드</span>
+                  <span class="step-action-tag">다운로드 가능: 초안·최종본·분석자료</span>
+                </div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="step-left"><div class="step-num student">4</div><div class="step-line"></div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage student">피드백</div>
+                <div class="step-title">수정 의견 / 피드백 파일 업로드</div>
+                <div class="step-desc">초안을 검토한 후 수정 요청 사항이나 의견을 파일로 업로드하여 강사에게 전달합니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">파일 업로드 (학생 피드백)</span>
+                  <span class="step-action-tag">uploader_role = 'student'</span>
+                </div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="step-left"><div class="step-num student">5</div><div class="step-line"></div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage student">최종 검토</div>
+                <div class="step-title">최종본 확인 및 승인</div>
+                <div class="step-desc">강사가 수정 완료한 최종본을 다운로드하여 검토합니다. 이상이 없으면 강사에게 완료 승인을 전달합니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">최종본 다운로드</span>
+                  <span class="step-action-tag">내용 최종 확인</span>
+                </div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="step-left"><div class="step-num student">6</div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage student">결과 확인</div>
+                <div class="step-title">최종 점수 및 등급 확인</div>
+                <div class="step-desc">수행평가 제출 후 나온 실제 결과(점수, 등급)를 시스템에서 확인합니다. 강사가 입력한 결과가 표시됩니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">result_score 열람</span>
+                  <span class="step-action-tag">result_grade 열람</span>
+                </div>
+              </div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== PARENT ===================== -->
+        <div class="tab-content" id="content-parent">
+          <div class="role-header">
+            <div class="role-avatar parent">👨‍👩‍👧</div>
+            <div class="role-info">
+              <div class="role-name parent">학부모</div>
+              <div class="role-desc">자녀의 수행평가 진행 상황을 모니터링합니다. 읽기 전용 접근이 기본이며, 진행 단계·파일·결과를 실시간으로 확인할 수 있습니다.</div>
+              <div class="role-meta">
+                <div class="role-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  예) jisu.parent@sucoach.kr
+                </div>
+                <div class="role-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg>
+                  parent-page.html
+                </div>
+                <div class="role-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  자녀 데이터 읽기 전용
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="steps-title">이용 흐름</div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-left"><div class="step-num parent">1</div><div class="step-line"></div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage parent">로그인</div>
+                <div class="step-title">학부모 계정으로 접속</div>
+                <div class="step-desc">학부모 전용 이메일과 비밀번호로 로그인합니다. 시스템이 자동으로 자녀의 student_id와 연결하여 학부모 전용 대시보드로 이동합니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">SHA-256 인증</span>
+                  <span class="step-action-tag">linked_student_id 연결</span>
+                  <span class="step-action-tag">parent-page.html 이동</span>
+                </div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="step-left"><div class="step-num parent">2</div><div class="step-line"></div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage parent">현황 모니터링</div>
+                <div class="step-title">자녀 수행평가 진행 단계 확인</div>
+                <div class="step-desc">자녀가 현재 진행 중인 모든 수행평가의 단계를 실시간으로 확인합니다. 언제, 어떤 단계에 있는지 투명하게 파악할 수 있습니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">자녀 assignments 조회</span>
+                  <span class="step-action-tag">단계별 현황 표시</span>
+                  <span class="step-action-tag">마감일 확인</span>
+                </div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="step-left"><div class="step-num parent">3</div><div class="step-line"></div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage parent">파일 열람</div>
+                <div class="step-title">업로드된 파일 확인</div>
+                <div class="step-desc">강사가 업로드한 분석 자료, 초안, 최종본 파일을 다운로드하여 내용을 직접 확인합니다. 자녀의 수행평가 방향성과 내용을 파악할 수 있습니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">파일 목록 열람</span>
+                  <span class="step-action-tag">공개 URL 다운로드</span>
+                </div>
+              </div></div>
+            </div>
+
+            <div class="step">
+              <div class="step-left"><div class="step-num parent">4</div></div>
+              <div class="step-body"><div class="step-card">
+                <div class="step-stage parent">결과 확인</div>
+                <div class="step-title">최종 점수 및 등급 열람</div>
+                <div class="step-desc">수행평가가 완료되면 강사가 입력한 실제 점수와 등급을 확인합니다. 자녀의 수행평가 성과를 한눈에 파악할 수 있습니다.</div>
+                <div class="step-actions">
+                  <span class="step-action-tag">result_score 확인</span>
+                  <span class="step-action-tag">result_grade 확인</span>
+                  <span class="step-action-tag">읽기 전용</span>
+                </div>
+              </div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Permission Matrix -->
+        <section class="perm-section" data-reveal>
+          <h2 class="perm-title animate">기능별 권한 매트릭스</h2>
+          <div class="perm-grid">
+            <div class="perm-cell header">기능</div>
+            <div class="perm-cell header center admin-header">🛡️ Admin</div>
+            <div class="perm-cell header center tutor-header">👨‍🏫 강사</div>
+            <div class="perm-cell header center student-header">🎒 학생</div>
+            <div class="perm-cell header center parent-header">👨‍👩‍👧 학부모</div>
+
+            <div class="perm-cell feature">학생 계정 등록</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+
+            <div class="perm-cell feature">수행평가 접수 등록</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+
+            <div class="perm-cell feature">단계 상태 변경</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+
+            <div class="perm-cell feature">파일 업로드</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check p">△ 피드백만</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+
+            <div class="perm-cell feature">파일 다운로드</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+
+            <div class="perm-cell feature">결과 입력 (점수/등급)</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+
+            <div class="perm-cell feature">결과 열람</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+
+            <div class="perm-cell feature">전체 학생 현황 조회</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check p">△ 배정 학생만</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+
+            <div class="perm-cell feature">강사 배정 변경</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      Sucoach · 수행평가 전략관리 프로그램 · 역할별 워크플로우 가이드
+    </div>
+  </footer>
+
+  <script>
+    // === Menu ===
+    function toggleMenu() {
+      var dropdown = document.getElementById('vizMenuDropdown');
+      if (dropdown) dropdown.classList.toggle('open');
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.viz-menu')) {
+        var dropdown = document.getElementById('vizMenuDropdown');
+        if (dropdown) dropdown.classList.remove('open');
+      }
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        var dropdown = document.getElementById('vizMenuDropdown');
+        if (dropdown) dropdown.classList.remove('open');
+      }
+    });
+
+    // === Theme ===
+    var savedTheme = localStorage.getItem('viz-theme');
+    var currentTheme = savedTheme || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    function applyTheme(t) {
+      document.documentElement.className = 'theme-' + t;
+      document.getElementById('themeIcon').textContent = t === 'dark' ? '🌙' : '☀️';
+      document.getElementById('themeLabel').textContent = t === 'dark' ? '다크 모드' : '라이트 모드';
+      localStorage.setItem('viz-theme', t);
+      currentTheme = t;
+    }
+    function cycleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
+    applyTheme(currentTheme);
+
+    // === Tab switching ===
+    var roles = ['admin', 'tutor', 'student', 'parent'];
+    function switchTab(role) {
+      roles.forEach(function(r) {
+        var btn = document.getElementById('tab-' + r);
+        var content = document.getElementById('content-' + r);
+        if (r === role) {
+          btn.classList.add('active');
+          content.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+          content.classList.remove('active');
+        }
+      });
+    }
+
+    // === Scroll Reveal ===
+    document.querySelectorAll('[data-reveal]').forEach(function(el) { el.classList.add('reveal'); });
+    var revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          revealObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(function(el) { revealObserver.observe(el); });
+
+    // === Download PNG ===
+    async function downloadImage() {
+      var menu = document.querySelector('.viz-menu');
+      menu.style.display = 'none';
+      try {
+        var url = await htmlToImage.toPng(document.body, { quality: 1, pixelRatio: 2 });
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'sucoach-workflow.png';
+        a.click();
+      } catch(e) { console.error('Download failed:', e); }
+      menu.style.display = '';
+    }
+  </script>
+</body>
+</html>
