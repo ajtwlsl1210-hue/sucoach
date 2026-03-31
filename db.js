@@ -118,7 +118,7 @@ const DB = {
     const user = this.getCurrentUser();
     if (!user) { window.location.href = 'login.html'; return null; }
     if (allowedRoles.length && !allowedRoles.includes(user.role)) {
-      alert('접근 권한이 없습니다.');
+      console.warn('[sucoach] 접근 권한 없음: role=' + user.role + ', required=' + allowedRoles.join('/'));
       this._redirectByRole(user.role);
       return null;
     }
@@ -238,7 +238,7 @@ const DB = {
     return this._q('users', `?role=eq.tutor&order=display_name.asc`);
   },
 
-  // ── 학생 관리 ────────────────────────────────────────────────
+  // ── 학생 관리 ─────────────────────────────────────────────────
   async getAllStudents() {
     return this._q('students',
       '?order=name.asc&select=*,student_user:users!user_id(id,email,display_name),parent_user:users!parent_user_id(id,email,display_name),tutor:users!tutor_id(id,email,display_name)'
@@ -283,7 +283,7 @@ const DB = {
     const parentEmail = data.parent_email ||
       data.student_email.replace('@', '+parent@');
     const parentUser = await this.createUserAccount(
-      parentEmail, data.name + '  뙅부모', 'parent'
+      parentEmail, data.name + ' 학부모', 'parent'
     );
     const student = await this.insert('students', {
       name: data.name,
@@ -387,9 +387,9 @@ const DB = {
       teacher_comment: data.teacher_comment || null,
       growth_note:     data.growth_note     || null,
       // T2 필드
-      expected_score:     data.expected_score  != null ? Number(data.expected_score)  : null,
-      revision_count:     data.revision_count  != null ? Number(data.revision_count)  : null,
-      cliche_removed:     data.cliche_removed  != null ? Boolean(data.cliche_removed) : null,
+      expected_score:      data.expected_score  != null ? Number(data.expected_score)  : null,
+      revision_count:      data.revision_count  != null ? Number(data.revision_count)  : null,
+      cliche_removed:      data.cliche_removed  != null ? Boolean(data.cliche_removed) : null,
       structure_explained: data.structure_explained != null ? Boolean(data.structure_explained) : null,
       interview_minutes:   data.interview_minutes != null ? Number(data.interview_minutes) : null,
       feedback_minutes:    data.feedback_minutes  != null ? Number(data.feedback_minutes)  : null,
@@ -500,9 +500,9 @@ const DB = {
     const user = this.getCurrentUser();
     return this.insert('memos', {
       assignment_id: assignmentId || null,
-      student_id:   studentId   || null,
-      author_id:    user?.id    || null,
-      author_name:  authorName  || user?.display_name || null,
+      student_id:    studentId   || null,
+      author_id:     user?.id    || null,
+      author_name:   authorName  || user?.display_name || null,
       memo_type:    '면담',        // CHECK 제약: '면담'|'피드백'|'특이사항'|'성장'
       content,
       created_at:   new Date().toISOString()
@@ -568,7 +568,7 @@ const DB = {
     });
   },
 
-  // ── D-Day 여퍼 ────────────────────────────────────────────────
+  // ── D-Day 헬퍼 ────────────────────────────────────────────────
   getDDay(deadlineStr) {
     if (!deadlineStr) return null;
     const today = new Date(); today.setHours(0, 0, 0, 0);
@@ -616,10 +616,10 @@ const DB = {
       '학교': s.school,
       '학년': s.grade + '학년',
       '반': s.class_num ? s.class_num + '반' : '-',
-      '번': s.student_num ? s.student_num + '번' : '-',
+      '번호': s.student_num ? s.student_num + '번' : '-',
       '목표등급': s.target_grade || '-',
       '학생유형': s.student_type || '-',
-      '월비용': s.monthly_fee ? s.monthly_fee.toLocaleString() + '옖' : '-',
+      '월비용': s.monthly_fee ? s.monthly_fee.toLocaleString() + '원' : '-',
       '등록일': this.formatDate(s.enrolled_at),
       '학생이메일': s.student_user?.email || '-',
       '학부모이메일': s.parent_user?.email || '-',
