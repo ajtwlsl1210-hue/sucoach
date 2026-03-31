@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>내 수행평가 — 수코치</title>
+  <title>ë´ ìííê° â ìì½ì¹</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -25,7 +25,7 @@
       min-height:100vh; -webkit-font-smoothing:antialiased; transition:background 0.3s,color 0.3s;
     }
 
-    /* ── 탑바 ── */
+    /* ââ íë° ââ */
     .topbar {
       position:sticky; top:0; z-index:100; background:var(--surface);
       border-bottom:1px solid var(--border); padding:0 20px; height:56px;
@@ -35,14 +35,6 @@
     .topbar-divider { width:1px; height:20px; background:var(--border); }
     .topbar-title { font-size:14px; font-weight:700; color:var(--text-secondary); flex:1; }
     .topbar-actions { display:flex; gap:8px; align-items:center; }
-    @media (max-width:520px) {
-      .topbar { padding:0 12px; gap:8px; }
-      .topbar-logo { font-size:16px; }
-      .topbar-divider { display:none; }
-      .topbar-title { font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px; }
-      .topbar-actions { gap:4px; }
-      .btn-sm { padding:6px 10px; font-size:12px; }
-    }
     .btn-sm {
       padding:8px 14px; border-radius:8px; font-size:13px; font-weight:600;
       cursor:pointer; font-family:inherit; border:1px solid var(--border);
@@ -57,10 +49,10 @@
     }
     .theme-btn:hover { background:var(--surface-hover); }
 
-    /* ── 메인 ── */
+    /* ââ ë©ì¸ ââ */
     .main { max-width:860px; margin:0 auto; padding:28px 20px 80px; }
 
-    /* ── 환영 헤더 ── */
+    /* ââ íì í¤ë ââ */
     .welcome-header {
       background:linear-gradient(135deg, var(--accent) 0%, #7C3AED 100%);
       border-radius:20px; padding:28px 28px; margin-bottom:24px; color:white;
@@ -73,7 +65,7 @@
     .welcome-stat-val { font-size:22px; font-weight:900; }
     .welcome-stat-lbl { font-size:11px; opacity:0.7; }
 
-    /* ── 섹션 ── */
+    /* ââ ì¹ì ââ */
     .section { margin-bottom:24px; }
     .section-header {
       display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;
@@ -87,7 +79,7 @@
       padding:2px 8px; font-size:11px; font-weight:700;
     }
 
-    /* ── 수행평가 카드 ── */
+    /* ââ ìííê° ì¹´ë ââ */
     .asgn-list { display:flex; flex-direction:column; gap:12px; }
     .asgn-card {
       background:var(--surface); border:1px solid var(--border); border-radius:16px;
@@ -118,13 +110,13 @@
     .dday-overdue { background:rgba(220,38,38,0.15); color:var(--negative); }
     .dday-none { background:var(--surface-2); color:var(--text-muted); }
 
-    /* 진행바 */
+    /* ì§íë° */
     .asgn-progress { display:flex; align-items:center; gap:10px; }
     .progress-bar-wrap { flex:1; height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
     .progress-bar { height:100%; background:var(--accent); border-radius:3px; transition:width 0.5s ease; }
     .progress-label { font-size:11px; color:var(--text-muted); font-weight:600; flex-shrink:0; }
 
-    /* ── 완료 아코디언 ── */
+    /* ââ ìë£ ìì½ëì¸ ââ */
     .completed-toggle {
       display:flex; align-items:center; gap:8px; padding:12px 16px;
       background:var(--surface); border:1px solid var(--border); border-radius:12px;
@@ -135,7 +127,7 @@
     .completed-toggle .toggle-arrow { transition:transform 0.2s; }
     .completed-toggle.open .toggle-arrow { transform:rotate(90deg); }
 
-    /* ── 파일 업로드 섹션 ── */
+    /* ââ íì¼ ìë¡ë ì¹ì ââ */
     .upload-section {
       background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden;
     }
@@ -162,7 +154,7 @@
     .file-item:hover { background:var(--surface-hover); }
     .file-icon { font-size:20px; flex-shrink:0; }
     .file-info { flex:1; min-width:0; }
-    .file-name { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .file-name { font-size:13px; font-weight:600; white-space:nowraw; overflow:hidden; text-overflow:ellipsis; }
     .file-meta { font-size:11px; color:var(--text-muted); margin-top:2px; }
     .btn-icon {
       width:28px; height:28px; border-radius:6px; border:1px solid var(--border);
@@ -171,7 +163,7 @@
     }
     .btn-icon:hover { background:var(--accent); color:white; border-color:var(--accent); }
 
-    /* ── 알림 배너 ── */
+    /* ââ ìë¦¼ ë°°ë ââ */
     .notice-banner {
       padding:14px 16px; border-radius:12px; margin-bottom:16px;
       display:flex; align-items:flex-start; gap:10px; font-size:13px;
@@ -181,7 +173,7 @@
     .notice-icon { font-size:16px; flex-shrink:0; margin-top:1px; }
     .notice-text { line-height:1.5; }
 
-    /* ── 모달 ── */
+    /* ââ ëª¨ë¬ ââ */
     .modal-overlay {
       position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200;
       display:none; align-items:center; justify-content:center; padding:24px;
@@ -210,7 +202,7 @@
     .alert.error { background:rgba(220,38,38,0.08); color:var(--negative); border:1px solid rgba(220,38,38,0.2); }
     .alert.show { display:block; }
 
-    /* ── 빈 상태 ── */
+    /* ââ ë¹ ìí ââ */
     .opacity-50 { opacity:0.55; }
     .grade-badge { font-size:13px; font-weight:800; }
     .grade-badge.grade-1, .grade-badge.grade-A { color:var(--positive); }
@@ -224,7 +216,7 @@
     .empty-icon { font-size:40px; margin-bottom:12px; opacity:0.5; }
     .empty-text { font-size:13px; }
 
-    /* ── 로딩 ── */
+    /* ââ ë¡ë© ââ */
     .loading-wrap { display:flex; align-items:center; justify-content:center; min-height:300px; flex-direction:column; gap:12px; color:var(--text-secondary); }
     .spinner-lg { width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; }
     @keyframes spin { to{transform:rotate(360deg)} }
@@ -232,93 +224,106 @@
 </head>
 <body>
 
-<!-- 탑바 -->
+<!-- íë° -->
 <div class="topbar">
-  <div class="topbar-logo">수코치</div>
+  <div class="topbar-logo">ìì½ì¹</div>
   <div class="topbar-divider"></div>
-  <div class="topbar-title" id="topbarTitle">내 수행평가</div>
+  <div class="topbar-title" id="topbarTitle">ë´ ìííê°</div>
   <div class="topbar-actions">
-    <button class="btn-sm" onclick="openModal('uploadFileModal')">📎 자료 업로드</button>
-    <button class="btn-sm" onclick="openModal('pwModal')">🔑</button>
-    <button class="btn-sm" onclick="DB.logout()">로그아웃</button>
-    <button class="theme-btn" id="themeBtn" onclick="cycleTheme()">🌙</button>
+    <button class="btn-sm" onclick="openModal('uploadFileModal')">ð ìë£ ìë¡ë</button>
+    <button class="btn-sm" onclick="openModal('pwModal')">ð</button>
+    <button class="btn-sm" onclick="DB.logout()">ë¡ê·¸ìì</button>
+    <button class="theme-btn" id="themeBtn" onclick="cycleTheme()">ð</button>
   </div>
 </div>
 
-<!-- 메인 -->
+<!-- ë©ì¸ -->
 <div class="main">
   <div class="loading-wrap" id="loadingWrap">
     <div class="spinner-lg"></div>
-    <div>불러오는 중…</div>
+    <div>ë¶ë¬ì¤ë ì¤â¦</div>
   </div>
   <div id="pageContent" style="display:none"></div>
 </div>
 
-<!-- 파일 업로드 모달 -->
+<!-- íì¼ ìë¡ë ëª¨ë¬ -->
 <div class="modal-overlay" id="uploadFileModal">
   <div class="modal">
-    <div class="modal-title">📎 자료 업로드</div>
+    <div class="modal-title">ð ìë£ ìë¡ë</div>
     <div class="alert error" id="uploadAlert"></div>
     <div class="form-group">
-      <label>관련 수행평가 (선택)</label>
+      <label>ê´ë ¨ ìííê° (ì í)</label>
       <select id="upload_assignment_id">
-        <option value="">일반 자료 (특정 수행평가 없음)</option>
+        <option value="">ì¼ë° ìë£ (í¹ì  ìííê° ìì)</option>
       </select>
     </div>
     <div class="form-group">
-      <label>파일</label>
+      <label>íì¼ ì¢ë¥</label>
+      <select id="upload_file_type">
+        <option value="ì´ì">ì´ì</option>
+        <option value="ìì ë³¸">ìì ë³¸</option>
+        <option value="ìµì¢ë³¸">ìµì¢ë³¸</option>
+        <option value="ì°¸ê³ ìë£">ì°¸ê³ ìë£</option>
+        <option value="ê¸°í">ê¸°í</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>íì¼ <span style="font-size:11px;color:var(--text-muted);font-weight:400">(PDFÂ·WordÂ·íê¸Â·JPGÂ·PNG ë±, ìµë 10MB)</span></label>
       <div style="padding:12px;background:var(--surface-2);border-radius:8px;font-size:13px;color:var(--text-muted);cursor:pointer" onclick="document.getElementById('studentFileInput').click()">
-        <span id="uploadFileName">파일을 선택하세요 (최대 10MB)</span>
+        <span id="uploadFileName">íì¼ì ì ííì¸ì (ìµë 10MB)</span>
       </div>
-      <input type="file" id="studentFileInput" onchange="onStudentFileSelected(event)">
+      <!-- acceptë íí¸ì¼ ë¿ â HWPÂ·ëª¨ë  íì íì©ì ìí´ ê´ë²ìíê² ì¤ì  -->
+      <input type="file" id="studentFileInput"
+        accept=".pdf,.doc,.docx,.hwp,.hwpx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.gif,.bmp,.webp,.txt,.zip,.mp4,.mov"
+        onchange="onStudentFileSelected(event)">
     </div>
     <div class="modal-actions">
-      <button class="btn-full cancel" onclick="closeModal('uploadFileModal')">취소</button>
-      <button class="btn-full primary" id="uploadSubmitBtn" onclick="submitStudentUpload()">업로드</button>
+      <button class="btn-full cancel" onclick="closeModal('uploadFileModal')">ì·¨ì</button>
+      <button class="btn-full primary" id="uploadSubmitBtn" onclick="submitStudentUpload()">ìë¡ë</button>
     </div>
   </div>
 </div>
 
-<!-- 비밀번호 변경 모달 -->
+<!-- ë¹ë°ë²í¸ ë³ê²½ ëª¨ë¬ -->
 <div class="modal-overlay" id="pwModal">
   <div class="modal">
-    <div class="modal-title">🔑 비밀번호 변경</div>
+    <div class="modal-title">ð ë¹ë°ë²í¸ ë³ê²½</div>
     <div class="alert error" id="pwAlert"></div>
     <div class="form-group">
-      <label>현재 비밀번호</label>
-      <input type="password" id="inp_pw_current" placeholder="현재 비밀번호">
+      <label>íì¬ ë¹ë°ë²í¸</label>
+      <input type="password" id="inp_pw_current" placeholder="íì¬ ë¹ë°ë²í¸">
     </div>
     <div class="form-group">
-      <label>새 비밀번호</label>
-      <input type="password" id="inp_pw_new" placeholder="새 비밀번호 (6자 이상)">
+      <label>ì ë¹ë°ë²í¸</label>
+      <input type="password" id="inp_pw_new" placeholder="ì ë¹ë°ë²í¸ (6ì ì´ì)">
     </div>
     <div class="form-group">
-      <label>새 비밀번호 확인</label>
-      <input type="password" id="inp_pw_confirm" placeholder="재입력">
+      <label>ì ë¹ë°ë²í¸ íì¸</label>
+      <input type="password" id="inp_pw_confirm" placeholder="ì¬ìë ¥">
     </div>
     <div class="modal-actions">
-      <button class="btn-full cancel" onclick="closeModal('pwModal')">취소</button>
-      <button class="btn-full primary" onclick="submitPwChange()">변경</button>
+      <button class="btn-full cancel" onclick="closeModal('pwModal')">ì·¨ì</button>
+      <button class="btn-full primary" onclick="submitPwChange()">ë³ê²½</button>
     </div>
   </div>
 </div>
 
 <script src="db.js"></script>
 <script>
-// ── 테마 ─────────────────────────────────────────────────────────
+// ââ íë§ âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 var savedTheme = localStorage.getItem('sc-theme');
 var currentTheme = savedTheme || (window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
 function applyTheme(t) {
   document.documentElement.className = 'theme-' + t;
   var btn = document.getElementById('themeBtn');
-  if (btn) btn.textContent = t === 'dark' ? '☀️' : '🌙';
+  if (btn) btn.textContent = t === 'dark' ? 'âï¸' : 'ð';
   localStorage.setItem('sc-theme', t);
   currentTheme = t;
 }
 function cycleTheme() { applyTheme(currentTheme === 'dark' ? 'light' : 'dark'); }
 applyTheme(currentTheme);
 
-// ── 상태 ─────────────────────────────────────────────────────────
+// ââ ìí âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 var currentUser = null;
 var myStudent = null;
 var assignments = [];
@@ -330,12 +335,12 @@ document.addEventListener('DOMContentLoaded', async function() {
   currentUser = DB.requireAuth(['student']);
   if (!currentUser) return;
 
-  document.getElementById('topbarTitle').textContent = currentUser.display_name + '의 수행평가';
+  document.getElementById('topbarTitle').textContent = currentUser.display_name + 'ì ìííê°';
 
   try {
     myStudent = await DB.getStudentByUserId(currentUser.id);
     if (!myStudent) {
-      showError('학생 정보를 찾을 수 없습니다. 관리자에게 문의하세요.');
+      showError('íì ì ë³´ë¥¼ ì°¾ì ì ììµëë¤. ê´ë¦¬ììê² ë¬¸ìíì¸ì.');
       return;
     }
 
@@ -346,9 +351,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     assignments = asgns || [];
     myFiles = files || [];
 
-    // 파일 업로드 모달 수행평가 목록 채우기
+    // íì¼ ìë¡ë ëª¨ë¬ ìííê° ëª©ë¡ ì±ì°ê¸° (ìë£ë í­ëª© ì ì¸)
     var sel = document.getElementById('upload_assignment_id');
-    assignments.forEach(function(a) {
+    assignments.filter(function(a) { return a.stage !== 'ìë£'; }).forEach(function(a) {
       var opt = document.createElement('option');
       opt.value = a.id;
       opt.textContent = '[' + a.subject + '] ' + a.title;
@@ -357,16 +362,16 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     renderPage();
   } catch(e) {
-    showError('데이터 로드 실패: ' + e.message);
+    showError('ë°ì´í° ë¡ë ì¤í¨: ' + e.message);
   }
 });
 
 function renderPage() {
   var today = new Date(); today.setHours(0,0,0,0);
-  var active = assignments.filter(function(a) { return a.stage !== '완료'; });
-  var completed = assignments.filter(function(a) { return a.stage === '완료'; });
+  var active = assignments.filter(function(a) { return a.stage !== 'ìë£'; });
+  var completed = assignments.filter(function(a) { return a.stage === 'ìë£'; });
 
-  // 긴급 알림
+  // ê¸´ê¸ ìë¦¼
   var urgentAsgns = active.filter(function(a) {
     var dl = a.internal_deadline || a.school_deadline;
     if (!dl) return false;
@@ -376,56 +381,56 @@ function renderPage() {
 
   var html = '';
 
-  // 환영 헤더
-  var greetings = ['안녕하세요!', '오늘도 화이팅!', '꾸준히 해봐요!'];
+  // íì í¤ë
+  var greetings = ['ìëíì¸ì!', 'ì¤ëë íì´í!', 'ê¾¸ì¤í í´ë´ì!'];
   var greeting = greetings[new Date().getDay() % greetings.length];
   html += `
     <div class="welcome-header">
       <div class="welcome-greeting">${greeting}</div>
-      <div class="welcome-name">${myStudent.name} 학생</div>
-      <div class="welcome-sub">${myStudent.school||''} ${myStudent.grade ? myStudent.grade + '학년' : ''}</div>
+      <div class="welcome-name">${myStudent.name} íì</div>
+      <div class="welcome-sub">${myStudent.school||''} ${myStudent.grade ? myStudent.grade + 'íë' : ''}</div>
       <div class="welcome-stats">
         <div class="welcome-stat">
           <div class="welcome-stat-val">${active.length}</div>
-          <div class="welcome-stat-lbl">진행중</div>
+          <div class="welcome-stat-lbl">ì§íì¤</div>
         </div>
         <div class="welcome-stat">
           <div class="welcome-stat-val">${urgentAsgns.length}</div>
-          <div class="welcome-stat-lbl">긴급 (D-3)</div>
+          <div class="welcome-stat-lbl">ê¸´ê¸ (D-3)</div>
         </div>
         <div class="welcome-stat">
           <div class="welcome-stat-val">${completed.length}</div>
-          <div class="welcome-stat-lbl">완료</div>
+          <div class="welcome-stat-lbl">ìë£</div>
         </div>
       </div>
     </div>
   `;
 
-  // 긴급 알림 배너
+  // ê¸´ê¸ ìë¦¼ ë°°ë
   if (urgentAsgns.length > 0) {
     html += `
       <div class="notice-banner warn">
-        <span class="notice-icon">⚠️</span>
+        <span class="notice-icon">â ï¸</span>
         <div class="notice-text">
-          <strong>마감이 임박한 수행평가가 ${urgentAsgns.length}건 있습니다!</strong><br>
+          <strong>ë§ê°ì´ ìë°í ìííê°ê° ${urgentAsgns.length}ê±´ ììµëë¤!</strong><br>
           ${urgentAsgns.map(function(a) {
             var dl = a.internal_deadline || a.school_deadline;
             var diff = Math.ceil((new Date(dl) - today) / 86400000);
             return a.subject + ' ' + a.title + ' (' + (diff === 0 ? 'D-Day' : 'D-' + diff) + ')';
-          }).join(' · ')}
+          }).join(' Â· ')}
         </div>
       </div>
     `;
   }
 
-  // 진행 중 수행평가
+  // ì§í ì¤ ìííê°
   html += `<div class="section">`;
   html += `<div class="section-header">
-    <div class="section-title"><span>📋</span> 진행 중 <span class="section-count">${active.length}</span></div>
+    <div class="section-title"><span>ð</span> ì§í ì¤ <span class="section-count">${active.length}</span></div>
   </div>`;
 
   if (active.length === 0) {
-    html += `<div class="empty-state"><div class="empty-icon">✨</div><div class="empty-text">현재 진행 중인 수행평가가 없습니다.</div></div>`;
+    html += `<div class="empty-state"><div class="empty-icon">â¨</div><div class="empty-text">íì¬ ì§í ì¤ì¸ ìííê°ê° ììµëë¤.</div></div>`;
   } else {
     html += `<div class="asgn-list">`;
     active.sort(function(a,b) {
@@ -439,13 +444,13 @@ function renderPage() {
   }
   html += `</div>`;
 
-  // 완료된 수행평가 (접기/펼치기)
+  // ìë£ë ìííê° (ì ê¸°/í¼ì¹ê¸°)
   if (completed.length > 0) {
     html += `
       <div class="section">
         <div class="completed-toggle ${showCompleted ? 'open' : ''}" onclick="toggleCompleted()">
-          <span class="toggle-arrow">▶</span>
-          완료된 수행평가 <span class="section-count">${completed.length}</span>
+          <span class="toggle-arrow">â¶</span>
+          ìë£ë ìííê° <span class="section-count">${completed.length}</span>
         </div>
         <div id="completedList" style="${showCompleted ? '' : 'display:none'}">
           <div class="asgn-list">
@@ -456,12 +461,12 @@ function renderPage() {
     `;
   }
 
-  // 내 자료 보관함
+  // ë´ ìë£ ë³´ê´í¨
   html += `
     <div class="section">
       <div class="section-header">
-        <div class="section-title"><span>📁</span> 내 자료 보관함 <span class="section-count">${myFiles.length}</span></div>
-        <button class="btn-sm" onclick="openModal('uploadFileModal')">+ 업로드</button>
+        <div class="section-title"><span>ð</span> ë´ ìë£ ë³´ê´í¨ <span class="section-count">${myFiles.length}</span></div>
+        <button class="btn-sm" onclick="openModal('uploadFileModal')">+ ìë¡ë</button>
       </div>
       <div class="upload-section">
         <div class="file-list" id="myFileList">
@@ -483,21 +488,22 @@ function renderAssignmentCard(a, today) {
   var stage = DB.STAGE_LABELS[a.stage] || {};
   var stageIdx = DB.STAGES.indexOf(a.stage);
   var progressPct = Math.round(((stageIdx + 1) / DB.STAGES.length) * 100);
-  var isCompleted = a.stage === '완료';
+  var isCompleted = a.stage === 'ìë£';
 
   return `
     <div class="asgn-card ${isCompleted ? 'opacity-50' : ''}" onclick="window.location.href='assignment-detail.html?id=${a.id}'">
       <div class="asgn-card-top">
-        <div class="asgn-card-icon">${stage.icon || '📋'}</div>
+        <div class="asgn-card-icon">${stage.icon || 'ð'}</div>
         <div class="asgn-card-info">
           <div class="asgn-card-subject">${a.subject}</div>
           <div class="asgn-card-title">${a.title}</div>
-          <div class="asgn-card-meta">${a.type || ''} ${a.school_deadline ? '· 학교마감 ' + DB.formatDate(a.school_deadline) : ''}</div>
+          <div class="asgn-card-meta">${a.type || ''} ${a.school_deadline ? 'Â· íêµë§ê° ' + DB.formatDate(a.school_deadline) : ''}</div>
         </div>
         <div class="asgn-card-right">
           <span class="asgn-stage-badge" style="color:${stage.color||'var(--text)'};border-color:${stage.color||'var(--border)'}">${stage.icon||''} ${a.stage}</span>
           ${dl && !isCompleted ? `<span class="dday-badge ${ddayClass}">${dday}</span>` : ''}
-          ${isCompleted && a.grade ? `<span class="grade-badge grade-${(a.grade||'').replace('등급','')}">${a.grade}</span>` : ''}
+          ${isCompleted && a.grade ? `<span class="grade-badge grade-${(a.grade||'').replace('ë±ê¸','')}">${a.grade}</span>` : ''}
+          ${isCompleted && a.score != null ? `<span class="dday-badge" style="background:rgba(16,185,129,0.12);color:#059669;border-color:#059669">${a.score}ì </span>` : ''}
         </div>
       </div>
       <div class="asgn-progress">
@@ -512,7 +518,7 @@ function renderAssignmentCard(a, today) {
 
 function renderFileList() {
   if (myFiles.length === 0) {
-    return `<div class="empty-state" style="padding:28px"><div class="empty-icon">📂</div><div class="empty-text">업로드된 자료가 없습니다.</div></div>`;
+    return `<div class="empty-state" style="padding:28px"><div class="empty-icon">ð</div><div class="empty-text">ìë¡ëë ìë£ê° ììµëë¤.</div></div>`;
   }
   return myFiles.map(function(f) {
     var ext = (f.file_name || '').split('.').pop().toLowerCase();
@@ -521,10 +527,10 @@ function renderFileList() {
       <div class="file-item">
         <span class="file-icon">${icon}</span>
         <div class="file-info">
-          <div class="file-name">${f.file_name || '파일'}</div>
-          <div class="file-meta">${f.file_type || ''} · ${DB.formatDate(f.uploaded_at || f.created_at)}</div>
+          <div class="file-name">${f.file_name || 'íì¼'}</div>
+          <div class="file-meta">${f.file_type || ''} Â· ${DB.formatDate(f.uploaded_at || f.created_at)}</div>
         </div>
-        <button class="btn-icon" onclick="downloadFile('${f.file_url}','${(f.file_name||'file').replace(/'/g,'')}')">⬇</button>
+        <button class="btn-icon" onclick="downloadFile('${f.file_url}','${(f.file_name||'file').replace(/'/g,'')}')">â¬</button>
       </div>
     `;
   }).join('');
@@ -538,36 +544,37 @@ function toggleCompleted() {
   if (list) list.style.display = showCompleted ? '' : 'none';
 }
 
-// ── 파일 업로드 ──────────────────────────────────────────────────
+// ââ íì¼ ìë¡ë ââââââââââââââââââââââââââââââââââââââââââââââââââ
 function onStudentFileSelected(e) {
   var f = e.target.files[0];
   if (!f) return;
-  if (f.size > 10 * 1024 * 1024) { alert('파일 크기는 10MB 이하여야 합니다.'); e.target.value = ''; return; }
+  if (f.size > 10 * 1024 * 1024) { alert('íì¼ í¬ê¸°ë 10MB ì´íì¬ì¼ í©ëë¤.'); e.target.value = ''; return; }
   selectedUploadFile = f;
   document.getElementById('uploadFileName').textContent = f.name + ' (' + formatFileSize(f.size) + ')';
 }
 
 async function submitStudentUpload() {
-  if (!selectedUploadFile) { showAlert('uploadAlert', '파일을 선택하세요.'); return; }
+  if (!selectedUploadFile) { showAlert('uploadAlert', 'íì¼ì ì ííì¸ì.'); return; }
   var assignmentId = document.getElementById('upload_assignment_id').value || null;
+  var fileType = document.getElementById('upload_file_type').value || 'ê¸°í';
   var btn = document.getElementById('uploadSubmitBtn');
-  btn.disabled = true; btn.textContent = '업로드 중…';
+  btn.disabled = true; btn.textContent = 'ìë¡ë ì¤â¦';
   try {
     var newFile = await DB.uploadFile(
-      selectedUploadFile, myStudent.id, assignmentId, '기타', ''
+      selectedUploadFile, myStudent.id, assignmentId, fileType, ''
     );
-    // assignmentId 유무와 관계없이 항상 로컬 배열에 추가 (목록 즉시 갱신)
+    // assignmentId ì ë¬´ì ê´ê³ìì´ í­ì ë¡ì»¬ ë°°ì´ì ì¶ê° (ëª©ë¡ ì¦ì ê°±ì )
     myFiles.push(newFile);
     selectedUploadFile = null;
-    document.getElementById('uploadFileName').textContent = '파일을 선택하세요 (최대 10MB)';
+    document.getElementById('uploadFileName').textContent = 'íì¼ì ì ííì¸ì (ìµë 10MB)';
     document.getElementById('studentFileInput').value = '';
     closeModal('uploadFileModal');
     document.getElementById('myFileList').innerHTML = renderFileList();
-    DB.toast('파일이 업로드되었습니다.');
+    DB.toast('íì¼ì´ ìë¡ëëììµëë¤.');
   } catch(e) {
-    showAlert('uploadAlert', '업로드 실패: ' + e.message);
+    showAlert('uploadAlert', 'ìë¡ë ì¤í¨: ' + e.message);
   } finally {
-    btn.disabled = false; btn.textContent = '업로드';
+    btn.disabled = false; btn.textContent = 'ìë¡ë';
   }
 }
 
@@ -577,25 +584,25 @@ function downloadFile(url, name) {
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 
-// ── 비밀번호 변경 ────────────────────────────────────────────────
+// ââ ë¹ë°ë²í¸ ë³ê²½ ââââââââââââââââââââââââââââââââââââââââââââââââ
 async function submitPwChange() {
   var cur = document.getElementById('inp_pw_current').value;
   var nw = document.getElementById('inp_pw_new').value;
   var cf = document.getElementById('inp_pw_confirm').value;
-  if (!cur || !nw || !cf) { showAlert('pwAlert', '모든 항목을 입력하세요.'); return; }
-  if (nw.length < 6) { showAlert('pwAlert', '새 비밀번호는 6자 이상이어야 합니다.'); return; }
-  if (nw !== cf) { showAlert('pwAlert', '새 비밀번호가 일치하지 않습니다.'); return; }
+  if (!cur || !nw || !cf) { showAlert('pwAlert', 'ëª¨ë  í­ëª©ì ìë ¥íì¸ì.'); return; }
+  if (nw.length < 6) { showAlert('pwAlert', 'ì ë¹ë°ë²í¸ë 6ì ì´ìì´ì´ì¼ í©ëë¤.'); return; }
+  if (nw !== cf) { showAlert('pwAlert', 'ì ë¹ë°ë²í¸ê° ì¼ì¹íì§ ììµëë¤.'); return; }
   try {
     await DB.changePassword(nw, cur);
     closeModal('pwModal');
-    DB.toast('비밀번호가 변경되었습니다.');
+    DB.toast('ë¹ë°ë²í¸ê° ë³ê²½ëììµëë¤.');
   } catch(e) { showAlert('pwAlert', e.message); }
 }
 
-// ── 유틸 ─────────────────────────────────────────────────────────
+// ââ ì í¸ âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function showError(msg) {
   document.getElementById('loadingWrap').innerHTML =
-    `<div style="text-align:center;color:var(--negative);font-size:14px;padding:40px">⚠️ ${msg}</div>`;
+    `<div style="text-align:center;color:var(--negative);font-size:14px;padding:40px">â ï¸ ${msg}</div>`;
 }
 var _modalCount = 0;
 function openModal(id) {
@@ -619,9 +626,9 @@ function formatFileSize(bytes) {
   return (bytes/1048576).toFixed(1) + 'MB';
 }
 function getFileIcon(ext) {
-  var icons = { pdf:'📄', doc:'📝', docx:'📝', xls:'📊', xlsx:'📊', ppt:'📊', pptx:'📊',
-    jpg:'🖼', jpeg:'🖼', png:'🖼', gif:'🖼', mp4:'🎬', mov:'🎬', zip:'🗜', hwp:'📝', txt:'📄' };
-  return icons[ext] || '📎';
+  var icons = { pdf:'ð', doc:'ð', docx:'ð', xls:'ð', xlsx:'ð', ppt:'ð', pptx:'ð',
+    jpg:'ð¼', jpeg:'ð¼', png:'ð¼', gif:'ð¼', mp4:'ð¬', mov:'ð¬', zip:'ð', hwp:'ð', txt:'ð' };
+  return icons[ext] || 'ð';
 }
 document.querySelectorAll('.modal-overlay').forEach(function(ov) {
   ov.addEventListener('click', function(e) { if (e.target === ov) ov.classList.remove('open'); });
