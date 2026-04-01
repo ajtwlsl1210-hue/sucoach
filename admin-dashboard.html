@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ê´ë¦¬ì ëìë³´ë â ìì½ì¹</title>
+  <title>관리자 대시보드 — 수코치</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
@@ -28,7 +28,7 @@
     .layout { display:flex; min-height:calc(100vh - 56px); }
     .sidebar { width:200px; flex-shrink:0; padding:16px 10px; border-right:1px solid var(--border); background:var(--surface); transition:transform 0.25s ease; }
     .main { flex:1; padding:24px; overflow:auto; }
-    /* ëª¨ë°ì¼ */
+    /* 모바일 */
     .hamburger { display:none; width:32px; height:32px; border-radius:7px; border:1px solid var(--border); background:transparent; color:var(--text-secondary); font-size:16px; cursor:pointer; align-items:center; justify-content:center; }
     .sidebar-overlay { display:none; position:fixed; inset:0; background:var(--overlay); z-index:98; }
     @media(max-width:768px) {
@@ -182,7 +182,7 @@
     @keyframes spin { to{transform:rotate(360deg)} }
     .empty { text-align:center; padding:32px 20px; color:var(--text-muted); font-size:14px; }
     .empty-icon { font-size:32px; margin-bottom:8px; }
-    /* ëª¨ë¬ ì´ë¦´ ë ë°°ê²½ ì¤í¬ë¡¤ ì ê¸ */
+    /* 모달 열릴 때 배경 스크롤 잠금 */
     body:has(.modal-overlay.open) { overflow: hidden; }
   </style>
 </head>
@@ -190,175 +190,175 @@
 
   <!-- NAVBAR -->
   <nav class="navbar">
-    <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="ë©ë´">â°</button>
-    <a href="admin-dashboard.html" class="nav-logo">ìì½ì¹</a>
+    <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="메뉴">☰</button>
+    <a href="admin-dashboard.html" class="nav-logo">수코치</a>
     <div class="nav-div"></div>
-    <span class="nav-title">ê´ë¦¬ì ëìë³´ë</span>
+    <span class="nav-title">관리자 대시보드</span>
     <div class="nav-sp"></div>
     <div class="nav-user">
-      <div class="nav-avatar" id="navAvatar">ê´</div>
-      <span id="navName">ê´ë¦¬ì</span>
+      <div class="nav-avatar" id="navAvatar">관</div>
+      <span id="navName">관리자</span>
     </div>
-    <button class="nav-btn" onclick="changePasswordModal()">ð ë¹ë°ë²í¸</button>
-    <button class="nav-btn" onclick="DB.logout()">ë¡ê·¸ìì</button>
+    <button class="nav-btn" onclick="changePasswordModal()">🔑 비밀번호</button>
+    <button class="nav-btn" onclick="DB.logout()">로그아웃</button>
   </nav>
 
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
   <div class="layout">
     <!-- SIDEBAR -->
     <aside class="sidebar" id="mainSidebar">
-      <div class="sb-label">ë©ë´</div>
-      <button class="sb-item active" onclick="switchTab('overview', this)"><span class="sb-icon">ð</span>ì ì²´ íí©</button>
-      <button class="sb-item" onclick="switchTab('students', this)"><span class="sb-icon">ð¥</span>íì ëª©ë¡</button>
-      <button class="sb-item" onclick="switchTab('assignments', this)"><span class="sb-icon">ð</span>ìííê° íí©</button>
-      <button class="sb-item" onclick="switchTab('onboarding', this)"><span class="sb-icon">â</span>ì¨ë³´ë© íí©</button>
-      <button class="sb-item" onclick="switchTab('files', this)"><span class="sb-icon">ð</span>íì¼ íí©</button>
-      <button class="sb-item" onclick="switchTab('users', this)"><span class="sb-icon">ð¤</span>íì ê´ë¦¬</button>
-      <button class="sb-item" onclick="switchTab('docs', this)"><span class="sb-icon">ð</span>ë´ë¶ìë£</button>
-      <div class="sb-label">ë°ì´í°</div>
-      <button class="sb-item" onclick="exportStudents()"><span class="sb-icon">ð¥</span>íì Excel</button>
-      <button class="sb-item" onclick="exportAssignments()"><span class="sb-icon">ð¥</span>ìííê° Excel</button>
+      <div class="sb-label">메뉴</div>
+      <button class="sb-item active" onclick="switchTab('overview', this)"><span class="sb-icon">📊</span>전체 현황</button>
+      <button class="sb-item" onclick="switchTab('students', this)"><span class="sb-icon">👥</span>학생 목록</button>
+      <button class="sb-item" onclick="switchTab('assignments', this)"><span class="sb-icon">📋</span>수행평가 현황</button>
+      <button class="sb-item" onclick="switchTab('onboarding', this)"><span class="sb-icon">✅</span>온보딩 현황</button>
+      <button class="sb-item" onclick="switchTab('files', this)"><span class="sb-icon">📁</span>파일 현황</button>
+      <button class="sb-item" onclick="switchTab('users', this)"><span class="sb-icon">👤</span>회원 관리</button>
+      <button class="sb-item" onclick="switchTab('docs', this)"><span class="sb-icon">🗂</span>내부자료</button>
+      <div class="sb-label">데이터</div>
+      <button class="sb-item" onclick="exportStudents()"><span class="sb-icon">📥</span>학생 Excel</button>
+      <button class="sb-item" onclick="exportAssignments()"><span class="sb-icon">📥</span>수행평가 Excel</button>
     </aside>
 
     <!-- MAIN -->
     <main class="main">
 
-      <!-- ââ ì ì²´ íí© ââ -->
+      <!-- ── 전체 현황 ── -->
       <div id="tab-overview" class="tab-content active">
         <div class="stats-row" id="statsRow">
-          <div class="stat-card"><div class="stat-label">ë±ë¡ íì</div><div class="stat-num" id="stat-students">-</div><div class="stat-sub">ëª</div></div>
-          <div class="stat-card"><div class="stat-label">ì§í ì¤ì¸ ìííê°</div><div class="stat-num" id="stat-progress">-</div><div class="stat-sub">ê±´</div></div>
-          <div class="stat-card stat-urgent"><div class="stat-label">â¡ D-5 ì´ë´ ë§ê°</div><div class="stat-num" id="stat-urgent">-</div><div class="stat-sub">ê±´ â ê¸´ê¸</div></div>
-          <div class="stat-card stat-positive"><div class="stat-label">ì´ë² ë¬ ìë£</div><div class="stat-num" id="stat-done">-</div><div class="stat-sub">ê±´</div></div>
+          <div class="stat-card"><div class="stat-label">등록 학생</div><div class="stat-num" id="stat-students">-</div><div class="stat-sub">명</div></div>
+          <div class="stat-card"><div class="stat-label">진행 중인 수행평가</div><div class="stat-num" id="stat-progress">-</div><div class="stat-sub">건</div></div>
+          <div class="stat-card stat-urgent"><div class="stat-label">⚡ D-5 이내 마감</div><div class="stat-num" id="stat-urgent">-</div><div class="stat-sub">건 — 긴급</div></div>
+          <div class="stat-card stat-positive"><div class="stat-label">이번 달 완료</div><div class="stat-num" id="stat-done">-</div><div class="stat-sub">건</div></div>
         </div>
         <div id="urgentSection" style="display:none;margin-bottom:28px;">
-          <div class="sec-header"><div class="sec-title">â¡ ê¸´ê¸ ì²ë¦¬ íì (D-5 ì´ë´)</div></div>
+          <div class="sec-header"><div class="sec-title">⚡ 긴급 처리 필요 (D-5 이내)</div></div>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>íì</th><th>ê³¼ëª©</th><th>ìííê°ëª</th><th>ë¨ê³</th><th>ë´ë¶ë§ê°</th><th>D-Day</th></tr></thead>
+              <thead><tr><th>학생</th><th>과목</th><th>수행평가명</th><th>단계</th><th>내부마감</th><th>D-Day</th></tr></thead>
               <tbody id="urgentTbody"></tbody>
             </table>
           </div>
         </div>
         <div class="sec-header">
-          <div class="sec-title">ìííê° ì¹¸ë° ë³´ë</div>
-          <button class="btn" onclick="loadData()">ð ìë¡ê³ ì¹¨</button>
+          <div class="sec-title">수행평가 칸반 보드</div>
+          <button class="btn" onclick="loadData()">🔄 새로고침</button>
         </div>
         <div class="kanban" id="kanbanBoard"></div>
       </div>
 
-      <!-- ââ íì ëª©ë¡ ââ -->
+      <!-- ── 학생 목록 ── -->
       <div id="tab-students" class="tab-content">
         <div class="sec-header">
-          <div class="sec-title">íì ëª©ë¡</div>
-          <button class="btn primary" onclick="openAddStudent()">+ íì ë±ë¡</button>
+          <div class="sec-title">학생 목록</div>
+          <button class="btn primary" onclick="openAddStudent()">+ 학생 등록</button>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>ì´ë¦</th><th>íêµ</th><th>íë/ë°/ë²í¸</th><th>ëª©íë±ê¸</th><th>íìì í</th><th>ë´ë¹ê°ì¬</th><th>ì§íì¤</th><th>ë±ë¡ì¼</th><th>ê´ë¦¬</th></tr></thead>
+            <thead><tr><th>이름</th><th>학교</th><th>학년/반/번호</th><th>목표등급</th><th>학생유형</th><th>담당강사</th><th>진행중</th><th>등록일</th><th>관리</th></tr></thead>
             <tbody id="studentTbody"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- ââ ìííê° íí© ââ -->
+      <!-- ── 수행평가 현황 ── -->
       <div id="tab-assignments" class="tab-content">
         <div class="sec-header">
-          <div class="sec-title">ìííê° ì ì²´ íí©</div>
-          <button class="btn" onclick="exportAssignments()">ð¥ Excel</button>
+          <div class="sec-title">수행평가 전체 현황</div>
+          <button class="btn" onclick="exportAssignments()">📥 Excel</button>
         </div>
         <div class="filter-row">
           <select class="filter-select" id="filterStage" onchange="renderAssignmentTable()">
-            <option value="">ëª¨ë  ë¨ê³</option>
-            <option>ì ì</option><option>ë¶ììë£</option><option>ë©´ë´ìë£</option>
-            <option>ì´ìëê¸°</option><option>í¼ëë°±ìë£</option><option>ìì ì¤</option>
-            <option>ìµì¢íì¸</option><option>ìë£</option>
+            <option value="">모든 단계</option>
+            <option>접수</option><option>분석완료</option><option>면담완료</option>
+            <option>초안대기</option><option>피드백완료</option><option>수정중</option>
+            <option>최종확인</option><option>완료</option>
           </select>
           <select class="filter-select" id="filterSubject" onchange="renderAssignmentTable()">
-            <option value="">ëª¨ë  ê³¼ëª©</option>
+            <option value="">모든 과목</option>
           </select>
           <select class="filter-select" id="filterStudent" onchange="renderAssignmentTable()">
-            <option value="">ëª¨ë  íì</option>
+            <option value="">모든 학생</option>
           </select>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>íì</th><th>ê³¼ëª©</th><th>ìííê°ëª</th><th>ë¨ê³</th><th>íêµë§ê°</th><th>ë´ë¶ë§ê°</th><th>D-Day</th><th>ì ì</th><th>ê´ë¦¬</th></tr></thead>
+            <thead><tr><th>학생</th><th>과목</th><th>수행평가명</th><th>단계</th><th>학교마감</th><th>내부마감</th><th>D-Day</th><th>점수</th><th>관리</th></tr></thead>
             <tbody id="assignmentTbody"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- ââ ì¨ë³´ë© íí© ââ -->
+      <!-- ── 온보딩 현황 ── -->
       <div id="tab-onboarding" class="tab-content">
         <div class="sec-header">
-          <div class="sec-title">ì¨ë³´ë© íí© (íì/íë¶ëª¨)</div>
-          <button class="btn" onclick="loadOnboarding()">ð ìë¡ê³ ì¹¨</button>
+          <div class="sec-title">온보딩 현황 (학생/학부모)</div>
+          <button class="btn" onclick="loadOnboarding()">🔄 새로고침</button>
         </div>
         <div class="ob-grid" id="obGrid"></div>
       </div>
 
-      <!-- ââ íì¼ íí© ââ -->
+      <!-- ── 파일 현황 ── -->
       <div id="tab-files" class="tab-content">
         <div class="sec-header">
-          <div class="sec-title">ìë¡ëë íì¼ ì ì²´ íí©</div>
-          <button class="btn" onclick="loadFiles()">ð ìë¡ê³ ì¹¨</button>
+          <div class="sec-title">업로드된 파일 전체 현황</div>
+          <button class="btn" onclick="loadFiles()">🔄 새로고침</button>
         </div>
         <div class="filter-row">
           <select class="filter-select" id="filterFileStudent" onchange="renderFileTable()">
-            <option value="">ëª¨ë  íì</option>
+            <option value="">모든 학생</option>
           </select>
           <select class="filter-select" id="filterFileType" onchange="renderFileTable()">
-            <option value="">ëª¨ë  íì¼ì í</option>
-            <option>ì°ê°ê³íì</option><option>ë£¨ë¸ë¦­</option><option>ì½ì¹­ê°ì´ë</option>
-            <option>ì´ì</option><option>í¼ëë°±</option><option>ìì ë³¸</option><option>ìµì¢ë³¸</option><option>ê¸°í</option>
+            <option value="">모든 파일유형</option>
+            <option>연간계획서</option><option>루브릭</option><option>코칭가이드</option>
+            <option>초안</option><option>피드백</option><option>수정본</option><option>최종본</option><option>기타</option>
           </select>
           <select class="filter-select" id="filterFileUploader" onchange="renderFileTable()">
-            <option value="">ëª¨ë  ìë¡ë</option>
-            <option value="admin">ê´ë¦¬ì</option><option value="tutor">ê°ì¬</option>
-            <option value="student">íì</option><option value="parent">íë¶ëª¨</option>
+            <option value="">모든 업로더</option>
+            <option value="admin">관리자</option><option value="tutor">강사</option>
+            <option value="student">학생</option><option value="parent">학부모</option>
           </select>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>íì</th><th>ìííê°</th><th>íì¼ì í</th><th>íì¼ëª</th><th>ìë¡ë</th><th>í¬ê¸°</th><th>ìë¡ëì¼</th><th>ì´ê¸°</th><th>ê´ë¦¬</th></tr></thead>
+            <thead><tr><th>학생</th><th>수행평가</th><th>파일유형</th><th>파일명</th><th>업로더</th><th>크기</th><th>업로드일</th><th>열기</th><th>관리</th></tr></thead>
             <tbody id="fileTbody"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- ââ íì ê´ë¦¬ ââ -->
+      <!-- ── 회원 관리 ── -->
       <div id="tab-users" class="tab-content">
         <div class="sec-header">
-          <div class="sec-title">ì ì²´ íì ëª©ë¡</div>
-          <button class="btn" onclick="loadUsers()">ð ìë¡ê³ ì¹¨</button>
+          <div class="sec-title">전체 회원 목록</div>
+          <button class="btn" onclick="loadUsers()">🔄 새로고침</button>
         </div>
         <div class="filter-row">
           <select class="filter-select" id="filterUserRole" onchange="renderUserTable()">
-            <option value="">ëª¨ë  ì­í </option>
-            <option value="admin">ê´ë¦¬ì</option><option value="tutor">ê°ì¬</option>
-            <option value="student">íì</option><option value="parent">íë¶ëª¨</option>
+            <option value="">모든 역할</option>
+            <option value="admin">관리자</option><option value="tutor">강사</option>
+            <option value="student">학생</option><option value="parent">학부모</option>
           </select>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>ì´ë¦</th><th>ì´ë©ì¼</th><th>ì­í </th><th>ê°ìì¼</th><th>ê´ë¦¬</th></tr></thead>
+            <thead><tr><th>이름</th><th>이메일</th><th>역할</th><th>가입일</th><th>관리</th></tr></thead>
             <tbody id="userTbody"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- ââ ë´ë¶ìë£ (ê´ë¦¬ìÂ·ê°ì¬ ì ì©) ââ -->
+      <!-- ── 내부자료 (관리자·강사 전용) ── -->
       <div id="tab-docs" class="tab-content">
         <div class="sec-header">
-          <div class="sec-title">ð ë´ë¶ìë£</div>
-          <span style="font-size:11px;color:var(--text-muted);font-weight:600;padding:4px 8px;background:rgba(220,38,38,0.07);border-radius:6px;">ê´ë¦¬ìÂ·ê°ì¬ ì ì©</span>
-          <button class="btn primary" onclick="openAddDoc()">+ ìë£ ì¶ê°</button>
-          <button class="btn" onclick="loadInternalDocs()">ð ìë¡ê³ ì¹¨</button>
+          <div class="sec-title">🗂 내부자료</div>
+          <span style="font-size:11px;color:var(--text-muted);font-weight:600;padding:4px 8px;background:rgba(220,38,38,0.07);border-radius:6px;">관리자·강사 전용</span>
+          <button class="btn primary" onclick="openAddDoc()">+ 자료 추가</button>
+          <button class="btn" onclick="loadInternalDocs()">🔄 새로고침</button>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>ìë£ëª</th><th>ë¶ë¥</th><th>ì¤ëª</th><th>ë±ë¡ì</th><th>ë±ë¡ì¼</th><th>ë§í¬</th><th>ê´ë¦¬</th></tr></thead>
+            <thead><tr><th>자료명</th><th>분류</th><th>설명</th><th>등록자</th><th>등록일</th><th>링크</th><th>관리</th></tr></thead>
             <tbody id="docTbody"></tbody>
           </table>
         </div>
@@ -368,224 +368,224 @@
   </div>
 
 
-  <!-- âââ íì ë±ë¡ ëª¨ë¬ âââ -->
+  <!-- ═══ 학생 등록 모달 ═══ -->
   <div class="modal-overlay" id="addStudentModal">
     <div class="modal">
-      <div class="modal-title">+ íì ë±ë¡</div>
+      <div class="modal-title">+ 학생 등록</div>
       <div class="modal-alert error" id="addStudentErr" style="display:none;"></div>
       <div class="modal-alert success" id="addStudentOk" style="display:none;"></div>
       <div id="addStudentForm">
         <div class="form-group">
-          <label class="form-label">ì´ë¦ <span class="req">*</span></label>
-          <input type="text" id="f_name" placeholder="íì ì´ë¦">
+          <label class="form-label">이름 <span class="req">*</span></label>
+          <input type="text" id="f_name" placeholder="학생 이름">
         </div>
         <div class="form-group">
-          <label class="form-label">íêµ <span class="req">*</span></label>
-          <input type="text" id="f_school" placeholder="íêµ ì´ë¦">
+          <label class="form-label">학교 <span class="req">*</span></label>
+          <input type="text" id="f_school" placeholder="학교 이름">
         </div>
         <div class="form-group">
-          <label class="form-label">íë / ë° / ë²í¸ <span class="req">*</span></label>
+          <label class="form-label">학년 / 반 / 번호 <span class="req">*</span></label>
           <div class="input-row">
-            <select id="f_grade"><option value="">íë</option><option>1</option><option>2</option><option>3</option></select>
-            <input type="number" id="f_class" placeholder="ë°" min="1" max="30" style="max-width:80px;">
-            <input type="number" id="f_num" placeholder="ë²í¸" min="1" max="50" style="max-width:80px;">
+            <select id="f_grade"><option value="">학년</option><option>1</option><option>2</option><option>3</option></select>
+            <input type="number" id="f_class" placeholder="반" min="1" max="30" style="max-width:80px;">
+            <input type="number" id="f_num" placeholder="번호" min="1" max="50" style="max-width:80px;">
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">ëª©í ë±ê¸</label>
-          <select id="f_target"><option value="">ì í ì í¨</option><option>1ë±ê¸</option><option>2ë±ê¸</option><option>3ë±ê¸</option><option>4ë±ê¸</option><option>5ë±ê¸ ì´í</option></select>
+          <label class="form-label">목표 등급</label>
+          <select id="f_target"><option value="">선택 안 함</option><option>1등급</option><option>2등급</option><option>3등급</option><option>4등급</option><option>5등급 이하</option></select>
         </div>
         <div class="form-group">
-          <label class="form-label">íì ì í</label>
-          <select id="f_type"><option value="">ì í ì í¨</option><option>ë¬´ê¸°ë ¥í</option><option>ê³¼ì¤ê³í</option><option>ì°½ìí</option><option>ìëí</option></select>
+          <label class="form-label">학생 유형</label>
+          <select id="f_type"><option value="">선택 안 함</option><option>무기력형</option><option>과설계형</option><option>창의형</option><option>수동형</option></select>
         </div>
         <div class="form-group">
-          <label class="form-label">ë´ë¹ ê°ì¬</label>
-          <select id="f_tutor"><option value="">ë¯¸ë°°ì </option></select>
+          <label class="form-label">담당 강사</label>
+          <select id="f_tutor"><option value="">미배정</option></select>
         </div>
         <div class="form-group">
-          <label class="form-label">íì ì´ë©ì¼ (ë¡ê·¸ì¸ ìì´ë) <span class="req">*</span></label>
+          <label class="form-label">학생 이메일 (로그인 아이디) <span class="req">*</span></label>
           <input type="email" id="f_email" placeholder="student@example.com">
         </div>
         <div class="form-group">
-          <label class="form-label">íë¶ëª¨ ì´ë©ì¼</label>
-          <input type="email" id="f_parent_email" placeholder="ë¹ìëë©´ student+parent@ ìë ìì±">
+          <label class="form-label">학부모 이메일</label>
+          <input type="email" id="f_parent_email" placeholder="비워두면 student+parent@ 자동 생성">
         </div>
         <div class="form-group">
-          <label class="form-label">ìë¹ì© (ì)</label>
+          <label class="form-label">월비용 (원)</label>
           <input type="number" id="f_fee" placeholder="70000" value="70000">
         </div>
         <div class="form-group">
-          <label class="form-label">ë©ëª¨</label>
-          <textarea id="f_notes" rows="2" placeholder="í¹ì´ì¬í­ (ì í)"></textarea>
+          <label class="form-label">메모</label>
+          <textarea id="f_notes" rows="2" placeholder="특이사항 (선택)"></textarea>
         </div>
       </div>
       <div class="result-box" id="addStudentResult" style="display:none;"></div>
       <div class="modal-footer">
-        <button class="btn-cancel" onclick="closeAddStudent()">ì·¨ì</button>
-        <button class="btn-submit" id="btnAddStudent" onclick="submitAddStudent()">ë±ë¡íê¸°</button>
+        <button class="btn-cancel" onclick="closeAddStudent()">취소</button>
+        <button class="btn-submit" id="btnAddStudent" onclick="submitAddStudent()">등록하기</button>
       </div>
     </div>
   </div>
 
-  <!-- âââ íì ìì  ëª¨ë¬ âââ -->
+  <!-- ═══ 학생 수정 모달 ═══ -->
   <div class="modal-overlay" id="editStudentModal">
     <div class="modal">
-      <div class="modal-title">âï¸ íì ì ë³´ ìì </div>
+      <div class="modal-title">✏️ 학생 정보 수정</div>
       <div class="modal-alert error" id="editStudentErr" style="display:none;"></div>
       <input type="hidden" id="edit_student_id">
       <div class="form-group">
-        <label class="form-label">ì´ë¦</label>
+        <label class="form-label">이름</label>
         <input type="text" id="edit_name" readonly>
       </div>
       <div class="form-group">
-        <label class="form-label">íêµ <span class="req">*</span></label>
-        <input type="text" id="edit_school" placeholder="íêµ ì´ë¦">
+        <label class="form-label">학교 <span class="req">*</span></label>
+        <input type="text" id="edit_school" placeholder="학교 이름">
       </div>
       <div class="form-group">
-        <label class="form-label">íë / ë° / ë²í¸</label>
+        <label class="form-label">학년 / 반 / 번호</label>
         <div class="input-row">
-          <select id="edit_grade"><option value="">íë</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-          <input type="number" id="edit_class" placeholder="ë°" min="1" max="30" style="max-width:80px;">
-          <input type="number" id="edit_num" placeholder="ë²í¸" min="1" max="50" style="max-width:80px;">
+          <select id="edit_grade"><option value="">학년</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+          <input type="number" id="edit_class" placeholder="반" min="1" max="30" style="max-width:80px;">
+          <input type="number" id="edit_num" placeholder="번호" min="1" max="50" style="max-width:80px;">
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">ëª©í ë±ê¸</label>
-        <select id="edit_target"><option value="">ì í ì í¨</option><option>1ë±ê¸</option><option>2ë±ê¸</option><option>3ë±ê¸</option><option>4ë±ê¸</option><option>5ë±ê¸ ì´í</option></select>
+        <label class="form-label">목표 등급</label>
+        <select id="edit_target"><option value="">선택 안 함</option><option>1등급</option><option>2등급</option><option>3등급</option><option>4등급</option><option>5등급 이하</option></select>
       </div>
       <div class="form-group">
-        <label class="form-label">íì ì í</label>
-        <select id="edit_type"><option value="">ì í ì í¨</option><option>ë¬´ê¸°ë ¥í</option><option>ê³¼ì¤ê³í</option><option>ì°½ìí</option><option>ìëí</option></select>
+        <label class="form-label">학생 유형</label>
+        <select id="edit_type"><option value="">선택 안 함</option><option>무기력형</option><option>과설계형</option><option>창의형</option><option>수동형</option></select>
       </div>
       <div class="form-group">
-        <label class="form-label">ë´ë¹ ê°ì¬</label>
-        <select id="edit_tutor"><option value="">ë¯¸ë°°ì </option></select>
+        <label class="form-label">담당 강사</label>
+        <select id="edit_tutor"><option value="">미배정</option></select>
       </div>
       <div class="form-group">
-        <label class="form-label">ë©ëª¨</label>
-        <textarea id="edit_notes" rows="2" placeholder="í¹ì´ì¬í­"></textarea>
+        <label class="form-label">메모</label>
+        <textarea id="edit_notes" rows="2" placeholder="특이사항"></textarea>
       </div>
       <div class="modal-footer">
-        <button class="btn-cancel" onclick="closeEditStudent()">ì·¨ì</button>
-        <button class="btn-submit" id="btnEditStudent" onclick="submitEditStudent()">ì ì¥</button>
+        <button class="btn-cancel" onclick="closeEditStudent()">취소</button>
+        <button class="btn-submit" id="btnEditStudent" onclick="submitEditStudent()">저장</button>
       </div>
     </div>
   </div>
 
-  <!-- âââ ì¨ë³´ë© ìì¸ ëª¨ë¬ âââ -->
+  <!-- ═══ 온보딩 상세 모달 ═══ -->
   <div class="modal-overlay" id="obDetailModal">
     <div class="modal wide">
-      <div class="modal-title" id="obDetailTitle">ì¨ë³´ë© ìì¸</div>
+      <div class="modal-title" id="obDetailTitle">온보딩 상세</div>
       <div id="obDetailContent"></div>
       <div class="modal-footer">
-        <button class="btn-submit" onclick="closeObDetail()">ë«ê¸°</button>
+        <button class="btn-submit" onclick="closeObDetail()">닫기</button>
       </div>
     </div>
   </div>
 
-  <!-- âââ ë´ë¶ìë£ ì¶ê° ëª¨ë¬ âââ -->
+  <!-- ═══ 내부자료 추가 모달 ═══ -->
   <div class="modal-overlay" id="addDocModal">
     <div class="modal">
-      <div class="modal-title">ð ë´ë¶ìë£ ì¶ê°</div>
+      <div class="modal-title">🗂 내부자료 추가</div>
       <div class="modal-alert error" id="addDocErr" style="display:none;"></div>
       <div class="form-group">
-        <label class="form-label">ìë£ëª <span class="req">*</span></label>
-        <input type="text" id="doc_title" placeholder="ì: ìì½ì¹ ì´ì ë§¤ë´ì¼ v1.2">
+        <label class="form-label">자료명 <span class="req">*</span></label>
+        <input type="text" id="doc_title" placeholder="예: 수코치 운영 매뉴얼 v1.2">
       </div>
       <div class="form-group">
-        <label class="form-label">ë¶ë¥</label>
+        <label class="form-label">분류</label>
         <select id="doc_category">
-          <option value="ì´ì ë§¤ë´ì¼">ì´ì ë§¤ë´ì¼</option>
-          <option value="ë£¨ë¸ë¦­ ìë£">ë£¨ë¸ë¦­ ìë£</option>
-          <option value="ì°ê°ê³íì">ì°ê°ê³íì</option>
-          <option value="ì½ì¹­ ê°ì´ë">ì½ì¹­ ê°ì´ë</option>
-          <option value="ê³ì½ / ëìì">ê³ì½ / ëìì</option>
-          <option value="íìë¡">íìë¡</option>
-          <option value="ê¸°í">ê¸°í</option>
+          <option value="운영 매뉴얼">운영 매뉴얼</option>
+          <option value="루브릭 자료">루브릭 자료</option>
+          <option value="연간계획서">연간계획서</option>
+          <option value="코칭 가이드">코칭 가이드</option>
+          <option value="계약 / 동의서">계약 / 동의서</option>
+          <option value="회의록">회의록</option>
+          <option value="기타">기타</option>
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">íì¼ ìë¡ë</label>
+        <label class="form-label">파일 업로드</label>
         <div class="doc-upload-zone" id="docUploadZone" onclick="document.getElementById('docFileInput').click()">
-          <span class="doc-upload-icon">ð</span>
-          <span id="docUploadText">í´ë¦­íì¬ íì¼ ì í (ìµë 10MB)</span>
+          <span class="doc-upload-icon">📎</span>
+          <span id="docUploadText">클릭하여 파일 선택 (최대 10MB)</span>
         </div>
         <input type="file" id="docFileInput" style="display:none" onchange="onDocFileSelected(event)">
       </div>
       <div class="form-group">
-        <label class="form-label">ëë ë§í¬ URL</label>
+        <label class="form-label">또는 링크 URL</label>
         <input type="url" id="doc_url" placeholder="https://docs.google.com/...">
       </div>
       <div class="form-group">
-        <label class="form-label">ì¤ëª / ë©ëª¨</label>
-        <textarea id="doc_note" rows="3" placeholder="ìë£ ì¤ëª, ì©ë, ìµì¢ ìì ì¼ ë± ë©ëª¨"></textarea>
+        <label class="form-label">설명 / 메모</label>
+        <textarea id="doc_note" rows="3" placeholder="자료 설명, 용도, 최종 수정일 등 메모"></textarea>
       </div>
       <div class="modal-footer">
-        <button class="btn-cancel" onclick="closeAddDoc()">ì·¨ì</button>
-        <button class="btn-submit" id="btnAddDoc" onclick="submitAddDoc()">ì ì¥</button>
+        <button class="btn-cancel" onclick="closeAddDoc()">취소</button>
+        <button class="btn-submit" id="btnAddDoc" onclick="submitAddDoc()">저장</button>
       </div>
     </div>
   </div>
 
-  <!-- âââ ìííê° ì ë³´ ìì  ëª¨ë¬ âââ -->
+  <!-- ═══ 수행평가 정보 수정 모달 ═══ -->
   <div class="modal-overlay" id="editAssignmentModal">
     <div class="modal">
-      <div class="modal-title">âï¸ ìííê° ì ë³´ ìì </div>
+      <div class="modal-title">✏️ 수행평가 정보 수정</div>
       <div class="modal-alert error" id="editAssignmentErr" style="display:none;"></div>
       <input type="hidden" id="ea_id">
       <div class="form-group">
-        <label class="form-label">ìííê°ëª <span class="req">*</span></label>
-        <input type="text" id="ea_title" placeholder="ìííê° ì ëª©">
+        <label class="form-label">수행평가명 <span class="req">*</span></label>
+        <input type="text" id="ea_title" placeholder="수행평가 제목">
       </div>
       <div class="form-group">
-        <label class="form-label">ê³¼ëª© <span class="req">*</span></label>
+        <label class="form-label">과목 <span class="req">*</span></label>
         <select id="ea_subject">
-          <option>êµ­ì´</option><option>ìì´</option><option>ìí</option>
-          <option>ì¬í</option><option>ê³¼í</option><option>ì­ì¬</option><option>ê¸°í</option>
+          <option>국어</option><option>영어</option><option>수학</option>
+          <option>사회</option><option>과학</option><option>역사</option><option>기타</option>
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">ìííê° ì í</label>
+        <label class="form-label">수행평가 유형</label>
         <select id="ea_type">
-          <option value="">ì í ì í¨</option>
-          <option>ìì í</option><option>ë°íí</option><option>ë³´ê³ ìí</option>
-          <option>íêµ¬í</option><option>ì¤íí</option><option>íë¡ì í¸í</option><option>ê¸°í</option>
+          <option value="">선택 안 함</option>
+          <option>서술형</option><option>발표형</option><option>보고서형</option>
+          <option>탐구형</option><option>실험형</option><option>프로젝트형</option><option>기타</option>
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">íêµ ë§ê°ì¼</label>
+        <label class="form-label">학교 마감일</label>
         <input type="date" id="ea_school_dl">
       </div>
       <div class="form-group">
-        <label class="form-label">ë´ë¶ ë§ê°ì¼ (D-5)</label>
+        <label class="form-label">내부 마감일 (D-5)</label>
         <input type="date" id="ea_internal_dl">
       </div>
       <div class="modal-footer">
-        <button class="btn-cancel" onclick="closeEditAssignment()">ì·¨ì</button>
-        <button class="btn-submit" id="btnEditAssignment" onclick="submitEditAssignment()">ì ì¥</button>
+        <button class="btn-cancel" onclick="closeEditAssignment()">취소</button>
+        <button class="btn-submit" id="btnEditAssignment" onclick="submitEditAssignment()">저장</button>
       </div>
     </div>
   </div>
 
-  <!-- âââ ë¹ë°ë²í¸ ë³ê²½ ëª¨ë¬ âââ -->
+  <!-- ═══ 비밀번호 변경 모달 ═══ -->
   <div class="modal-overlay" id="pwModal">
     <div class="modal">
-      <div class="modal-title" id="pwModalTitle">ð ë¹ë°ë²í¸ ë³ê²½</div>
+      <div class="modal-title" id="pwModalTitle">🔑 비밀번호 변경</div>
       <div class="modal-alert error" id="pwErr" style="display:none;"></div>
       <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;" id="pwModalDesc"></p>
       <input type="hidden" id="pwTargetId">
       <div class="form-group">
-        <label class="form-label">ì ë¹ë°ë²í¸</label>
-        <input type="password" id="newPw" placeholder="ì ë¹ë°ë²í¸ (6ì ì´ì)">
+        <label class="form-label">새 비밀번호</label>
+        <input type="password" id="newPw" placeholder="새 비밀번호 (6자 이상)">
       </div>
       <div class="form-group">
-        <label class="form-label">ë¹ë°ë²í¸ íì¸</label>
-        <input type="password" id="newPw2" placeholder="ë¤ì ìë ¥">
+        <label class="form-label">비밀번호 확인</label>
+        <input type="password" id="newPw2" placeholder="다시 입력">
       </div>
       <div class="modal-footer">
-        <button class="btn-cancel" onclick="closePwModal()">ì·¨ì</button>
-        <button class="btn-submit" onclick="submitPw()">ë³ê²½</button>
+        <button class="btn-cancel" onclick="closePwModal()">취소</button>
+        <button class="btn-submit" onclick="submitPw()">변경</button>
       </div>
     </div>
   </div>
@@ -593,14 +593,14 @@
 
   <script src="db.js"></script>
   <script>
-    // ââ ëª¨ë°ì¼ ì¬ì´ëë° í ê¸ âââââââââââââââââââââââââââââââââââââââââ
+    // ── 모바일 사이드바 토글 ─────────────────────────────────────────
     function toggleSidebar() {
       var sb = document.getElementById('mainSidebar');
       var ov = document.getElementById('sidebarOverlay');
       sb.classList.toggle('open');
       ov.classList.toggle('open');
     }
-    // switchTab í¸ì¶ ì ëª¨ë°ì¼ìì ì¬ì´ëë° ìë ë«ê¸°
+    // switchTab 호출 시 모바일에서 사이드바 자동 닫기
     var _origSwitchTab;
     document.addEventListener('DOMContentLoaded', function() {
       _origSwitchTab = window.switchTab;
@@ -614,7 +614,7 @@
     var allUsers = [];
     var allInternalDocs = [];
 
-    // ââ ì´ê¸°í âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── 초기화 ───────────────────────────────────────────────────────
     async function init() {
       me = DB.requireAuth(['admin', 'tutor']);
       if (!me) return;
@@ -647,14 +647,14 @@
       tutors = await DB.getAllTutors();
       ['f_tutor', 'edit_tutor'].forEach(function(selId) {
         var sel = document.getElementById(selId);
-        sel.innerHTML = '<option value="">ë¯¸ë°°ì </option>';
+        sel.innerHTML = '<option value="">미배정</option>';
         tutors.forEach(function(t) {
           sel.innerHTML += '<option value="' + t.id + '">' + t.display_name + '</option>';
         });
       });
     }
 
-    // ââ ì¨ë³´ë© íí© ââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── 온보딩 현황 ──────────────────────────────────────────────────
     async function loadOnboarding() {
       try {
         var obData = await DB.getOnboardingStatus();
@@ -665,7 +665,7 @@
 
         var grid = document.getElementById('obGrid');
         if (!Object.keys(userMap).length) {
-          grid.innerHTML = '<div class="empty"><div class="empty-icon">ð</div>ë±ë¡ë íì/íë¶ëª¨ê° ììµëë¤.</div>';
+          grid.innerHTML = '<div class="empty"><div class="empty-icon">📋</div>등록된 학생/학부모가 없습니다.</div>';
           return;
         }
         grid.innerHTML = '';
@@ -673,22 +673,22 @@
           var ob = obData.find(function(o){ return o.user_id === u.id; });
           var consent = ob && ob.consent_signed;
           var survey  = ob && ob.survey_completed;
-          var roleLabel = u.role === 'student' ? 'íì' : 'íë¶ëª¨';
+          var roleLabel = u.role === 'student' ? '학생' : '학부모';
           var card = document.createElement('div');
           card.className = 'ob-card';
           card.innerHTML =
             '<div class="ob-name">' + u.display_name +
               ' <span class="badge badge-gray">' + roleLabel + '</span>' +
             '</div>' +
-            '<div class="ob-row"><span>ì´ì© ëìì</span>' +
+            '<div class="ob-row"><span>이용 동의서</span>' +
               '<span class="' + (consent ? 'ob-ok' : 'ob-pending') + '">' +
-              (consent ? 'â ìë£ ' + (ob.consent_signed_at ? DB.formatDate(ob.consent_signed_at) : '') : 'â³ ë¯¸ìë£') +
+              (consent ? '✓ 완료 ' + (ob.consent_signed_at ? DB.formatDate(ob.consent_signed_at) : '') : '⏳ 미완료') +
               '</span></div>' +
-            '<div class="ob-row"><span>ì¸íì´í¬ ì¤ë¬¸</span>' +
+            '<div class="ob-row"><span>인테이크 설문</span>' +
               '<span class="' + (survey ? 'ob-ok' : 'ob-pending') + '">' +
-              (survey ? 'â ìë£ ' + (ob.survey_completed_at ? DB.formatDate(ob.survey_completed_at) : '') : 'â³ ë¯¸ìë£') +
+              (survey ? '✓ 완료 ' + (ob.survey_completed_at ? DB.formatDate(ob.survey_completed_at) : '') : '⏳ 미완료') +
               '</span></div>' +
-            (ob ? '<button class="ob-detail-btn" onclick="openObDetail(\'' + u.id + '\')">ð ìì¸ ë´ì© ë³´ê¸°</button>' : '');
+            (ob ? '<button class="ob-detail-btn" onclick="openObDetail(\'' + u.id + '\')">📄 상세 내용 보기</button>' : '');
           grid.appendChild(card);
         });
       } catch(e) {
@@ -704,43 +704,43 @@
         var ob     = obList.find(function(o){ return o.user_id === userId; });
 
         document.getElementById('obDetailTitle').textContent =
-          (u.display_name || 'ì¬ì©ì') + ' â ì¨ë³´ë© ìì¸';
+          (u.display_name || '사용자') + ' — 온보딩 상세';
 
         var html = '';
 
-        // â  ì´ì© ëìì
-        html += '<div class="survey-section"><div class="survey-section-title">ð ì´ì© ëìì</div>';
+        // ① 이용 동의서
+        html += '<div class="survey-section"><div class="survey-section-title">📄 이용 동의서</div>';
         if (ob && ob.consent_signed) {
           html += '<div class="survey-kv">';
-          html += kvRow('ìëª ì¬ë¶', '<span class="ob-ok">â ëì ìë£</span>');
+          html += kvRow('서명 여부', '<span class="ob-ok">✓ 동의 완료</span>');
           if (ob.consent_signed_at)
-            html += kvRow('ìëª ì¼ì', DB.formatDateTime(ob.consent_signed_at));
+            html += kvRow('서명 일시', DB.formatDateTime(ob.consent_signed_at));
           html += '</div>';
         } else {
-          html += '<div style="font-size:13px;color:var(--warning);">â³ ìì§ ë¯¸ìëª</div>';
+          html += '<div style="font-size:13px;color:var(--warning);">⏳ 아직 미서명</div>';
         }
         html += '</div>';
 
-        // â¡ ì¸íì´í¬ ì¤ë¬¸
-        html += '<div class="survey-section"><div class="survey-section-title">ð ì¸íì´í¬ ì¤ë¬¸ì§ ëµë³</div>';
+        // ② 인테이크 설문
+        html += '<div class="survey-section"><div class="survey-section-title">📋 인테이크 설문지 답변</div>';
         if (ob && ob.survey_completed) {
           var data = ob.survey_data;
           if (typeof data === 'string') { try { data = JSON.parse(data); } catch(e){} }
           html += '<div class="survey-kv">';
           if (ob.survey_completed_at)
-            html += kvRow('ì ì¶ ì¼ì', DB.formatDateTime(ob.survey_completed_at));
+            html += kvRow('제출 일시', DB.formatDateTime(ob.survey_completed_at));
           html += '</div>';
           if (data && typeof data === 'object' && !Array.isArray(data)) {
             var labelMap = {
-              student_name:'íì ì´ë¦', name:'ì´ë¦', grade:'íë', school:'íêµ',
-              target_grade:'ëª©í ë±ê¸', student_type:'íì ì í',
-              weak_subjects:'ì·¨ì½ ê³¼ëª©', strong_subjects:'ê°ì  ê³¼ëª©',
-              study_hours:'íë£¨ íìµìê°', learning_style:'íìµ ì¤íì¼',
-              parent_name:'íë¶ëª¨ ì´ë¦', contact:'ì°ë½ì²',
-              goals:'ëª©í/í¬ë§ì¬í­', notes:'í¹ì´ì¬í­',
-              monthly_fee:'ì ë¹ì©', agree_terms:'ì´ì©ì½ê´ ëì',
-              agree_privacy:'ê°ì¸ì ë³´ ëì', agree_marketing:'ë§ì¼í ëì',
-              class_num:'ë°', student_num:'ë²í¸'
+              student_name:'학생 이름', name:'이름', grade:'학년', school:'학교',
+              target_grade:'목표 등급', student_type:'학생 유형',
+              weak_subjects:'취약 과목', strong_subjects:'강점 과목',
+              study_hours:'하루 학습시간', learning_style:'학습 스타일',
+              parent_name:'학부모 이름', contact:'연락처',
+              goals:'목표/희망사항', notes:'특이사항',
+              monthly_fee:'월 비용', agree_terms:'이용약관 동의',
+              agree_privacy:'개인정보 동의', agree_marketing:'마케팅 동의',
+              class_num:'반', student_num:'번호'
             };
             var keys = Object.keys(data);
             if (keys.length) {
@@ -750,7 +750,7 @@
                 if (v === null || v === undefined || v === '') return;
                 var dk = labelMap[k] || k;
                 var dv;
-                if (typeof v === 'boolean')   dv = v ? 'â ì' : 'â ìëì¤';
+                if (typeof v === 'boolean')   dv = v ? '✓ 예' : '✗ 아니오';
                 else if (Array.isArray(v))    dv = v.join(', ');
                 else if (typeof v === 'object') dv = '<pre style="margin:0;font-size:12px;">' + JSON.stringify(v,null,2) + '</pre>';
                 else                          dv = String(v);
@@ -758,22 +758,22 @@
               });
               html += '</div>';
             } else {
-              html += '<div style="font-size:13px;color:var(--text-muted);margin-top:8px;">ì ì¥ë ëµë³ ë°ì´í°ê° ììµëë¤.</div>';
+              html += '<div style="font-size:13px;color:var(--text-muted);margin-top:8px;">저장된 답변 데이터가 없습니다.</div>';
             }
           } else if (data) {
             html += '<div class="survey-raw" style="margin-top:10px;">' + JSON.stringify(data,null,2) + '</div>';
           } else {
-            html += '<div style="font-size:13px;color:var(--text-muted);margin-top:8px;">ì ì¥ë ëµë³ ë°ì´í°ê° ììµëë¤.</div>';
+            html += '<div style="font-size:13px;color:var(--text-muted);margin-top:8px;">저장된 답변 데이터가 없습니다.</div>';
           }
         } else {
-          html += '<div style="font-size:13px;color:var(--warning);">â³ ìì§ ë¯¸ì ì¶</div>';
+          html += '<div style="font-size:13px;color:var(--warning);">⏳ 아직 미제출</div>';
         }
         html += '</div>';
 
         document.getElementById('obDetailContent').innerHTML = html;
         document.getElementById('obDetailModal').classList.add('open');
       } catch(e) {
-        alert('ìì¸ ì ë³´ ë¡ë ì¤ë¥: ' + e.message);
+        alert('상세 정보 로드 오류: ' + e.message);
       }
     }
 
@@ -785,12 +785,12 @@
       document.getElementById('obDetailModal').classList.remove('open');
     }
 
-    // ââ ì¹¸ë° âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── 칸반 ─────────────────────────────────────────────────────────
     function renderKanban() {
       var board = document.getElementById('kanbanBoard');
       var colors = {
-        'ì ì':'#64748B','ë¶ììë£':'#3B82F6','ë©´ë´ìë£':'#8B5CF6','ì´ìëê¸°':'#EC4899',
-        'í¼ëë°±ìë£':'#F59E0B','ìì ì¤':'#EF4444','ìµì¢íì¸':'#10B981','ìë£':'#059669'
+        '접수':'#64748B','분석완료':'#3B82F6','면담완료':'#8B5CF6','초안대기':'#EC4899',
+        '피드백완료':'#F59E0B','수정중':'#EF4444','최종확인':'#10B981','완료':'#059669'
       };
       board.innerHTML = '';
       DB.STAGES.forEach(function(stage) {
@@ -800,7 +800,7 @@
         var html = '<div class="kboard-head">' +
           '<div class="kboard-title"><div class="kboard-dot" style="background:' + (colors[stage]||'#888') + '"></div>' + stage + '</div>' +
           '<div class="kboard-cnt">' + cards.length + '</div></div><div class="kboard-cards">';
-        if (!cards.length) html += '<div style="padding:8px;font-size:12px;color:var(--text-muted);text-align:center;">ìì</div>';
+        if (!cards.length) html += '<div style="padding:8px;font-size:12px;color:var(--text-muted);text-align:center;">없음</div>';
         cards.forEach(function(a) {
           var s = a.student || {};
           var dl = a.internal_deadline || a.school_deadline;
@@ -815,28 +815,28 @@
       });
     }
 
-    // ââ íì ëª©ë¡ âââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── 학생 목록 ─────────────────────────────────────────────────────
     function renderStudentTable() {
       var tbody = document.getElementById('studentTbody');
       if (!allStudents.length) {
-        tbody.innerHTML = '<tr><td colspan="9"><div class="empty"><div class="empty-icon">ð¥</div>ë±ë¡ë íìì´ ììµëë¤. "+ íì ë±ë¡" ë²í¼ì¼ë¡ ì¶ê°íì¸ì.</div></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9"><div class="empty"><div class="empty-icon">👥</div>등록된 학생이 없습니다. "+ 학생 등록" 버튼으로 추가하세요.</div></td></tr>';
         return;
       }
       tbody.innerHTML = allStudents.map(function(s) {
-        var inProgress = allAssignments.filter(function(a){ return a.student_id === s.id && a.stage !== 'ìë£'; }).length;
+        var inProgress = allAssignments.filter(function(a){ return a.student_id === s.id && a.stage !== '완료'; }).length;
         var safeName = (s.name||'').replace(/'/g, '');
         return '<tr class="clickable" onclick="goToStudent(\'' + s.id + '\')">' +
           '<td><strong>' + s.name + '</strong></td>' +
           '<td>' + s.school + '</td>' +
-          '<td>' + s.grade + 'íë ' + (s.class_num||'-') + 'ë° ' + (s.student_num||'-') + 'ë²</td>' +
+          '<td>' + s.grade + '학년 ' + (s.class_num||'-') + '반 ' + (s.student_num||'-') + '번</td>' +
           '<td>' + (s.target_grade || '-') + '</td>' +
           '<td>' + (s.student_type ? '<span class="badge badge-purple">' + s.student_type + '</span>' : '-') + '</td>' +
-          '<td>' + (s.tutor ? s.tutor.display_name : '<span style="color:var(--text-muted)">ë¯¸ë°°ì </span>') + '</td>' +
-          '<td>' + (inProgress > 0 ? '<span class="badge badge-blue">' + inProgress + 'ê±´</span>' : '-') + '</td>' +
+          '<td>' + (s.tutor ? s.tutor.display_name : '<span style="color:var(--text-muted)">미배정</span>') + '</td>' +
+          '<td>' + (inProgress > 0 ? '<span class="badge badge-blue">' + inProgress + '건</span>' : '-') + '</td>' +
           '<td>' + DB.formatDate(s.enrolled_at) + '</td>' +
           '<td onclick="event.stopPropagation()"><div class="act-btns">' +
-            '<button class="act-btn edit" onclick="openEditStudent(\'' + s.id + '\')">ìì </button>' +
-            '<button class="act-btn del" onclick="deleteStudent(\'' + s.id + '\',\'' + safeName + '\')">ì­ì </button>' +
+            '<button class="act-btn edit" onclick="openEditStudent(\'' + s.id + '\')">수정</button>' +
+            '<button class="act-btn del" onclick="deleteStudent(\'' + s.id + '\',\'' + safeName + '\')">삭제</button>' +
           '</div></td>' +
           '</tr>';
       }).join('');
@@ -857,7 +857,7 @@
       document.getElementById('edit_notes').value     = s.notes || '';
       document.getElementById('editStudentErr').style.display = 'none';
       document.getElementById('btnEditStudent').disabled = false;
-      document.getElementById('btnEditStudent').textContent = 'ì ì¥';
+      document.getElementById('btnEditStudent').textContent = '저장';
       document.getElementById('editStudentModal').classList.add('open');
     }
 
@@ -873,12 +873,12 @@
       var school = document.getElementById('edit_school').value.trim();
       var grade  = document.getElementById('edit_grade').value;
       if (!school || !grade) {
-        err.textContent = 'íêµì íëì íììëë¤.';
+        err.textContent = '학교와 학년은 필수입니다.';
         err.style.display = 'block';
         return;
       }
       btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span>ì ì¥ ì¤...';
+      btn.innerHTML = '<span class="spinner"></span>저장 중...';
       try {
         await DB.updateStudent(id, {
           school:       school,
@@ -893,34 +893,34 @@
         closeEditStudent();
         await loadData();
       } catch(e) {
-        err.textContent = e.message || 'ì ì¥ ì¤ ì¤ë¥ê° ë°ìíìµëë¤.';
+        err.textContent = e.message || '저장 중 오류가 발생했습니다.';
         err.style.display = 'block';
         btn.disabled = false;
-        btn.textContent = 'ì ì¥';
+        btn.textContent = '저장';
       }
     }
 
     async function deleteStudent(id, name) {
-      if (!confirm('"' + name + '" íìì ì­ì íìê² ìµëê¹?\nê´ë ¨ ìííê° ê¸°ë¡ì ì ì§ë©ëë¤.')) return;
+      if (!confirm('"' + name + '" 학생을 삭제하시겠습니까?\n관련 수행평가 기록은 유지됩니다.')) return;
       try {
         await DB.delete('students', id);
         await loadData();
       } catch(e) {
-        alert('ì­ì  ì¤í¨: ' + e.message);
+        alert('삭제 실패: ' + e.message);
       }
     }
 
-    // ââ íí° âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── 필터 ─────────────────────────────────────────────────────────
     function renderFilters() {
       var subjects = [];
       allAssignments.forEach(function(a){ if (subjects.indexOf(a.subject) === -1) subjects.push(a.subject); });
-      document.getElementById('filterSubject').innerHTML = '<option value="">ëª¨ë  ê³¼ëª©</option>' +
+      document.getElementById('filterSubject').innerHTML = '<option value="">모든 과목</option>' +
         subjects.map(function(s){ return '<option>' + s + '</option>'; }).join('');
-      document.getElementById('filterStudent').innerHTML = '<option value="">ëª¨ë  íì</option>' +
+      document.getElementById('filterStudent').innerHTML = '<option value="">모든 학생</option>' +
         allStudents.map(function(s){ return '<option value="' + s.id + '">' + s.name + '</option>'; }).join('');
     }
 
-    // ââ ìííê° íí© ââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── 수행평가 현황 ────────────────────────────────────────────────
     function renderAssignmentTable() {
       var stage     = document.getElementById('filterStage').value;
       var subject   = document.getElementById('filterSubject').value;
@@ -932,7 +932,7 @@
       });
       var tbody = document.getElementById('assignmentTbody');
       if (!data.length) {
-        tbody.innerHTML = '<tr><td colspan="9"><div class="empty">í´ë¹íë ìííê°ê° ììµëë¤.</div></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9"><div class="empty">해당하는 수행평가가 없습니다.</div></td></tr>';
         return;
       }
       tbody.innerHTML = data.map(function(a) {
@@ -943,44 +943,44 @@
           '<td><strong>' + (s.name||'?') + '</strong></td>' +
           '<td>' + a.subject + '</td>' +
           '<td>' + a.title + '</td>' +
-          '<td><span class="badge ' + (a.stage === 'ìë£' ? 'badge-green' : 'badge-blue') + '">' + a.stage + '</span>' +
-            (a.stage === 'ìë£' && !a.grade ? ' <span title="ê²°ê³¼ ë¯¸ìë ¥" style="font-size:11px;color:var(--warning);">â ï¸</span>' : '') +
+          '<td><span class="badge ' + (a.stage === '완료' ? 'badge-green' : 'badge-blue') + '">' + a.stage + '</span>' +
+            (a.stage === '완료' && !a.grade ? ' <span title="결과 미입력" style="font-size:11px;color:var(--warning);">⚠️</span>' : '') +
           '</td>' +
           '<td>' + DB.formatDate(a.school_deadline) + '</td>' +
           '<td>' + DB.formatDate(a.internal_deadline) + '</td>' +
           '<td><span class="' + DB.getDDayClass(dl) + '">' + (DB.getDDay(dl)||'-') + '</span></td>' +
-          '<td>' + (a.grade ? '<span style="font-weight:700">' + a.grade + '</span>' : (a.score != null ? a.score + 'ì ' : '-')) + '</td>' +
+          '<td>' + (a.grade ? '<span style="font-weight:700">' + a.grade + '</span>' : (a.score != null ? a.score + '점' : '-')) + '</td>' +
           '<td onclick="event.stopPropagation()"><div class="act-btns">' +
-            '<button class="act-btn edit" onclick="openEditAssignment(\'' + a.id + '\')">ìì </button>' +
-            '<button class="act-btn del" onclick="deleteAssignment(\'' + a.id + '\',\'' + safeTitle + '\')">ì­ì </button>' +
+            '<button class="act-btn edit" onclick="openEditAssignment(\'' + a.id + '\')">수정</button>' +
+            '<button class="act-btn del" onclick="deleteAssignment(\'' + a.id + '\',\'' + safeTitle + '\')">삭제</button>' +
           '</div></td>' +
           '</tr>';
       }).join('');
     }
 
     async function deleteAssignment(id, title) {
-      if (!confirm('"' + title + '" ìííê°ë¥¼ ì­ì íìê² ìµëê¹?\nê´ë ¨ íì¼ ê¸°ë¡ì ì ì§ë©ëë¤.')) return;
+      if (!confirm('"' + title + '" 수행평가를 삭제하시겠습니까?\n관련 파일 기록은 유지됩니다.')) return;
       try {
         await DB.delete('assignments', id);
         await loadData();
       } catch(e) {
-        alert('ì­ì  ì¤í¨: ' + e.message);
+        alert('삭제 실패: ' + e.message);
       }
     }
 
-    // ââ ìííê° ë©í ìì  âââââââââââââââââââââââââââââââââââââââââââ
+    // ── 수행평가 메타 수정 ───────────────────────────────────────────
     function openEditAssignment(id) {
       var a = allAssignments.find(function(x){ return x.id === id; });
       if (!a) return;
       document.getElementById('ea_id').value          = a.id;
       document.getElementById('ea_title').value        = a.title || '';
-      document.getElementById('ea_subject').value      = a.subject || 'êµ­ì´';
+      document.getElementById('ea_subject').value      = a.subject || '국어';
       document.getElementById('ea_type').value         = a.type   || '';
       document.getElementById('ea_school_dl').value    = a.school_deadline   ? a.school_deadline.substring(0,10)   : '';
       document.getElementById('ea_internal_dl').value  = a.internal_deadline ? a.internal_deadline.substring(0,10) : '';
       document.getElementById('editAssignmentErr').style.display = 'none';
       document.getElementById('btnEditAssignment').disabled  = false;
-      document.getElementById('btnEditAssignment').textContent = 'ì ì¥';
+      document.getElementById('btnEditAssignment').textContent = '저장';
       document.getElementById('editAssignmentModal').classList.add('open');
     }
 
@@ -996,12 +996,12 @@
       var title   = document.getElementById('ea_title').value.trim();
       var subject = document.getElementById('ea_subject').value;
       if (!title || !subject) {
-        err.textContent = 'ìííê°ëªê³¼ ê³¼ëª©ì íììëë¤.';
+        err.textContent = '수행평가명과 과목은 필수입니다.';
         err.style.display = 'block';
         return;
       }
       btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span>ì ì¥ ì¤...';
+      btn.innerHTML = '<span class="spinner"></span>저장 중...';
       try {
         var schoolDl   = document.getElementById('ea_school_dl').value   || null;
         var internalDl = document.getElementById('ea_internal_dl').value || null;
@@ -1015,22 +1015,22 @@
         closeEditAssignment();
         await loadData();
       } catch(e) {
-        err.textContent = e.message || 'ì ì¥ ì¤ ì¤ë¥ê° ë°ìíìµëë¤.';
+        err.textContent = e.message || '저장 중 오류가 발생했습니다.';
         err.style.display = 'block';
         btn.disabled = false;
-        btn.textContent = 'ì ì¥';
+        btn.textContent = '저장';
       }
     }
 
-    // ââ ê¸´ê¸ ëª©ë¡ âââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── 긴급 목록 ─────────────────────────────────────────────────────
     function renderUrgent(stats) {
       var today = new Date(); today.setHours(0,0,0,0);
       var urgent = allAssignments.filter(function(a) {
-        if (a.stage === 'ìë£') return false;
+        if (a.stage === '완료') return false;
         var dl = a.internal_deadline || a.school_deadline;
         if (!dl) return false;
         var diff = Math.ceil((new Date(dl) - today) / 86400000);
-        return diff <= 5;  // ë§ê° ì´ê³¼(ìì)ë í¬í¨
+        return diff <= 5;  // 마감 초과(음수)도 포함
       }).sort(function(a,b){
         return new Date(a.internal_deadline||a.school_deadline||'9999') -
                new Date(b.internal_deadline||b.school_deadline||'9999');
@@ -1051,7 +1051,7 @@
       }).join('');
     }
 
-    // ââ íì¼ íí© âââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── 파일 현황 ─────────────────────────────────────────────────────
     async function loadFiles() {
       try {
         allFiles = await DB.getAllFiles();
@@ -1061,7 +1061,7 @@
             names.push(f.student.name);
         });
         document.getElementById('filterFileStudent').innerHTML =
-          '<option value="">ëª¨ë  íì</option>' +
+          '<option value="">모든 학생</option>' +
           names.map(function(n){ return '<option>' + n + '</option>'; }).join('');
         renderFileTable();
       } catch(e) { console.error(e); }
@@ -1078,14 +1078,14 @@
       });
       var tbody = document.getElementById('fileTbody');
       if (!data.length) {
-        tbody.innerHTML = '<tr><td colspan="9"><div class="empty"><div class="empty-icon">ð</div>ìë¡ëë íì¼ì´ ììµëë¤.</div></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9"><div class="empty"><div class="empty-icon">📁</div>업로드된 파일이 없습니다.</div></td></tr>';
         return;
       }
-      var roleLabel = { admin:'ê´ë¦¬ì', tutor:'ê°ì¬', student:'íì', parent:'íë¶ëª¨' };
+      var roleLabel = { admin:'관리자', tutor:'강사', student:'학생', parent:'학부모' };
       var roleClass = { admin:'badge-red', tutor:'badge-blue', student:'badge-green', parent:'badge-orange' };
       tbody.innerHTML = data.map(function(f) {
         var stuName  = (f.student && f.student.name) || '-';
-        var asgTitle = (f.assignment && (f.assignment.subject + ' Â· ' + f.assignment.title)) || '(ì¼ë° ìë£)';
+        var asgTitle = (f.assignment && (f.assignment.subject + ' · ' + f.assignment.title)) || '(일반 자료)';
         var size     = f.file_size ? (f.file_size > 1048576 ? (f.file_size/1048576).toFixed(1)+'MB' : Math.round(f.file_size/1024)+'KB') : '-';
         return '<tr>' +
           '<td><strong>' + stuName + '</strong></td>' +
@@ -1095,23 +1095,23 @@
           '<td><span class="badge ' + (roleClass[f.uploader_role]||'badge-gray') + '">' + (roleLabel[f.uploader_role]||f.uploader_role||'-') + '</span></td>' +
           '<td>' + size + '</td>' +
           '<td>' + DB.formatDate(f.uploaded_at) + '</td>' +
-          '<td>' + (f.file_url ? '<a href="' + f.file_url + '" target="_blank" style="color:var(--accent);font-size:12px;font-weight:600;">ì´ê¸°</a>' : '-') + '</td>' +
-          '<td><div class="act-btns"><button class="act-btn del" onclick="deleteFileRecord(\'' + f.id + '\')">ì­ì </button></div></td>' +
+          '<td>' + (f.file_url ? '<a href="' + f.file_url + '" target="_blank" style="color:var(--accent);font-size:12px;font-weight:600;">열기</a>' : '-') + '</td>' +
+          '<td><div class="act-btns"><button class="act-btn del" onclick="deleteFileRecord(\'' + f.id + '\')">삭제</button></div></td>' +
           '</tr>';
       }).join('');
     }
 
     async function deleteFileRecord(id) {
-      if (!confirm('ì´ íì¼ ê¸°ë¡ì ì­ì íìê² ìµëê¹?')) return;
+      if (!confirm('이 파일 기록을 삭제하시겠습니까?')) return;
       try {
         await DB.delete('files', id);
         await loadFiles();
       } catch(e) {
-        alert('ì­ì  ì¤í¨: ' + e.message);
+        alert('삭제 실패: ' + e.message);
       }
     }
 
-    // ââ íì ê´ë¦¬ âââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── 회원 관리 ─────────────────────────────────────────────────────
     async function loadUsers() {
       try {
         allUsers = await DB.getAllUsers();
@@ -1124,37 +1124,37 @@
       var data = allUsers.filter(function(u){ return !roleFilter || u.role === roleFilter; });
       var tbody = document.getElementById('userTbody');
       if (!data.length) {
-        tbody.innerHTML = '<tr><td colspan="5"><div class="empty"><div class="empty-icon">ð¤</div>íìì´ ììµëë¤.</div></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5"><div class="empty"><div class="empty-icon">👤</div>회원이 없습니다.</div></td></tr>';
         return;
       }
-      var roleLabel = { admin:'ê´ë¦¬ì', tutor:'ê°ì¬', student:'íì', parent:'íë¶ëª¨' };
+      var roleLabel = { admin:'관리자', tutor:'강사', student:'학생', parent:'학부모' };
       var roleClass = { admin:'badge-red', tutor:'badge-blue', student:'badge-green', parent:'badge-orange' };
       tbody.innerHTML = data.map(function(u) {
         var isSelf  = u.id === me.id;
         var safeName = (u.display_name||'').replace(/'/g, '');
         return '<tr>' +
           '<td><strong>' + (u.display_name||'-') + '</strong>' +
-            (isSelf ? ' <span class="badge badge-gray" style="font-size:10px;">ë</span>' : '') +
+            (isSelf ? ' <span class="badge badge-gray" style="font-size:10px;">나</span>' : '') +
           '</td>' +
           '<td style="color:var(--text-secondary);">' + (u.email||'-') + '</td>' +
           '<td><span class="badge ' + (roleClass[u.role]||'badge-gray') + '">' + (roleLabel[u.role]||u.role||'-') + '</span></td>' +
           '<td>' + DB.formatDate(u.created_at) + '</td>' +
           '<td><div class="act-btns">' +
             (!isSelf
-              ? '<button class="act-btn edit" onclick="openUserPwReset(\'' + u.id + '\',\'' + safeName + '\')">ë¹ë²ë¦¬ì</button>' +
-                '<button class="act-btn del" onclick="deleteUser(\'' + u.id + '\',\'' + safeName + '\')">ì­ì </button>'
-              : '<button class="act-btn edit" onclick="changePasswordModal()">ë´ ë¹ë²ë³ê²½</button>') +
+              ? '<button class="act-btn edit" onclick="openUserPwReset(\'' + u.id + '\',\'' + safeName + '\')">비번리셋</button>' +
+                '<button class="act-btn del" onclick="deleteUser(\'' + u.id + '\',\'' + safeName + '\')">삭제</button>'
+              : '<button class="act-btn edit" onclick="changePasswordModal()">내 비번변경</button>') +
           '</div></td>' +
           '</tr>';
       }).join('');
     }
 
     async function deleteUser(id, name) {
-      // ìê¸° ìì  ì­ì  ë°©ì´ (UIììë ë²í¼ì ì¨ê¸°ì§ë§ í¨ì ë ë²¨ììë ì°¨ë¨)
-      if (id === me.id) { alert('ìì ì ê³ì ì ì­ì í  ì ììµëë¤.'); return; }
-      if (!confirm('"' + name + '" ê³ì ì ì­ì íìê² ìµëê¹?\nì´ ììì ëëë¦´ ì ììµëë¤.')) return;
+      // 자기 자신 삭제 방어 (UI에서도 버튼을 숨기지만 함수 레벨에서도 차단)
+      if (id === me.id) { alert('자신의 계정은 삭제할 수 없습니다.'); return; }
+      if (!confirm('"' + name + '" 계정을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) return;
       try {
-        // ê°ì¬ ê³ì  ì­ì  ì â ë´ë¹ íìë¤ì tutor_idë¥¼ nullë¡ ì´ê¸°í
+        // 강사 계정 삭제 시 → 담당 학생들의 tutor_id를 null로 초기화
         var targetUser = allUsers.find(function(u){ return u.id === id; });
         if (targetUser && targetUser.role === 'tutor') {
           var tutorStudents = await DB.getTutorStudents(id);
@@ -1164,13 +1164,13 @@
         }
         await DB.delete('users', id);
         await loadUsers();
-        await loadData(); // íì ëª©ë¡ë ê°±ì 
+        await loadData(); // 학생 목록도 갱신
       } catch(e) {
-        alert('ì­ì  ì¤í¨: ' + e.message);
+        alert('삭제 실패: ' + e.message);
       }
     }
 
-    // ââ ë´ë¶ìë£ ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── 내부자료 ──────────────────────────────────────────────────────
     async function loadInternalDocs() {
       try {
         allInternalDocs = await DB.getInternalDocs();
@@ -1178,17 +1178,17 @@
       } catch(e) {
         console.error(e);
         document.getElementById('docTbody').innerHTML =
-          '<tr><td colspan="7"><div class="empty"><div class="empty-icon">â ï¸</div>ìë£ë¥¼ ë¶ë¬ì¤ë ì¤ ì¤ë¥: ' + e.message + '</div></td></tr>';
+          '<tr><td colspan="7"><div class="empty"><div class="empty-icon">⚠️</div>자료를 불러오는 중 오류: ' + e.message + '</div></td></tr>';
       }
     }
 
     function renderInternalDocTable() {
       var tbody = document.getElementById('docTbody');
       if (!allInternalDocs.length) {
-        tbody.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="empty-icon">ð</div>ë±ë¡ë ë´ë¶ìë£ê° ììµëë¤.<br>"+ ìë£ ì¶ê°" ë²í¼ì¼ë¡ ì¶ê°íì¸ì.</div></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="empty-icon">🗂</div>등록된 내부자료가 없습니다.<br>"+ 자료 추가" 버튼으로 추가하세요.</div></td></tr>';
         return;
       }
-      var roleLabel = { admin:'ê´ë¦¬ì', tutor:'ê°ì¬' };
+      var roleLabel = { admin:'관리자', tutor:'강사' };
       var roleClass = { admin:'badge-red', tutor:'badge-blue' };
       tbody.innerHTML = allInternalDocs.map(function(d) {
         var category = '-', desc = d.note || '';
@@ -1205,10 +1205,10 @@
           '<td><span class="badge ' + (roleClass[d.uploader_role]||'badge-gray') + '">' + (roleLabel[d.uploader_role]||d.uploader_role||'-') + '</span></td>' +
           '<td>' + DB.formatDate(d.uploaded_at) + '</td>' +
           '<td>' + (d.file_url
-            ? '<a href="' + d.file_url + '" target="_blank" style="color:var(--accent);font-size:12px;font-weight:600;">ì´ê¸° â</a>' +
-              '&nbsp;<a href="' + d.file_url + '" download="' + (d.file_name||'file') + '" style="color:var(--text-secondary);font-size:12px;">â¬</a>'
-            : '<span style="color:var(--text-muted);font-size:12px;">ìì</span>') + '</td>' +
-          '<td><div class="act-btns"><button class="act-btn del" onclick="deleteDoc(\'' + d.id + '\',\'' + safeTitle + '\')">ì­ì </button></div></td>' +
+            ? '<a href="' + d.file_url + '" target="_blank" style="color:var(--accent);font-size:12px;font-weight:600;">열기 ↗</a>' +
+              '&nbsp;<a href="' + d.file_url + '" download="' + (d.file_name||'file') + '" style="color:var(--text-secondary);font-size:12px;">⬇</a>'
+            : '<span style="color:var(--text-muted);font-size:12px;">없음</span>') + '</td>' +
+          '<td><div class="act-btns"><button class="act-btn del" onclick="deleteDoc(\'' + d.id + '\',\'' + safeTitle + '\')">삭제</button></div></td>' +
           '</tr>';
       }).join('');
     }
@@ -1219,29 +1219,29 @@
       var f = e.target.files[0];
       if (!f) return;
       if (f.size > 10 * 1024 * 1024) {
-        alert('íì¼ í¬ê¸°ë 10MB ì´íì¬ì¼ í©ëë¤.');
+        alert('파일 크기는 10MB 이하여야 합니다.');
         e.target.value = '';
         return;
       }
       selectedDocFile = f;
       var zone = document.getElementById('docUploadZone');
       zone.classList.add('has-file');
-      document.getElementById('docUploadText').textContent = 'â ' + f.name + ' (' + (f.size/1024).toFixed(0) + 'KB)';
+      document.getElementById('docUploadText').textContent = '✅ ' + f.name + ' (' + (f.size/1024).toFixed(0) + 'KB)';
       document.getElementById('doc_url').value = '';
     }
 
     function openAddDoc() {
       selectedDocFile = null;
       document.getElementById('doc_title').value    = '';
-      document.getElementById('doc_category').value = 'ì´ì ë§¤ë´ì¼';
+      document.getElementById('doc_category').value = '운영 매뉴얼';
       document.getElementById('doc_url').value      = '';
       document.getElementById('doc_note').value     = '';
       document.getElementById('docFileInput').value = '';
       document.getElementById('docUploadZone').classList.remove('has-file');
-      document.getElementById('docUploadText').textContent = 'í´ë¦­íì¬ íì¼ ì í (ìµë 10MB)';
+      document.getElementById('docUploadText').textContent = '클릭하여 파일 선택 (최대 10MB)';
       document.getElementById('addDocErr').style.display = 'none';
       document.getElementById('btnAddDoc').disabled  = false;
-      document.getElementById('btnAddDoc').textContent = 'ì ì¥';
+      document.getElementById('btnAddDoc').textContent = '저장';
       document.getElementById('addDocModal').classList.add('open');
     }
 
@@ -1255,22 +1255,22 @@
       err.style.display = 'none';
       var title = document.getElementById('doc_title').value.trim();
       if (!title) {
-        err.textContent = 'ìë£ëªì íììëë¤.';
+        err.textContent = '자료명은 필수입니다.';
         err.style.display = 'block';
         return;
       }
       var urlInput = document.getElementById('doc_url').value.trim();
       if (!selectedDocFile && !urlInput) {
-        err.textContent = 'íì¼ì ìë¡ëíê±°ë ë§í¬ URLì ìë ¥íì¸ì.';
+        err.textContent = '파일을 업로드하거나 링크 URL을 입력하세요.';
         err.style.display = 'block';
         return;
       }
       btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span>' + (selectedDocFile ? 'ìë¡ë ì¤...' : 'ì ì¥ ì¤...');
+      btn.innerHTML = '<span class="spinner"></span>' + (selectedDocFile ? '업로드 중...' : '저장 중...');
       try {
         var fileUrl = urlInput || null;
         var fileSize = 0;
-        // íì¼ì´ ì íë ê²½ì° Supabase Storageì ìë¡ë
+        // 파일이 선택된 경우 Supabase Storage에 업로드
         if (selectedDocFile) {
           fileUrl = await DB.uploadInternalFile(selectedDocFile);
           fileSize = selectedDocFile.size;
@@ -1285,34 +1285,34 @@
                         }),
           uploader_id:  me.id,
           uploader_role: me.role,
-          file_type:    selectedDocFile ? (selectedDocFile.type || 'ê¸°í') : 'ë§í¬',
+          file_type:    selectedDocFile ? (selectedDocFile.type || '기타') : '링크',
           file_size:    fileSize,
           uploaded_at:  new Date().toISOString()
         });
         closeAddDoc();
         await loadInternalDocs();
-        DB.toast('ìë£ê° ë±ë¡ëììµëë¤.');
+        DB.toast('자료가 등록되었습니다.');
       } catch(e) {
-        err.textContent = e.message || 'ì ì¥ ì¤ ì¤ë¥ê° ë°ìíìµëë¤.';
+        err.textContent = e.message || '저장 중 오류가 발생했습니다.';
         err.style.display = 'block';
       } finally {
         btn.disabled = false;
-        btn.textContent = 'ì ì¥';
+        btn.textContent = '저장';
       }
     }
 
     async function deleteDoc(id, title) {
-      if (!confirm('"' + title + '" ìë£ë¥¼ ì­ì íìê² ìµëê¹?')) return;
+      if (!confirm('"' + title + '" 자료를 삭제하시겠습니까?')) return;
       try {
         await DB.delete('files', id);
         await loadInternalDocs();
       } catch(e) {
-        alert('ì­ì  ì¤í¨: ' + e.message);
+        alert('삭제 실패: ' + e.message);
       }
     }
 
-    // ââ í­ ì í âââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-    // el: í´ë¦­ë ë²í¼ ìë¦¬ë¨¼í¸ (this). ìì´ë ëìíëë¡ optional ì²ë¦¬
+    // ── 탭 전환 ───────────────────────────────────────────────────────
+    // el: 클릭된 버튼 엘리먼트 (this). 없어도 동작하도록 optional 처리
     function switchTab(name, el) {
       document.querySelectorAll('.tab-content').forEach(function(c){ c.classList.remove('active'); });
       document.getElementById('tab-' + name).classList.add('active');
@@ -1322,7 +1322,7 @@
       if (name === 'files')      loadFiles();
       if (name === 'users')      loadUsers();
       if (name === 'docs')       loadInternalDocs();
-      // ëª¨ë°ì¼ìì í­ ì í ì ì¬ì´ëë° ìë ë«ê¸°
+      // 모바일에서 탭 선택 시 사이드바 자동 닫기
       var sb = document.getElementById('mainSidebar');
       var ov = document.getElementById('sidebarOverlay');
       if (sb && sb.classList.contains('open')) {
@@ -1331,11 +1331,11 @@
       }
     }
 
-    // ââ íì´ì§ ì´ë ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── 페이지 이동 ────────────────────────────────────────────────────
     function goToStudent(id)    { window.location.href = 'student-detail.html?id='    + id; }
     function goToAssignment(id) { window.location.href = 'assignment-detail.html?id=' + id; }
 
-    // ââ íì ë±ë¡ âââââââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── 학생 등록 ─────────────────────────────────────────────────────
     function openAddStudent() {
       document.getElementById('addStudentErr').style.display    = 'none';
       document.getElementById('addStudentOk').style.display     = 'none';
@@ -1343,7 +1343,7 @@
       document.getElementById('addStudentForm').style.display   = 'block';
       document.getElementById('btnAddStudent').style.display    = 'inline-block';
       document.getElementById('btnAddStudent').disabled         = false;
-      document.getElementById('btnAddStudent').textContent      = 'ë±ë¡íê¸°';
+      document.getElementById('btnAddStudent').textContent      = '등록하기';
       document.getElementById('addStudentModal').classList.add('open');
     }
     function closeAddStudent() { document.getElementById('addStudentModal').classList.remove('open'); }
@@ -1357,12 +1357,12 @@
       var grade  = document.getElementById('f_grade').value;
       var email  = document.getElementById('f_email').value.trim();
       if (!name || !school || !grade || !email) {
-        errEl.textContent = 'ì´ë¦, íêµ, íë, ì´ë©ì¼ì íììëë¤.';
+        errEl.textContent = '이름, 학교, 학년, 이메일은 필수입니다.';
         errEl.style.display = 'block';
         return;
       }
       btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span>ë±ë¡ ì¤...';
+      btn.innerHTML = '<span class="spinner"></span>등록 중...';
       try {
         var result = await DB.createStudent({
           name:         name,
@@ -1378,46 +1378,46 @@
           monthly_fee:  parseInt(document.getElementById('f_fee').value) || 70000,
           notes:        document.getElementById('f_notes').value.trim() || null,
         });
-        document.getElementById('addStudentOk').textContent   = name + ' íìì´ ë±ë¡ëììµëë¤!';
+        document.getElementById('addStudentOk').textContent   = name + ' 학생이 등록되었습니다!';
         document.getElementById('addStudentOk').style.display = 'block';
         document.getElementById('addStudentResult').innerHTML =
-          '<strong>ë±ë¡ ìë£!</strong> ìë ì ë³´ë¥¼ ì¹´í¡ì¼ë¡ ì ë¬íì¸ì.<br><br>' +
-          'ð¤ <strong>íì:</strong> ' + result.studentEmail + '<br>' +
-          'ðª <strong>íë¶ëª¨:</strong> ' + result.parentEmail + '<br>' +
-          'ð <strong>ì´ê¸° ë¹ë°ë²í¸:</strong> ' + result.defaultPassword + '<br><br>' +
-          'â» ì²« ë¡ê·¸ì¸ í ì´ì©ëìì & ì¤ë¬¸ì§ë¥¼ ìë£í´ì¼ ëìë³´ëì ì ê·¼í  ì ììµëë¤.';
+          '<strong>등록 완료!</strong> 아래 정보를 카톡으로 전달하세요.<br><br>' +
+          '👤 <strong>학생:</strong> ' + result.studentEmail + '<br>' +
+          '👪 <strong>학부모:</strong> ' + result.parentEmail + '<br>' +
+          '🔑 <strong>초기 비밀번호:</strong> ' + result.defaultPassword + '<br><br>' +
+          '※ 첫 로그인 후 이용동의서 & 설문지를 완료해야 대시보드에 접근할 수 있습니다.';
         document.getElementById('addStudentResult').style.display = 'block';
         document.getElementById('addStudentForm').style.display   = 'none';
         btn.style.display = 'none';
         await loadData();
       } catch(e) {
-        errEl.textContent = e.message || 'ë±ë¡ ì¤ ì¤ë¥ê° ë°ìíìµëë¤.';
+        errEl.textContent = e.message || '등록 중 오류가 발생했습니다.';
         errEl.style.display = 'block';
         btn.disabled = false;
-        btn.textContent = 'ë±ë¡íê¸°';
+        btn.textContent = '등록하기';
       }
     }
 
-    // ââ Excel ë´ë³´ë´ê¸° ââââââââââââââââââââââââââââââââââââââââââââââââ
-    async function exportStudents()    { try { await DB.exportStudents(); }    catch(e) { alert('ì¤ë¥: ' + e.message); } }
-    async function exportAssignments() { try { await DB.exportAssignments(); } catch(e) { alert('ì¤ë¥: ' + e.message); } }
+    // ── Excel 내보내기 ────────────────────────────────────────────────
+    async function exportStudents()    { try { await DB.exportStudents(); }    catch(e) { alert('오류: ' + e.message); } }
+    async function exportAssignments() { try { await DB.exportAssignments(); } catch(e) { alert('오류: ' + e.message); } }
 
-    // ââ ë¹ë°ë²í¸ ë³ê²½ âââââââââââââââââââââââââââââââââââââââââââââââââ
+    // ── 비밀번호 변경 ─────────────────────────────────────────────────
     function changePasswordModal() {
-      // ìì ì ë¹ë°ë²í¸ ë³ê²½
+      // 자신의 비밀번호 변경
       document.getElementById('pwTargetId').value = '';
-      document.getElementById('pwModalTitle').textContent = 'ð ë´ ë¹ë°ë²í¸ ë³ê²½';
-      document.getElementById('pwModalDesc').textContent = 'íì¬ ë¡ê·¸ì¸í ê³ì ì ë¹ë°ë²í¸ë¥¼ ë³ê²½í©ëë¤.';
+      document.getElementById('pwModalTitle').textContent = '🔑 내 비밀번호 변경';
+      document.getElementById('pwModalDesc').textContent = '현재 로그인한 계정의 비밀번호를 변경합니다.';
       document.getElementById('newPw').value = '';
       document.getElementById('newPw2').value = '';
       document.getElementById('pwErr').style.display = 'none';
       document.getElementById('pwModal').classList.add('open');
     }
     function openUserPwReset(userId, name) {
-      // í¹ì  ì ì  ë¹ë°ë²í¸ ë¦¬ì (ê´ë¦¬ì ê¶í)
+      // 특정 유저 비밀번호 리셋 (관리자 권한)
       document.getElementById('pwTargetId').value = userId;
-      document.getElementById('pwModalTitle').textContent = 'ð ë¹ë°ë²í¸ ë¦¬ì';
-      document.getElementById('pwModalDesc').textContent = '"' + name + '" ê³ì ì ë¹ë°ë²í¸ë¥¼ ìë¡ ì¤ì í©ëë¤.';
+      document.getElementById('pwModalTitle').textContent = '🔑 비밀번호 리셋';
+      document.getElementById('pwModalDesc').textContent = '"' + name + '" 계정의 비밀번호를 새로 설정합니다.';
       document.getElementById('newPw').value = '';
       document.getElementById('newPw2').value = '';
       document.getElementById('pwErr').style.display = 'none';
@@ -1430,13 +1430,13 @@
       var tid   = document.getElementById('pwTargetId').value;
       var err   = document.getElementById('pwErr');
       err.style.display = 'none';
-      if (!pw || pw.length < 6) { err.textContent = 'ë¹ë°ë²í¸ë 6ì ì´ìì´ì´ì¼ í©ëë¤.'; err.style.display='block'; return; }
-      if (pw !== pw2)           { err.textContent = 'ë¹ë°ë²í¸ê° ì¼ì¹íì§ ììµëë¤.';     err.style.display='block'; return; }
+      if (!pw || pw.length < 6) { err.textContent = '비밀번호는 6자 이상이어야 합니다.'; err.style.display='block'; return; }
+      if (pw !== pw2)           { err.textContent = '비밀번호가 일치하지 않습니다.';     err.style.display='block'; return; }
       try {
-        // tid ìì¼ë©´ í´ë¹ ì ì , ìì¼ë©´ ìì 
+        // tid 있으면 해당 유저, 없으면 자신
         await DB.changePassword(pw, null, tid || null);
         closePwModal();
-        DB.toast('ë¹ë°ë²í¸ê° ë³ê²½ëììµëë¤.');
+        DB.toast('비밀번호가 변경되었습니다.');
       } catch(e) {
         err.textContent = e.message;
         err.style.display = 'block';
