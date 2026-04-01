@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sucoach ì­í ë³ ìí¬íë¡ì°</title>
+  <title>Sucoach 역할별 워크플로우</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
@@ -330,15 +330,15 @@
 
   <!-- MENU -->
   <div class="viz-menu">
-    <button class="viz-menu-toggle" onclick="toggleMenu()" aria-label="ë©ë´">
+    <button class="viz-menu-toggle" onclick="toggleMenu()" aria-label="메뉴">
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <line x1="3" y1="5" x2="17" y2="5"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="15" x2="17" y2="15"/>
       </svg>
     </button>
     <div class="viz-menu-dropdown" id="vizMenuDropdown">
-      <button onclick="cycleTheme()"><span id="themeIcon">ð</span><span id="themeLabel">ë¤í¬ ëª¨ë</span></button>
-      <button onclick="downloadImage()"><span>ð¥</span><span>PNG ë¤ì´ë¡ë</span></button>
-      <button onclick="window.print()"><span>ð¨ï¸</span><span>ì¸ì / PDF</span></button>
+      <button onclick="cycleTheme()"><span id="themeIcon">🌙</span><span id="themeLabel">다크 모드</span></button>
+      <button onclick="downloadImage()"><span>📥</span><span>PNG 다운로드</span></button>
+      <button onclick="window.print()"><span>🖨️</span><span>인쇄 / PDF</span></button>
     </div>
   </div>
 
@@ -348,10 +348,10 @@
       <div class="container">
         <div class="hero-badge">
           <div class="hero-badge-dot"></div>
-          Sucoach Â· ìííê° ì ëµê´ë¦¬ íë¡ê·¸ë¨
+          Sucoach · 수행평가 전략관리 프로그램
         </div>
-        <h1>ì­í ë³ ìí¬íë¡ì°</h1>
-        <p>Admin Â· ê°ì¬ Â· íì Â· íë¶ëª¨, ê° ì­í ì´ ìííë ììê³¼ ê¶íì íëì íì¸íì¸ì.</p>
+        <h1>역할별 워크플로우</h1>
+        <p>Admin · 강사 · 학생 · 학부모, 각 역할이 수행하는 작업과 권한을 한눈에 확인하세요.</p>
       </div>
     </section>
 
@@ -360,26 +360,26 @@
       <div class="container">
         <div class="tabs animate delay-1">
           <button class="tab-btn active admin" onclick="switchTab('admin')" id="tab-admin">
-            <div class="tab-icon">ð¡ï¸</div> Admin (ì¢ë²)
+            <div class="tab-icon">🛡️</div> Admin (종범)
           </button>
           <button class="tab-btn tutor" onclick="switchTab('tutor')" id="tab-tutor">
-            <div class="tab-icon">ð¨âð«</div> ê°ì¬ (ì¬ì°)
+            <div class="tab-icon">👨‍🏫</div> 강사 (재우)
           </button>
           <button class="tab-btn student" onclick="switchTab('student')" id="tab-student">
-            <div class="tab-icon">ð</div> íì
+            <div class="tab-icon">🎒</div> 학생
           </button>
           <button class="tab-btn parent" onclick="switchTab('parent')" id="tab-parent">
-            <div class="tab-icon">ð¨âð©âð§</div> íë¶ëª¨
+            <div class="tab-icon">👨‍👩‍👧</div> 학부모
           </button>
         </div>
 
         <!-- ===================== ADMIN ===================== -->
         <div class="tab-content active" id="content-admin">
           <div class="role-header">
-            <div class="role-avatar admin">ð¡ï¸</div>
+            <div class="role-avatar admin">🛡️</div>
             <div class="role-info">
-              <div class="role-name admin">Admin Â· ì¢ë²</div>
-              <div class="role-desc">íë¡ê·¸ë¨ ì ì²´ë¥¼ ê´ë¦¬íë ì´ìì. íì ë±ë¡ë¶í° ìííê° ì ì, ê°ì¬ ë°°ì , ì ì²´ ì§í íí© ëª¨ëí°ë§ê¹ì§ ëª¨ë  ê¶íì ë³´ì í©ëë¤.</div>
+              <div class="role-name admin">Admin · 종범</div>
+              <div class="role-desc">프로그램 전체를 관리하는 운영자. 학생 등록부터 수행평가 접수, 강사 배정, 전체 진행 현황 모니터링까지 모든 권한을 보유합니다.</div>
               <div class="role-meta">
                 <div class="role-meta-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -391,13 +391,13 @@
                 </div>
                 <div class="role-meta-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  ì ì²´ ì ê·¼ ê¶í
+                  전체 접근 권한
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="steps-title">ìë¬´ íë¡ì¸ì¤</div>
+          <div class="steps-title">업무 프로세스</div>
           <div class="steps">
             <div class="step">
               <div class="step-left">
@@ -406,13 +406,13 @@
               </div>
               <div class="step-body">
                 <div class="step-card">
-                  <div class="step-stage admin">ì´ê¸° ì¤ì </div>
-                  <div class="step-title">íì ê³ì  ë±ë¡</div>
-                  <div class="step-desc">ì ê· íìì ê¸°ë³¸ ì ë³´(ì´ë¦, ì´ë©ì¼, íêµ, íë, ì í)ë¥¼ ìì¤íì ë±ë¡íê³  ê³ì ì ìì±í©ëë¤. íë¶ëª¨ ê³ì ë í¨ê» ìì±í©ëë¤.</div>
+                  <div class="step-stage admin">초기 설정</div>
+                  <div class="step-title">학생 계정 등록</div>
+                  <div class="step-desc">신규 학생의 기본 정보(이름, 이메일, 학교, 학년, 유형)를 시스템에 등록하고 계정을 생성합니다. 학부모 계정도 함께 생성합니다.</div>
                   <div class="step-actions">
-                    <span class="step-action-tag">users íì´ë¸ INSERT</span>
-                    <span class="step-action-tag">íì/íë¶ëª¨ ê³ì  ì ìì±</span>
-                    <span class="step-action-tag">SHA-256 ë¹ë°ë²í¸ ì²ë¦¬</span>
+                    <span class="step-action-tag">users 테이블 INSERT</span>
+                    <span class="step-action-tag">학생/학부모 계정 쌍 생성</span>
+                    <span class="step-action-tag">SHA-256 비밀번호 처리</span>
                   </div>
                 </div>
               </div>
@@ -425,13 +425,13 @@
               </div>
               <div class="step-body">
                 <div class="step-card">
-                  <div class="step-stage admin">ì ì</div>
-                  <div class="step-title">ìííê° ì ì ë±ë¡</div>
-                  <div class="step-desc">íìì´ ìì²­í ìííê°ë¥¼ ìì¤íì ë±ë¡í©ëë¤. ê³¼ëª©, ë§ê°ì¼, ìì¸ ë´ì©, ë´ë¹ ê°ì¬ë¥¼ ì§ì íê³  ì´ê¸° ë¨ê³ë¥¼ 'ì ì'ë¡ ì¤ì í©ëë¤.</div>
+                  <div class="step-stage admin">접수</div>
+                  <div class="step-title">수행평가 접수 등록</div>
+                  <div class="step-desc">학생이 요청한 수행평가를 시스템에 등록합니다. 과목, 마감일, 상세 내용, 담당 강사를 지정하고 초기 단계를 '접수'로 설정합니다.</div>
                   <div class="step-actions">
-                    <span class="step-action-tag">assignments íì´ë¸ INSERT</span>
-                    <span class="step-action-tag">tutor_id ë°°ì </span>
-                    <span class="step-action-tag">status = 'ì ì'</span>
+                    <span class="step-action-tag">assignments 테이블 INSERT</span>
+                    <span class="step-action-tag">tutor_id 배정</span>
+                    <span class="step-action-tag">status = '접수'</span>
                   </div>
                 </div>
               </div>
@@ -444,13 +444,13 @@
               </div>
               <div class="step-body">
                 <div class="step-card">
-                  <div class="step-stage admin">ëª¨ëí°ë§</div>
-                  <div class="step-title">ì ì²´ ì§í íí© ê´ë¦¬</div>
-                  <div class="step-desc">ëª¨ë  íìì ìííê° ì§í ë¨ê³ë¥¼ ëìë³´ëìì ì¤ìê°ì¼ë¡ íì¸í©ëë¤. ì§ì° ê±´ì íìíê³ , íì ì ë´ë¹ ê°ì¬ë¥¼ ë³ê²½íê±°ë ë§ê°ì¼ì ì¡°ì í©ëë¤.</div>
+                  <div class="step-stage admin">모니터링</div>
+                  <div class="step-title">전체 진행 현황 관리</div>
+                  <div class="step-desc">모든 학생의 수행평가 진행 단계를 대시보드에서 실시간으로 확인합니다. 지연 건을 파악하고, 필요 시 담당 강사를 변경하거나 마감일을 조정합니다.</div>
                   <div class="step-actions">
-                    <span class="step-action-tag">ì ì²´ student ë·°</span>
-                    <span class="step-action-tag">ë¨ê³ë³ íí°ë§</span>
-                    <span class="step-action-tag">ê°ì¬ ì¬ë°°ì </span>
+                    <span class="step-action-tag">전체 student 뷰</span>
+                    <span class="step-action-tag">단계별 필터링</span>
+                    <span class="step-action-tag">강사 재배정</span>
                   </div>
                 </div>
               </div>
@@ -463,12 +463,12 @@
               </div>
               <div class="step-body">
                 <div class="step-card">
-                  <div class="step-stage admin">íì¼ ê´ë¦¬</div>
-                  <div class="step-title">ìë¡ë íì¼ ì ì²´ ì´ë</div>
-                  <div class="step-desc">ê° ìííê°ì ìë¡ëë ëª¨ë  íì¼(ë¶ì ìë£, ì´ì, í¼ëë°±, ìµì¢ë³¸)ì ì´ëíê³  ê´ë¦¬í©ëë¤. Storage ê²½ë¡ì ì§ì  ì ê·¼ ê°ë¥í©ëë¤.</div>
+                  <div class="step-stage admin">파일 관리</div>
+                  <div class="step-title">업로드 파일 전체 열람</div>
+                  <div class="step-desc">각 수행평가에 업로드된 모든 파일(분석 자료, 초안, 피드백, 최종본)을 열람하고 관리합니다. Storage 경로에 직접 접근 가능합니다.</div>
                   <div class="step-actions">
-                    <span class="step-action-tag">Supabase Storage ì ê·¼</span>
-                    <span class="step-action-tag">files íì´ë¸ ì ì²´ ì¡°í</span>
+                    <span class="step-action-tag">Supabase Storage 접근</span>
+                    <span class="step-action-tag">files 테이블 전체 조회</span>
                   </div>
                 </div>
               </div>
@@ -481,13 +481,13 @@
               </div>
               <div class="step-body">
                 <div class="step-card">
-                  <div class="step-stage admin">ìë£</div>
-                  <div class="step-title">ê²°ê³¼ ë°ì´í° íì¸ ë° ì ì°</div>
-                  <div class="step-desc">ìë£ ì²ë¦¬ë ìííê°ì ìµì¢ ì ìì ë±ê¸ì íì¸í©ëë¤. íìë³ ì±ê³¼ë¥¼ ì§ê³íê³  íë¡ê·¸ë¨ í¨ê³¼ë¥¼ ë¶ìí©ëë¤.</div>
+                  <div class="step-stage admin">완료</div>
+                  <div class="step-title">결과 데이터 확인 및 정산</div>
+                  <div class="step-desc">완료 처리된 수행평가의 최종 점수와 등급을 확인합니다. 학생별 성과를 집계하고 프로그램 효과를 분석합니다.</div>
                   <div class="step-actions">
                     <span class="step-action-tag">result_score / result_grade</span>
-                    <span class="step-action-tag">íìë³ íµê³</span>
-                    <span class="step-action-tag">ê¸°ê°ë³ ë¦¬í¬í¸</span>
+                    <span class="step-action-tag">학생별 통계</span>
+                    <span class="step-action-tag">기간별 리포트</span>
                   </div>
                 </div>
               </div>
@@ -498,10 +498,10 @@
         <!-- ===================== TUTOR ===================== -->
         <div class="tab-content" id="content-tutor">
           <div class="role-header">
-            <div class="role-avatar tutor">ð¨âð«</div>
+            <div class="role-avatar tutor">👨‍🏫</div>
             <div class="role-info">
-              <div class="role-name tutor">ê°ì¬ Â· ì¬ì°</div>
-              <div class="role-desc">ìííê° ì ëµ ì½ì¹­ì íµì¬ ì­í . ë¶ìâë©´ë´âì´ìâí¼ëë°±âìì âìµì¢ê¹ì§ 8ë¨ê³ ìí¬íë¡ì°ë¥¼ ì£¼ëí©ëë¤.</div>
+              <div class="role-name tutor">강사 · 재우</div>
+              <div class="role-desc">수행평가 전략 코칭의 핵심 역할. 분석→면담→초안→피드백→수정→최종까지 8단계 워크플로우를 주도합니다.</div>
               <div class="role-meta">
                 <div class="role-meta-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -513,36 +513,36 @@
                 </div>
                 <div class="role-meta-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  ë°°ì ë íì ì ì© ì ê·¼
+                  배정된 학생 전용 접근
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="steps-title">8ë¨ê³ ì½ì¹­ ìí¬íë¡ì°</div>
+          <div class="steps-title">8단계 코칭 워크플로우</div>
 
           <div class="stage-flow" data-reveal>
-            <div class="stage-pill"><div class="stage-pill-num">Stage 1</div><div class="stage-pill-name">ì ì</div></div>
-            <div class="stage-pill"><div class="stage-pill-num">Stage 2</div><div class="stage-pill-name">ë¶ììë£</div></div>
-            <div class="stage-pill"><div class="stage-pill-num">Stage 3</div><div class="stage-pill-name">ë©´ë´ìë£</div></div>
-            <div class="stage-pill"><div class="stage-pill-num">Stage 4</div><div class="stage-pill-name">ì´ìëê¸°</div></div>
-            <div class="stage-pill"><div class="stage-pill-num">Stage 5</div><div class="stage-pill-name">í¼ëë°±ìë£</div></div>
-            <div class="stage-pill"><div class="stage-pill-num">Stage 6</div><div class="stage-pill-name">ìì ì¤</div></div>
-            <div class="stage-pill"><div class="stage-pill-num">Stage 7</div><div class="stage-pill-name">ìµì¢íì¸</div></div>
-            <div class="stage-pill"><div class="stage-pill-num">Stage 8</div><div class="stage-pill-name">ìë£</div></div>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 1</div><div class="stage-pill-name">접수</div></div>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 2</div><div class="stage-pill-name">분석완료</div></div>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 3</div><div class="stage-pill-name">면담완료</div></div>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 4</div><div class="stage-pill-name">초안대기</div></div>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 5</div><div class="stage-pill-name">피드백완료</div></div>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 6</div><div class="stage-pill-name">수정중</div></div>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 7</div><div class="stage-pill-name">최종확인</div></div>
+            <div class="stage-pill"><div class="stage-pill-num">Stage 8</div><div class="stage-pill-name">완료</div></div>
           </div>
 
           <div class="steps">
             <div class="step">
               <div class="step-left"><div class="step-num tutor">1</div><div class="step-line"></div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage tutor">ì ì</div>
-                <div class="step-title">ë°°ì  ìííê° íì¸</div>
-                <div class="step-desc">Adminì´ ë°°ì í ìííê° ë´ì©ì íì¸í©ëë¤. ê³¼ëª©, ë§ê°ì¼, íì ì ë³´, ìííê° ì¸ë¶ ìê±´ì íìíê³  ì½ì¹­ ê³íì ìë¦½í©ëë¤.</div>
+                <div class="step-stage tutor">접수</div>
+                <div class="step-title">배정 수행평가 확인</div>
+                <div class="step-desc">Admin이 배정한 수행평가 내용을 확인합니다. 과목, 마감일, 학생 정보, 수행평가 세부 요건을 파악하고 코칭 계획을 수립합니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">ìííê° ëª©ë¡ ì¡°í</span>
-                  <span class="step-action-tag">íì ì ë³´ íì¸</span>
-                  <span class="step-action-tag">ìê±´ ê²í </span>
+                  <span class="step-action-tag">수행평가 목록 조회</span>
+                  <span class="step-action-tag">학생 정보 확인</span>
+                  <span class="step-action-tag">요건 검토</span>
                 </div>
               </div></div>
             </div>
@@ -550,12 +550,12 @@
             <div class="step">
               <div class="step-left"><div class="step-num tutor">2</div><div class="step-line"></div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage tutor">ë¶ììë£</div>
-                <div class="step-title">ìííê° ìê±´ ë¶ì + ë°©í¥ ì¤ì </div>
-                <div class="step-desc">ì±ì  ê¸°ì¤, ë£¨ë¸ë¦­, ì¶ì  ìëë¥¼ ë¶ìí©ëë¤. íìì íì¬ ìì¤ì ì§ë¨íê³  ìµì ì ì ëµ ë°©í¥ì ì¤ì í©ëë¤. ë¶ì ìë£ íì¼ì ìë¡ëíê³  ë¨ê³ë¥¼ ì§íí©ëë¤.</div>
+                <div class="step-stage tutor">분석완료</div>
+                <div class="step-title">수행평가 요건 분석 + 방향 설정</div>
+                <div class="step-desc">채점 기준, 루브릭, 출제 의도를 분석합니다. 학생의 현재 수준을 진단하고 최적의 전략 방향을 설정합니다. 분석 자료 파일을 업로드하고 단계를 진행합니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">íì¼ ìë¡ë (ë¶ììë£)</span>
-                  <span class="step-action-tag">status â 'ë¶ììë£'</span>
+                  <span class="step-action-tag">파일 업로드 (분석자료)</span>
+                  <span class="step-action-tag">status → '분석완료'</span>
                 </div>
               </div></div>
             </div>
@@ -563,12 +563,12 @@
             <div class="step">
               <div class="step-left"><div class="step-num tutor">3</div><div class="step-line"></div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage tutor">ë©´ë´ìë£</div>
-                <div class="step-title">íì ë©´ë´ ì§í</div>
-                <div class="step-desc">íìê³¼ 1:1 ë©´ë´ì íµí´ íìì ìê°, ìì´ëì´, ë°©í¥ì±ì íìí©ëë¤. ë©´ë´ ë´ì©ì ë°íì¼ë¡ ì´ì êµ¬ì±ì íì íê³  ë¨ê³ë¥¼ ìë°ì´í¸í©ëë¤.</div>
+                <div class="step-stage tutor">면담완료</div>
+                <div class="step-title">학생 면담 진행</div>
+                <div class="step-desc">학생과 1:1 면담을 통해 학생의 생각, 아이디어, 방향성을 파악합니다. 면담 내용을 바탕으로 초안 구성을 확정하고 단계를 업데이트합니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">ë©´ë´ ë¸í¸ ìë¡ë</span>
-                  <span class="step-action-tag">status â 'ë©´ë´ìë£'</span>
+                  <span class="step-action-tag">면담 노트 업로드</span>
+                  <span class="step-action-tag">status → '면담완료'</span>
                 </div>
               </div></div>
             </div>
@@ -576,13 +576,13 @@
             <div class="step">
               <div class="step-left"><div class="step-num tutor">4</div><div class="step-line"></div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage tutor">ì´ìëê¸°</div>
-                <div class="step-title">ì´ì ìì± ë° ìë¡ë</div>
-                <div class="step-desc">ë©´ë´ ë´ì©ì ë°íì¼ë¡ ìííê° ì´ìì ìì±í©ëë¤. ìì±ë ì´ì íì¼ì ìì¤íì ìë¡ëíê³  íì/íë¶ëª¨ê° íì¸í  ì ìëë¡ ê³µê°í©ëë¤.</div>
+                <div class="step-stage tutor">초안대기</div>
+                <div class="step-title">초안 작성 및 업로드</div>
+                <div class="step-desc">면담 내용을 바탕으로 수행평가 초안을 작성합니다. 완성된 초안 파일을 시스템에 업로드하고 학생/학부모가 확인할 수 있도록 공개합니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">íì¼ ìë¡ë (ì´ì)</span>
-                  <span class="step-action-tag">status â 'ì´ìëê¸°'</span>
-                  <span class="step-action-tag">íì ì´ë ê°ë¥</span>
+                  <span class="step-action-tag">파일 업로드 (초안)</span>
+                  <span class="step-action-tag">status → '초안대기'</span>
+                  <span class="step-action-tag">학생 열람 가능</span>
                 </div>
               </div></div>
             </div>
@@ -590,12 +590,12 @@
             <div class="step">
               <div class="step-left"><div class="step-num tutor">5</div><div class="step-line"></div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage tutor">í¼ëë°±ìë£</div>
-                <div class="step-title">í¼ëë°± ìë ´ ë° ë°ì íì¸</div>
-                <div class="step-desc">íì/íë¶ëª¨ë¡ë¶í° ë°ì í¼ëë°± ë´ì©ì ê²í í©ëë¤. ë°ì ê°ë¥í ì¬í­ê³¼ ë°©í¥ì±ì ì ë¦¬íê³  ìì  ê³íì ìë¦½í©ëë¤.</div>
+                <div class="step-stage tutor">피드백완료</div>
+                <div class="step-title">피드백 수렴 및 반영 확인</div>
+                <div class="step-desc">학생/학부모로부터 받은 피드백 내용을 검토합니다. 반영 가능한 사항과 방향성을 정리하고 수정 계획을 수립합니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">í¼ëë°± ë´ì© íì¸</span>
-                  <span class="step-action-tag">status â 'í¼ëë°±ìë£'</span>
+                  <span class="step-action-tag">피드백 내용 확인</span>
+                  <span class="step-action-tag">status → '피드백완료'</span>
                 </div>
               </div></div>
             </div>
@@ -603,12 +603,12 @@
             <div class="step">
               <div class="step-left"><div class="step-num tutor">6</div><div class="step-line"></div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage tutor">ìì ì¤</div>
-                <div class="step-title">ì´ì ìì  ìì ì§í</div>
-                <div class="step-desc">í¼ëë°±ì ë°ìíì¬ ìííê°ë¥¼ ìì í©ëë¤. ë´ì©ì ìì±ëë¥¼ ëì´ê³ , ì±ì  ê¸°ì¤ì ë§ê² ì¡°ì í©ëë¤. ìì  ê³¼ì  íì¼ì íì ì ìë¡ëí©ëë¤.</div>
+                <div class="step-stage tutor">수정중</div>
+                <div class="step-title">초안 수정 작업 진행</div>
+                <div class="step-desc">피드백을 반영하여 수행평가를 수정합니다. 내용의 완성도를 높이고, 채점 기준에 맞게 조정합니다. 수정 과정 파일을 필요 시 업로드합니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">íì¼ ìë¡ë (ìì ë³¸)</span>
-                  <span class="step-action-tag">status â 'ìì ì¤'</span>
+                  <span class="step-action-tag">파일 업로드 (수정본)</span>
+                  <span class="step-action-tag">status → '수정중'</span>
                 </div>
               </div></div>
             </div>
@@ -616,13 +616,13 @@
             <div class="step">
               <div class="step-left"><div class="step-num tutor">7</div><div class="step-line"></div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage tutor">ìµì¢íì¸</div>
-                <div class="step-title">ìµì¢ë³¸ ìë¡ë ë° ì ì¶</div>
-                <div class="step-desc">ìì ì´ ìë£ë ìµì¢ë³¸ì ìë¡ëí©ëë¤. íì/íë¶ëª¨ê° ìµì¢ë³¸ì íì¸íê³  ì ì¶ ì¹ì¸ì í©ëë¤. ì´ìì´ ìì¼ë©´ ìë£ ë¨ê³ë¡ ì§íí©ëë¤.</div>
+                <div class="step-stage tutor">최종확인</div>
+                <div class="step-title">최종본 업로드 및 제출</div>
+                <div class="step-desc">수정이 완료된 최종본을 업로드합니다. 학생/학부모가 최종본을 확인하고 제출 승인을 합니다. 이상이 없으면 완료 단계로 진행합니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">íì¼ ìë¡ë (ìµì¢ë³¸)</span>
-                  <span class="step-action-tag">status â 'ìµì¢íì¸'</span>
-                  <span class="step-action-tag">íì ìµì¢ ê²í </span>
+                  <span class="step-action-tag">파일 업로드 (최종본)</span>
+                  <span class="step-action-tag">status → '최종확인'</span>
+                  <span class="step-action-tag">학생 최종 검토</span>
                 </div>
               </div></div>
             </div>
@@ -630,13 +630,13 @@
             <div class="step">
               <div class="step-left"><div class="step-num tutor">8</div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage tutor">ìë£</div>
-                <div class="step-title">ê²°ê³¼ ìë ¥ â ì ì / ë±ê¸ ê¸°ë¡</div>
-                <div class="step-desc">ìííê° ì ì¶ í ë°ì ì¤ì  ì ìì ë±ê¸ì ìì¤íì ìë ¥í©ëë¤. íìê³¼ íë¶ëª¨ê° ê²°ê³¼ë¥¼ íì¸í  ì ìì¼ë©°, ì½ì¹­ í¨ê³¼ë¥¼ ë¶ìíë ë° íì©ë©ëë¤.</div>
+                <div class="step-stage tutor">완료</div>
+                <div class="step-title">결과 입력 — 점수 / 등급 기록</div>
+                <div class="step-desc">수행평가 제출 후 받은 실제 점수와 등급을 시스템에 입력합니다. 학생과 학부모가 결과를 확인할 수 있으며, 코칭 효과를 분석하는 데 활용됩니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">result_score ìë ¥</span>
-                  <span class="step-action-tag">result_grade ìë ¥</span>
-                  <span class="step-action-tag">status â 'ìë£'</span>
+                  <span class="step-action-tag">result_score 입력</span>
+                  <span class="step-action-tag">result_grade 입력</span>
+                  <span class="step-action-tag">status → '완료'</span>
                 </div>
               </div></div>
             </div>
@@ -646,14 +646,14 @@
         <!-- ===================== STUDENT ===================== -->
         <div class="tab-content" id="content-student">
           <div class="role-header">
-            <div class="role-avatar student">ð</div>
+            <div class="role-avatar student">🎒</div>
             <div class="role-info">
-              <div class="role-name student">íì</div>
-              <div class="role-desc">ìííê° ì½ì¹­ì ì£¼ì¸ê³µ. ì§í íí©ì íì¸íê³ , íì¼ì ìë ¹íë©°, í¼ëë°±ì ì ê³µíê³  ìµì¢ ê²°ê³¼ë¥¼ íì¸í©ëë¤.</div>
+              <div class="role-name student">학생</div>
+              <div class="role-desc">수행평가 코칭의 주인공. 진행 현황을 확인하고, 파일을 수령하며, 피드백을 제공하고 최종 결과를 확인합니다.</div>
               <div class="role-meta">
                 <div class="role-meta-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  ì) jisu@sucoach.kr
+                  예) jisu@sucoach.kr
                 </div>
                 <div class="role-meta-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg>
@@ -661,24 +661,24 @@
                 </div>
                 <div class="role-meta-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  ë³¸ì¸ ìííê°ë§ ì ê·¼
+                  본인 수행평가만 접근
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="steps-title">ì´ì© íë¦</div>
+          <div class="steps-title">이용 흐름</div>
           <div class="steps">
             <div class="step">
               <div class="step-left"><div class="step-num student">1</div><div class="step-line"></div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage student">ë¡ê·¸ì¸</div>
-                <div class="step-title">íì ê³ì ì¼ë¡ ì ì</div>
-                <div class="step-desc">ì´ë©ì¼ + ë¹ë°ë²í¸ë¡ ë¡ê·¸ì¸í©ëë¤. ìì¤íì´ ì­í ì ìëì¼ë¡ íì¸íì¬ íì ì ì© íì´ì§ë¡ ì´ëí©ëë¤.</div>
+                <div class="step-stage student">로그인</div>
+                <div class="step-title">학생 계정으로 접속</div>
+                <div class="step-desc">이메일 + 비밀번호로 로그인합니다. 시스템이 역할을 자동으로 확인하여 학생 전용 페이지로 이동합니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">SHA-256 ì¸ì¦</span>
-                  <span class="step-action-tag">localStorage sc_user ì ì¥</span>
-                  <span class="step-action-tag">student-page.html ì´ë</span>
+                  <span class="step-action-tag">SHA-256 인증</span>
+                  <span class="step-action-tag">localStorage sc_user 저장</span>
+                  <span class="step-action-tag">student-page.html 이동</span>
                 </div>
               </div></div>
             </div>
@@ -686,12 +686,12 @@
             <div class="step">
               <div class="step-left"><div class="step-num student">2</div><div class="step-line"></div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage student">íí© íì¸</div>
-                <div class="step-title">ìííê° ì§í ë¨ê³ íì¸</div>
-                <div class="step-desc">íì¬ ì§í ì¤ì¸ ìííê° ëª©ë¡ê³¼ ê° ìííê°ì ë¨ê³(ì ì/ë¶ììë£/ë©´ë´ìë£/ì´ìëê¸°â¦)ë¥¼ ì¹´ë ííë¡ íì¸í©ëë¤.</div>
+                <div class="step-stage student">현황 확인</div>
+                <div class="step-title">수행평가 진행 단계 확인</div>
+                <div class="step-desc">현재 진행 중인 수행평가 목록과 각 수행평가의 단계(접수/분석완료/면담완료/초안대기…)를 카드 형태로 확인합니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">assignments ëª©ë¡ ì¡°í</span>
-                  <span class="step-action-tag">ë¨ê³ë³ ë°°ì§ íì</span>
+                  <span class="step-action-tag">assignments 목록 조회</span>
+                  <span class="step-action-tag">단계별 배지 표시</span>
                 </div>
               </div></div>
             </div>
@@ -699,13 +699,13 @@
             <div class="step">
               <div class="step-left"><div class="step-num student">3</div><div class="step-line"></div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage student">íì¼ ìë ¹</div>
-                <div class="step-title">ë¶ììë£ / ì´ì / ìµì¢ë³¸ ë¤ì´ë¡ë</div>
-                <div class="step-desc">ê°ì¬ê° ìë¡ëí íì¼(ë¶ì ìë£, ì´ì, ìµì¢ë³¸)ì ë¤ì´ë¡ëí©ëë¤. íì¼ì Supabase Storageìì ê³µê° URLë¡ ì ê³µë©ëë¤.</div>
+                <div class="step-stage student">파일 수령</div>
+                <div class="step-title">분석자료 / 초안 / 최종본 다운로드</div>
+                <div class="step-desc">강사가 업로드한 파일(분석 자료, 초안, 최종본)을 다운로드합니다. 파일은 Supabase Storage에서 공개 URL로 제공됩니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">íì¼ ëª©ë¡ ì¡°í</span>
-                  <span class="step-action-tag">ê³µê° URL ë¤ì´ë¡ë</span>
-                  <span class="step-action-tag">ë¤ì´ë¡ë ê°ë¥: ì´ìÂ·ìµì¢ë³¸Â·ë¶ììë£</span>
+                  <span class="step-action-tag">파일 목록 조회</span>
+                  <span class="step-action-tag">공개 URL 다운로드</span>
+                  <span class="step-action-tag">다운로드 가능: 초안·최종본·분석자료</span>
                 </div>
               </div></div>
             </div>
@@ -713,11 +713,11 @@
             <div class="step">
               <div class="step-left"><div class="step-num student">4</div><div class="step-line"></div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage student">í¼ëë°±</div>
-                <div class="step-title">ìì  ìê²¬ / í¼ëë°± íì¼ ìë¡ë</div>
-                <div class="step-desc">ì´ìì ê²í í í ìì  ìì²­ ì¬í­ì´ë ìê²¬ì íì¼ë¡ ìë¡ëíì¬ ê°ì¬ìê² ì ë¬í©ëë¤.</div>
+                <div class="step-stage student">피드백</div>
+                <div class="step-title">수정 의견 / 피드백 파일 업로드</div>
+                <div class="step-desc">초안을 검토한 후 수정 요청 사항이나 의견을 파일로 업로드하여 강사에게 전달합니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">íì¼ ìë¡ë (íì í¼ëë°±)</span>
+                  <span class="step-action-tag">파일 업로드 (학생 피드백)</span>
                   <span class="step-action-tag">uploader_role = 'student'</span>
                 </div>
               </div></div>
@@ -726,12 +726,12 @@
             <div class="step">
               <div class="step-left"><div class="step-num student">5</div><div class="step-line"></div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage student">ìµì¢ ê²í </div>
-                <div class="step-title">ìµì¢ë³¸ íì¸ ë° ì¹ì¸</div>
-                <div class="step-desc">ê°ì¬ê° ìì  ìë£í ìµì¢ë³¸ì ë¤ì´ë¡ëíì¬ ê²í í©ëë¤. ì´ìì´ ìì¼ë©´ ê°ì¬ìê² ìë£ ì¹ì¸ì ì ë¬í©ëë¤.</div>
+                <div class="step-stage student">최종 검토</div>
+                <div class="step-title">최종본 확인 및 승인</div>
+                <div class="step-desc">강사가 수정 완료한 최종본을 다운로드하여 검토합니다. 이상이 없으면 강사에게 완료 승인을 전달합니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">ìµì¢ë³¸ ë¤ì´ë¡ë</span>
-                  <span class="step-action-tag">ë´ì© ìµì¢ íì¸</span>
+                  <span class="step-action-tag">최종본 다운로드</span>
+                  <span class="step-action-tag">내용 최종 확인</span>
                 </div>
               </div></div>
             </div>
@@ -739,12 +739,12 @@
             <div class="step">
               <div class="step-left"><div class="step-num student">6</div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage student">ê²°ê³¼ íì¸</div>
-                <div class="step-title">ìµì¢ ì ì ë° ë±ê¸ íì¸</div>
-                <div class="step-desc">ìííê° ì ì¶ í ëì¨ ì¤ì  ê²°ê³¼(ì ì, ë±ê¸)ë¥¼ ìì¤íìì íì¸í©ëë¤. ê°ì¬ê° ìë ¥í ê²°ê³¼ê° íìë©ëë¤.</div>
+                <div class="step-stage student">결과 확인</div>
+                <div class="step-title">최종 점수 및 등급 확인</div>
+                <div class="step-desc">수행평가 제출 후 나온 실제 결과(점수, 등급)를 시스템에서 확인합니다. 강사가 입력한 결과가 표시됩니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">result_score ì´ë</span>
-                  <span class="step-action-tag">result_grade ì´ë</span>
+                  <span class="step-action-tag">result_score 열람</span>
+                  <span class="step-action-tag">result_grade 열람</span>
                 </div>
               </div></div>
             </div>
@@ -754,14 +754,14 @@
         <!-- ===================== PARENT ===================== -->
         <div class="tab-content" id="content-parent">
           <div class="role-header">
-            <div class="role-avatar parent">ð¨âð©âð§</div>
+            <div class="role-avatar parent">👨‍👩‍👧</div>
             <div class="role-info">
-              <div class="role-name parent">íë¶ëª¨</div>
-              <div class="role-desc">ìëì ìííê° ì§í ìí©ì ëª¨ëí°ë§í©ëë¤. ì½ê¸° ì ì© ì ê·¼ì´ ê¸°ë³¸ì´ë©°, ì§í ë¨ê³Â·íì¼Â·ê²°ê³¼ë¥¼ ì¤ìê°ì¼ë¡ íì¸í  ì ììµëë¤.</div>
+              <div class="role-name parent">학부모</div>
+              <div class="role-desc">자녀의 수행평가 진행 상황을 모니터링합니다. 읽기 전용 접근이 기본이며, 진행 단계·파일·결과를 실시간으로 확인할 수 있습니다.</div>
               <div class="role-meta">
                 <div class="role-meta-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  ì) jisu.parent@sucoach.kr
+                  예) jisu.parent@sucoach.kr
                 </div>
                 <div class="role-meta-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg>
@@ -769,24 +769,24 @@
                 </div>
                 <div class="role-meta-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  ìë ë°ì´í° ì½ê¸° ì ì©
+                  자녀 데이터 읽기 전용
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="steps-title">ì´ì© íë¦</div>
+          <div class="steps-title">이용 흐름</div>
           <div class="steps">
             <div class="step">
               <div class="step-left"><div class="step-num parent">1</div><div class="step-line"></div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage parent">ë¡ê·¸ì¸</div>
-                <div class="step-title">íë¶ëª¨ ê³ì ì¼ë¡ ì ì</div>
-                <div class="step-desc">íë¶ëª¨ ì ì© ì´ë©ì¼ê³¼ ë¹ë°ë²í¸ë¡ ë¡ê·¸ì¸í©ëë¤. ìì¤íì´ ìëì¼ë¡ ìëì student_idì ì°ê²°íì¬ íë¶ëª¨ ì ì© ëìë³´ëë¡ ì´ëí©ëë¤.</div>
+                <div class="step-stage parent">로그인</div>
+                <div class="step-title">학부모 계정으로 접속</div>
+                <div class="step-desc">학부모 전용 이메일과 비밀번호로 로그인합니다. 시스템이 자동으로 자녀의 student_id와 연결하여 학부모 전용 대시보드로 이동합니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">SHA-256 ì¸ì¦</span>
-                  <span class="step-action-tag">linked_student_id ì°ê²°</span>
-                  <span class="step-action-tag">parent-page.html ì´ë</span>
+                  <span class="step-action-tag">SHA-256 인증</span>
+                  <span class="step-action-tag">linked_student_id 연결</span>
+                  <span class="step-action-tag">parent-page.html 이동</span>
                 </div>
               </div></div>
             </div>
@@ -794,13 +794,13 @@
             <div class="step">
               <div class="step-left"><div class="step-num parent">2</div><div class="step-line"></div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage parent">íí© ëª¨ëí°ë§</div>
-                <div class="step-title">ìë ìííê° ì§í ë¨ê³ íì¸</div>
-                <div class="step-desc">ìëê° íì¬ ì§í ì¤ì¸ ëª¨ë  ìííê°ì ë¨ê³ë¥¼ ì¤ìê°ì¼ë¡ íì¸í©ëë¤. ì¸ì , ì´ë¤ ë¨ê³ì ìëì§ í¬ëªíê² íìí  ì ììµëë¤.</div>
+                <div class="step-stage parent">현황 모니터링</div>
+                <div class="step-title">자녀 수행평가 진행 단계 확인</div>
+                <div class="step-desc">자녀가 현재 진행 중인 모든 수행평가의 단계를 실시간으로 확인합니다. 언제, 어떤 단계에 있는지 투명하게 파악할 수 있습니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">ìë assignments ì¡°í</span>
-                  <span class="step-action-tag">ë¨ê³ë³ íí© íì</span>
-                  <span class="step-action-tag">ë§ê°ì¼ íì¸</span>
+                  <span class="step-action-tag">자녀 assignments 조회</span>
+                  <span class="step-action-tag">단계별 현황 표시</span>
+                  <span class="step-action-tag">마감일 확인</span>
                 </div>
               </div></div>
             </div>
@@ -808,12 +808,12 @@
             <div class="step">
               <div class="step-left"><div class="step-num parent">3</div><div class="step-line"></div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage parent">íì¼ ì´ë</div>
-                <div class="step-title">ìë¡ëë íì¼ íì¸</div>
-                <div class="step-desc">ê°ì¬ê° ìë¡ëí ë¶ì ìë£, ì´ì, ìµì¢ë³¸ íì¼ì ë¤ì´ë¡ëíì¬ ë´ì©ì ì§ì  íì¸í©ëë¤. ìëì ìííê° ë°©í¥ì±ê³¼ ë´ì©ì íìí  ì ììµëë¤.</div>
+                <div class="step-stage parent">파일 열람</div>
+                <div class="step-title">업로드된 파일 확인</div>
+                <div class="step-desc">강사가 업로드한 분석 자료, 초안, 최종본 파일을 다운로드하여 내용을 직접 확인합니다. 자녀의 수행평가 방향성과 내용을 파악할 수 있습니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">íì¼ ëª©ë¡ ì´ë</span>
-                  <span class="step-action-tag">ê³µê° URL ë¤ì´ë¡ë</span>
+                  <span class="step-action-tag">파일 목록 열람</span>
+                  <span class="step-action-tag">공개 URL 다운로드</span>
                 </div>
               </div></div>
             </div>
@@ -821,13 +821,13 @@
             <div class="step">
               <div class="step-left"><div class="step-num parent">4</div></div>
               <div class="step-body"><div class="step-card">
-                <div class="step-stage parent">ê²°ê³¼ íì¸</div>
-                <div class="step-title">ìµì¢ ì ì ë° ë±ê¸ ì´ë</div>
-                <div class="step-desc">ìííê°ê° ìë£ëë©´ ê°ì¬ê° ìë ¥í ì¤ì  ì ìì ë±ê¸ì íì¸í©ëë¤. ìëì ìííê° ì±ê³¼ë¥¼ íëì íìí  ì ììµëë¤.</div>
+                <div class="step-stage parent">결과 확인</div>
+                <div class="step-title">최종 점수 및 등급 열람</div>
+                <div class="step-desc">수행평가가 완료되면 강사가 입력한 실제 점수와 등급을 확인합니다. 자녀의 수행평가 성과를 한눈에 파악할 수 있습니다.</div>
                 <div class="step-actions">
-                  <span class="step-action-tag">result_score íì¸</span>
-                  <span class="step-action-tag">result_grade íì¸</span>
-                  <span class="step-action-tag">ì½ê¸° ì ì©</span>
+                  <span class="step-action-tag">result_score 확인</span>
+                  <span class="step-action-tag">result_grade 확인</span>
+                  <span class="step-action-tag">읽기 전용</span>
                 </div>
               </div></div>
             </div>
@@ -836,67 +836,67 @@
 
         <!-- Permission Matrix -->
         <section class="perm-section" data-reveal>
-          <h2 class="perm-title animate">ê¸°ë¥ë³ ê¶í ë§¤í¸ë¦­ì¤</h2>
+          <h2 class="perm-title animate">기능별 권한 매트릭스</h2>
           <div class="perm-grid">
-            <div class="perm-cell header">ê¸°ë¥</div>
-     0      <div class="perm-cell header center admin-header">ð¡ï¸ Admin</div>
-            <div class="perm-cell header center tutor-header">ð¨âð« ê°ì¬</div>
-            <div class="perm-cell header center student-header">ð íì</div>
-            <div class="perm-cell header center parent-header">ð¨âð©âð§ íë¶ëª¨</div>
+            <div class="perm-cell header">기능</div>
+            <div class="perm-cell header center admin-header">🛡️ Admin</div>
+            <div class="perm-cell header center tutor-header">👨‍🏫 강사</div>
+            <div class="perm-cell header center student-header">🎒 학생</div>
+            <div class="perm-cell header center parent-header">👨‍👩‍👧 학부모</div>
 
-            <div class="perm-cell feature">íì ê³ì  ë±ë¡</div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
+            <div class="perm-cell feature">학생 계정 등록</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
 
-            <div class="perm-cell feature">ìííê° ì ì ë±ë¡</div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
+            <div class="perm-cell feature">수행평가 접수 등록</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
 
-            <div class="perm-cell feature">ë¨ê³ ìí ë³ê²½</div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
+            <div class="perm-cell feature">단계 상태 변경</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
 
-            <div class="perm-cell feature">íì¼ ìë¡ë</div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check p">â³ í¼ëë°±ë§</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
+            <div class="perm-cell feature">파일 업로드</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check p">△ 피드백만</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
 
-            <div class="perm-cell feature">íì¼ ë¤ì´ë¡ë</div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
+            <div class="perm-cell feature">파일 다운로드</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
 
-            <div class="perm-cell feature">ê²°ê³¼ ìë ¥ (ì ì/ë±ê¸)</div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
+            <div class="perm-cell feature">결과 입력 (점수/등급)</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
 
-            <div class="perm-cell feature">ê²°ê³¼ ì´ë</div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
+            <div class="perm-cell feature">결과 열람</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
 
-            <div class="perm-cell feature">ì ì²´ íì íí© ì¡°í</div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check p">â³ ë°°ì  íìë§</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
+            <div class="perm-cell feature">전체 학생 현황 조회</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check p">△ 배정 학생만</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
 
-            <div class="perm-cell feature">ê°ì¬ ë°°ì  ë³ê²½</div>
-            <div class="perm-cell center"><span class="check y">â</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
-            <div class="perm-cell center"><span class="check n">â</span></div>
+            <div class="perm-cell feature">강사 배정 변경</div>
+            <div class="perm-cell center"><span class="check y">✓</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
+            <div class="perm-cell center"><span class="check n">—</span></div>
           </div>
         </section>
       </div>
@@ -905,7 +905,7 @@
 
   <footer>
     <div class="container">
-      Sucoach Â· ìííê° ì ëµê´ë¦¬ íë¡ê·¸ë¨ Â· ì­í ë³ ìí¬íë¡ì° ê°ì´ë
+      Sucoach · 수행평가 전략관리 프로그램 · 역할별 워크플로우 가이드
     </div>
   </footer>
 
@@ -933,8 +933,8 @@
     var currentTheme = savedTheme || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
     function applyTheme(t) {
       document.documentElement.className = 'theme-' + t;
-      document.getElementById('themeIcon').textContent = t === 'dark' ? 'ð' : 'âï¸';
-      document.getElementById('themeLabel').textContent = t === 'dark' ? 'ë¤í¬ ëª¨ë' : 'ë¼ì´í¸ ëª¨ë';
+      document.getElementById('themeIcon').textContent = t === 'dark' ? '🌙' : '☀️';
+      document.getElementById('themeLabel').textContent = t === 'dark' ? '다크 모드' : '라이트 모드';
       localStorage.setItem('viz-theme', t);
       currentTheme = t;
     }
